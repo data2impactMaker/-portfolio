@@ -100,4 +100,4 @@ Claude Code를 활용하여 분석 오케스트레이션 및 업무 자동화를
 
 ## Contact
 
-📧 darnell@socar.kr
+📧 data2impacts@gmail.com
