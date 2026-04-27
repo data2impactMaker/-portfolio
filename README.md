@@ -2,6 +2,8 @@
 
 > 분석을 액션으로 바꾸는 데이터 분석가
 
+## 👉 [포트폴리오 바로 보기](https://data2impactmaker.github.io/-portfolio/)
+
 ---
 
 ## 포트폴리오 보는 법
