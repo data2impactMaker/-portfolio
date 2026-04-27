@@ -1,1 +1,952 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정한얼 포트폴리오 | Data Analyst</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root{--bg:#fff;--surface:#fff;--alt:#f7f7f8;--text:#111;--sub:#555;--muted:#999;--border:#e0e0e0;--blue:#1a56db;--red:#c0392b;--radius:8px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Noto Sans KR','Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:14px;-webkit-font-smoothing:antialiased}
 
+  /* ── Nav Common ── */
+  .nav-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:600;color:var(--sub);text-decoration:none;cursor:pointer;transition:all .2s;white-space:nowrap;border:1px solid var(--border);background:#fff;font-family:inherit}
+  .nav-btn:hover{background:var(--text);color:#fff;border-color:var(--text)}
+  .nav-btn.active{color:#fff;background:var(--text);border-color:var(--text)}
+  .nav-btn svg{width:12px;height:12px;flex-shrink:0}
+
+  /* ── Float Nav ── */
+  .float-nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:999;display:flex;align-items:center;gap:4px;padding:5px 6px;border-radius:12px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.06);box-shadow:0 2px 16px rgba(0,0,0,.06);opacity:0;pointer-events:none;transition:opacity .3s}
+  .float-nav.visible{opacity:1;pointer-events:auto}
+  .float-nav .nav-btn{border:none;background:transparent}
+  .float-nav .nav-btn:hover{background:rgba(26,86,219,.05);color:var(--blue)}
+  .float-nav .nav-btn.active{color:#fff;background:var(--text)}
+  .fn-sep{width:1px;height:16px;background:var(--border);flex-shrink:0}
+  .fn-search{width:28px;height:28px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .2s;flex-shrink:0}
+  .fn-search:hover{background:var(--alt);color:var(--text)}
+
+  /* ── Viz Dropdown ── */
+  .viz-wrap{position:relative;display:inline-block}
+  .viz-dropdown{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:420px;background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,.08);box-shadow:0 8px 32px rgba(0,0,0,.12);padding:0;opacity:0;pointer-events:none;transition:all .2s;z-index:1000;overflow:hidden}
+  .viz-dropdown.open{opacity:1;pointer-events:auto}
+  .vd-tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none}
+  .vd-tabs::-webkit-scrollbar{display:none}
+  .vd-tab{display:flex;align-items:center;gap:5px;padding:9px 12px;font-size:10px;font-weight:700;color:var(--muted);white-space:nowrap;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .15s;font-family:inherit;flex-shrink:0}
+  .vd-tab:hover{color:var(--text);background:var(--alt)}
+  .vd-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+  .vd-tab img{width:13px;height:13px;object-fit:contain}
+  .vd-panel{display:none;padding:4px 0;max-height:200px;overflow-y:auto}
+  .vd-panel.active{display:block}
+  .vd-item{display:block;padding:6px 16px;font-size:12px;color:var(--sub);text-decoration:none;cursor:pointer;transition:all .15s;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+  .vd-item:hover{background:var(--alt);color:var(--blue)}
+
+  /* ── Search ── */
+  .search-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.25);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s}
+  .search-overlay.open{opacity:1;pointer-events:auto}
+  .search-modal{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-8px);z-index:1001;width:540px;max-width:calc(100vw - 32px);background:#fff;border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,.18);overflow:hidden;opacity:0;pointer-events:none;transition:all .2s}
+  .search-modal.open{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+  .si-wrap{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .si-wrap svg{flex-shrink:0;color:var(--muted)}
+  .si-wrap input{flex:1;border:none;outline:none;font-size:14px;font-family:inherit;background:transparent;color:var(--text)}
+  .si-wrap input::placeholder{color:#bbb}
+  .si-clear{display:none;width:20px;height:20px;border-radius:50%;border:none;background:var(--alt);color:var(--muted);font-size:14px;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;line-height:1;padding:0}
+  .si-clear.visible{display:flex}
+  .si-clear:hover{background:var(--border);color:var(--text)}
+  .si-wrap .kbd{font-size:9px;color:var(--muted);background:var(--alt);border:1px solid var(--border);padding:1px 5px;border-radius:3px}
+  .search-results{max-height:380px;overflow-y:auto;padding:4px 0}
+  .search-results.has-query:empty::after{content:'일치하는 결과가 없습니다';display:block;padding:28px;text-align:center;font-size:12px;color:#bbb}
+  .search-suggest{padding:12px 16px}
+  .search-suggest-title{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px}
+  .search-suggest-tags{display:flex;gap:6px;flex-wrap:wrap}
+  .search-suggest-tag{font-size:11px;color:var(--sub);padding:4px 10px;border:1px solid var(--border);border-radius:100px;cursor:pointer;transition:all .15s;background:#fff}
+  .search-suggest-tag:hover{background:var(--text);color:#fff;border-color:var(--text)}
+  .sr-group{padding:4px 16px 2px;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+  .sr-item{display:flex;align-items:center;gap:8px;padding:8px 16px;cursor:pointer;transition:background .1s}
+  .sr-item:hover,.sr-item.focused{background:var(--alt)}
+  .sr-item .sr-icon{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+  .sr-item .sr-text{flex:1;min-width:0}
+  .sr-item .sr-title{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sr-item .sr-title mark{background:#fff3cd;border-radius:2px;padding:0 1px}
+  .sr-item .sr-breadcrumb{font-size:10px;color:var(--muted)}
+  .sr-item .sr-preview{font-size:10px;color:var(--sub);margin-top:1px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .sr-item .sr-preview mark{background:#fff3cd;border-radius:2px;padding:0 1px}
+  .sr-item .sr-arrow{color:#ccc;font-size:10px}
+  @keyframes sfound{0%,20%{box-shadow:0 0 0 3px rgba(26,86,219,.4);background:rgba(26,86,219,.04)}100%{box-shadow:none;background:transparent}}
+  .search-found{animation:sfound 2.5s ease-out;border-radius:4px}
+
+  /* ── Page ── */
+  .page{max-width:820px;margin:0 auto;padding:0 32px}
+
+  /* ── Cover ── */
+  .cover{padding:100px 0 60px}
+  .cover-inner{display:flex;align-items:center;gap:36px}
+  .cover-photo{flex-shrink:0}
+  .cover-photo img{width:140px;height:175px;object-fit:cover;border-radius:12px;border:1px solid var(--border)}
+  .cover-text{flex:1}
+  .cover-role{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px}
+  .cover-text h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin-bottom:6px}
+  .cover-desc{font-size:13px;color:var(--sub);line-height:1.9;margin-bottom:16px}
+  .cover-skills{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+  .skill-group{display:flex;align-items:center;gap:6px}
+  .skill-cat{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;padding-right:4px;border-right:1.5px solid var(--border);margin-right:2px}
+  .skill-item{font-size:11px;font-weight:500;color:var(--text);padding:3px 10px;background:var(--alt);border-radius:4px}
+  .cover-bottom{text-align:center;margin-top:24px}
+  .cover-search{max-width:400px;margin:0 auto 12px}
+  .cover-search button{display:flex;align-items:center;gap:6px;width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--alt);cursor:pointer;font-family:inherit;font-size:12px;color:var(--muted);transition:all .2s}
+  .cover-search button:hover{border-color:#bbb}
+  .cover-nav{display:flex;justify-content:center;gap:6px}
+
+  /* ── Section ── */
+  .divider{text-align:center;margin:60px 0 48px;position:relative}
+  .divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border)}
+  .divider span{position:relative;background:var(--bg);padding:0 20px;font-size:13px;font-weight:700;color:var(--text);letter-spacing:1px}
+
+  /* ── Part Header ── */
+  .part-header{margin-bottom:24px}
+  .part-num{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:3px}
+  .part-title{font-size:19px;font-weight:700;padding-bottom:8px;border-bottom:2px solid var(--text)}
+
+  /* ── Project Card ── */
+  .pcard{background:var(--alt);border-radius:10px;padding:20px 24px;margin-bottom:12px;border:1px solid transparent;transition:border-color .2s}
+  .pcard:hover{border-color:var(--border)}
+  .pcard-title{font-size:16px;font-weight:700;margin-bottom:12px;color:var(--text);line-height:1.5}
+  .pcard-summary{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;background:#fff;border-radius:6px;padding:10px 14px;border:1px solid var(--border)}
+  .sum-row{display:flex;align-items:baseline;gap:10px;font-size:13px;padding:2px 0}
+  .sum-label{font-weight:700;color:#fff;background:var(--blue);flex-shrink:0;font-size:11px;padding:1px 8px;border-radius:4px;min-width:auto}
+  .sum-value{color:var(--text);line-height:1.6}
+
+  /* ── Image ── */
+  .img-wrap{display:flex;justify-content:center;margin:10px 0 0}
+  .img-box{display:inline-block;max-width:100%;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);background:#fff;cursor:pointer;transition:box-shadow .2s}
+  .img-box:hover{box-shadow:0 2px 12px rgba(0,0,0,.08)}
+  .img-box img{display:block;max-width:100%;height:auto;image-rendering:-webkit-optimize-contrast}
+  .img-box.dark{border-color:#333;background:#1a1a2e}
+  .img-cap{padding:6px 12px;font-size:10px;color:var(--muted);background:var(--alt);border-top:1px solid var(--border);text-align:center}
+  .img-box.dark .img-cap{background:#111;border-color:#333;color:#888}
+  .img-row{display:flex;gap:10px;justify-content:center;margin:10px 0 0;flex-wrap:wrap}
+  .img-row .img-box{flex:1;min-width:0;max-width:calc(50% - 5px)}
+  .img-row .img-box img{width:100%}
+  .img-full{width:100%}
+  .img-full img{width:100%}
+
+  /* ── Lightbox ── */
+  .lightbox{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;cursor:default;padding:24px}
+  .lightbox.open{opacity:1;pointer-events:auto}
+  .lightbox img{max-width:95%;max-height:95vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 32px rgba(0,0,0,.4);cursor:default}
+  .lightbox-close{position:fixed;top:16px;right:20px;z-index:2001;width:36px;height:36px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+  .lightbox-close:hover{background:rgba(255,255,255,.3)}
+
+  /* ── Viz Section ── */
+  .viz-sec-header{display:flex;align-items:center;gap:10px;margin:36px 0 16px}
+  .viz-sec-header h2{font-size:17px;font-weight:700}
+  .viz-sec-num{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+  .tool-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:100px;background:var(--alt);border:1px solid var(--border);color:var(--sub);margin-left:auto;flex-shrink:0}
+  .tool-badge .tool-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+
+  /* ── Footer ── */
+  .footer{text-align:center;padding:40px 20px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:40px}
+
+  /* ── Responsive ── */
+  @media(max-width:700px){
+    .page{padding:0 16px}
+    .cover{padding:60px 0 40px}
+    .cover-inner{flex-direction:column;text-align:center}
+    .cover-tools{justify-content:center}
+    .cover-text h1{font-size:28px}
+    .part-title{font-size:17px}
+    .float-nav{padding:4px 5px}
+    .float-nav .nav-btn{padding:5px 10px;font-size:10px}
+    .viz-dropdown{width:280px;left:auto;right:-40px;transform:none}
+    .img-row{flex-direction:column}
+    .img-row .img-box{max-width:100%}
+    .pcard{padding:16px}
+  }
+</style>
+</head>
+<body>
+
+<!-- Float Nav -->
+<nav class="float-nav" id="floatNav">
+  <div class="viz-wrap">
+    <button class="nav-btn" id="fnAnaToggle" data-section="analysis">Analysis <span style="font-size:9px">&#9662;</span></button>
+    <div class="viz-dropdown" id="fnAnaDropdown">
+      <div class="vd-tabs">
+        <button class="vd-tab active" data-panel="fn-a-p1">Part 01</button>
+        <button class="vd-tab" data-panel="fn-a-p2">Part 02</button>
+        <button class="vd-tab" data-panel="fn-a-p3">Part 03</button>
+      </div>
+      <div class="vd-panel active" id="fn-a-p1">
+        <a class="vd-item" data-target="project1a">접속횟수 비교분석</a>
+        <a class="vd-item" data-target="project1b">행동 데이터 비교분석</a>
+        <a class="vd-item" data-target="project1c">인근 구매가능 주차장 분석</a>
+      </div>
+      <div class="vd-panel" id="fn-a-p2">
+        <a class="vd-item" data-target="project2a">영업관리 프로세스 구축</a>
+        <a class="vd-item" data-target="project2b">통합 데이터셋 및 액션 매트릭스</a>
+        <a class="vd-item" data-target="project2c">액션제안 및 모니터링 대시보드</a>
+        <a class="vd-item" data-target="project2d">액션제안 대시보드 1차 고도화</a>
+        <a class="vd-item" data-target="project2e">액션제안 대시보드 2차 고도화</a>
+      </div>
+      <div class="vd-panel" id="fn-a-p3">
+        <a class="vd-item" data-target="project3a">첫결제 프로모션 쿠폰 설계</a>
+        <a class="vd-item" data-target="project3b">사업계획 달성 시나리오</a>
+        <a class="vd-item" data-target="project3c">클릭/거래 이상치 탐지 및 원인 분석</a>
+      </div>
+    </div>
+  </div>
+  <div class="fn-sep"></div>
+  <div class="viz-wrap">
+    <button class="nav-btn" id="fnVizToggle" data-section="visualization">Visualization <span style="font-size:9px">&#9662;</span></button>
+    <div class="viz-dropdown" id="fnVizDropdown">
+      <div class="vd-tabs">
+        <button class="vd-tab active" data-panel="fn-p-ls"><img src="https://cdn.simpleicons.org/looker/4285F4" alt="Looker"> Looker</button>
+        <button class="vd-tab" data-panel="fn-p-gs"><img src="https://cdn.simpleicons.org/googlesheets/34A853" alt="Sheets"> Sheets</button>
+        <button class="vd-tab" data-panel="fn-p-tb"><img src="https://img.icons8.com/color/48/tableau-software.png" alt="Tableau"> Tableau</button>
+        <button class="vd-tab" data-panel="fn-p-kp"><img src="https://kepler.gl/favicon.png" alt="Kepler"> Kepler</button>
+      </div>
+      <div class="vd-panel active" id="fn-p-ls">
+        <a class="vd-item" data-target="viz-v1a">W-1(저번주) 성과예측 대시보드</a>
+        <a class="vd-item" data-target="viz-v1b">마케팅 실적 리포트</a>
+        <a class="vd-item" data-target="viz-v1c">공유주차 서비스 자치구별 실적</a>
+        <a class="vd-item" data-target="viz-v2a">제휴일반 대시보드</a>
+        <a class="vd-item" data-target="viz-v2b">판매중단 시설관리 대시보드</a>
+        <a class="vd-item" data-target="viz-v2c">장기권 슬롯관리 대시보드</a>
+        <a class="vd-item" data-target="viz-v3a">퍼널 대시보드</a>
+      </div>
+      <div class="vd-panel" id="fn-p-gs"><a class="vd-item" data-target="viz-v3b">신규가입유저 코호트 분석 리포트</a></div>
+      <div class="vd-panel" id="fn-p-tb"><a class="vd-item" data-target="viz-v3c-tab">검색수요 지리공간 분석</a></div>
+      <div class="vd-panel" id="fn-p-kp"><a class="vd-item" data-target="viz-v3c">여의도 불꽃축제 동적 수요지도</a></div>
+    </div>
+  </div>
+  <div class="fn-sep"></div>
+  <div class="viz-wrap">
+    <button class="nav-btn" id="fnAiToggle" data-section="ai-assisted">AI Usage <span style="font-size:9px">&#9662;</span></button>
+    <div class="viz-dropdown" id="fnAiDropdown">
+      <div class="vd-panel active" style="display:block">
+        <a class="vd-item" data-target="ai-a1">BTS 광화문 콘서트 주차장 영향분석</a>
+        <a class="vd-item" data-target="ai-a2">Airbridge 앱 설치 유입경로 분석</a>
+        <a class="vd-item" data-target="ai-a3">데이터업무 슬랙봇 설계 및 구축</a>
+      </div>
+    </div>
+  </div>
+  <div class="fn-sep"></div>
+  <button class="fn-search" id="searchToggle" title="Ctrl+K">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
+  </button>
+</nav>
+
+<!-- Search -->
+<div class="search-overlay" id="searchOverlay"></div>
+<div class="search-modal" id="searchModal">
+  <div class="si-wrap">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="7" r="5"/><line x1="11" y1="11" x2="15" y2="15"/></svg>
+    <input type="text" id="searchInput" placeholder="프로젝트, 키워드로 검색..." autocomplete="off">
+    <button class="si-clear" id="searchClear">&times;</button>
+    <span class="kbd">ESC</span>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+  <div class="search-suggest" id="searchSuggest">
+    <div class="search-suggest-title">추천 키워드</div>
+    <div class="search-suggest-tags">
+      <span class="search-suggest-tag" data-kw="전환율">전환율</span>
+      <span class="search-suggest-tag" data-kw="퍼널">퍼널</span>
+      <span class="search-suggest-tag" data-kw="코호트">코호트</span>
+      <span class="search-suggest-tag" data-kw="실적">실적</span>
+      <span class="search-suggest-tag" data-kw="마케팅">마케팅</span>
+      <span class="search-suggest-tag" data-kw="사업">사업</span>
+      <span class="search-suggest-tag" data-kw="Claude">Claude</span>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="event.stopPropagation();closeLightbox()">&times;</button>
+  <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
+</div>
+
+<div class="page">
+
+<!-- ═══════════ COVER ═══════════ -->
+<div class="cover" id="hero">
+  <div class="cover-inner">
+    <div class="cover-photo">
+      <img src="portfolio_images/notion/notion_00.jpg" alt="정한얼">
+    </div>
+    <div class="cover-text">
+      <div class="cover-role">Data Analyst</div>
+      <h1>정한얼</h1>
+      <p class="cover-desc">
+        실행 가능한 인사이트 도출로 비즈니스 임팩트를 창출하는 데이터 분석가 정한얼이라 합니다.<br>
+        화려하고 복잡한 분석이 아닌, 간결하고 직관적인 분석으로 조직의 성과에 기여합니다.<br>
+        최근 AI를 적극적으로 활용하며 풀어야 할 비즈니스 문제에 더욱 집중하고 있습니다.
+      </p>
+      <p class="cover-desc" style="font-size:12px;color:var(--sub);margin-bottom:16px;line-height:1.8">
+        현재 쏘카 CGO 산하 플랫폼데이터팀에서 주차 비즈니스를 담당하고 있으며,<br>
+        결과물을 Analysis · Visualization · AI Usage로 구분하여 정리했습니다.
+      </p>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-search">
+      <button onclick="openSearch()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><line x1="8.5" y1="8.5" x2="12" y2="12"/></svg>
+        원하는 내용을 검색하세요
+        <span style="margin-left:auto;font-size:9px;background:#eee;border:1px solid #ddd;padding:1px 4px;border-radius:3px">Ctrl+K</span>
+      </button>
+    </div>
+    <div class="cover-nav">
+      <div class="viz-wrap">
+        <button class="nav-btn" id="coverAnaToggle">Analysis <span style="font-size:9px">&#9662;</span></button>
+        <div class="viz-dropdown" id="coverAnaDropdown">
+          <div class="vd-tabs">
+            <button class="vd-tab active" data-panel="cv-a-p1">Part 01</button>
+            <button class="vd-tab" data-panel="cv-a-p2">Part 02</button>
+            <button class="vd-tab" data-panel="cv-a-p3">Part 03</button>
+          </div>
+          <div class="vd-panel active" id="cv-a-p1">
+            <a class="vd-item" data-target="project1a">접속횟수 비교분석</a>
+            <a class="vd-item" data-target="project1b">행동 데이터 비교분석</a>
+            <a class="vd-item" data-target="project1c">인근 구매가능 주차장 분석</a>
+          </div>
+          <div class="vd-panel" id="cv-a-p2">
+            <a class="vd-item" data-target="project2a">영업관리 프로세스 구축</a>
+            <a class="vd-item" data-target="project2b">통합 데이터셋 및 액션 매트릭스</a>
+            <a class="vd-item" data-target="project2c">액션제안 및 모니터링 대시보드</a>
+            <a class="vd-item" data-target="project2d">액션제안 대시보드 1차 고도화</a>
+            <a class="vd-item" data-target="project2e">액션제안 대시보드 2차 고도화</a>
+          </div>
+          <div class="vd-panel" id="cv-a-p3">
+            <a class="vd-item" data-target="project3a">첫결제 프로모션 쿠폰 설계</a>
+            <a class="vd-item" data-target="project3b">사업계획 달성 시나리오</a>
+            <a class="vd-item" data-target="project3c">클릭/거래 이상치 탐지 및 원인 분석</a>
+          </div>
+        </div>
+      </div>
+      <div class="viz-wrap">
+        <button class="nav-btn" id="coverVizToggle">Visualization <span style="font-size:9px">&#9662;</span></button>
+        <div class="viz-dropdown" id="coverVizDropdown">
+          <div class="vd-tabs">
+            <button class="vd-tab active" data-panel="cv-p-ls"><img src="https://cdn.simpleicons.org/looker/4285F4" alt="Looker"> Looker</button>
+            <button class="vd-tab" data-panel="cv-p-gs"><img src="https://cdn.simpleicons.org/googlesheets/34A853" alt="Sheets"> Sheets</button>
+            <button class="vd-tab" data-panel="cv-p-tb"><img src="https://img.icons8.com/color/48/tableau-software.png" alt="Tableau"> Tableau</button>
+            <button class="vd-tab" data-panel="cv-p-kp"><img src="https://kepler.gl/favicon.png" alt="Kepler"> Kepler</button>
+          </div>
+          <div class="vd-panel active" id="cv-p-ls">
+            <a class="vd-item" data-target="viz-v1a">W-1(저번주) 성과예측 대시보드</a>
+            <a class="vd-item" data-target="viz-v1b">마케팅 실적 리포트</a>
+            <a class="vd-item" data-target="viz-v1c">공유주차 서비스 자치구별 실적</a>
+            <a class="vd-item" data-target="viz-v2a">제휴일반 대시보드</a>
+            <a class="vd-item" data-target="viz-v2b">판매중단 시설관리 대시보드</a>
+            <a class="vd-item" data-target="viz-v2c">장기권 슬롯관리 대시보드</a>
+            <a class="vd-item" data-target="viz-v3a">퍼널 대시보드</a>
+          </div>
+          <div class="vd-panel" id="cv-p-gs"><a class="vd-item" data-target="viz-v3b">신규가입유저 코호트 분석 리포트</a></div>
+          <div class="vd-panel" id="cv-p-tb"><a class="vd-item" data-target="viz-v3c-tab">검색수요 지리공간 분석</a></div>
+          <div class="vd-panel" id="cv-p-kp"><a class="vd-item" data-target="viz-v3c">여의도 불꽃축제 동적 수요지도</a></div>
+        </div>
+      </div>
+      <div class="viz-wrap">
+        <button class="nav-btn" id="coverAiToggle">AI Usage <span style="font-size:9px">&#9662;</span></button>
+        <div class="viz-dropdown" id="coverAiDropdown">
+          <div class="vd-panel active" style="display:block">
+            <a class="vd-item" data-target="ai-a1">BTS 광화문 콘서트 주차장 영향분석</a>
+            <a class="vd-item" data-target="ai-a2">Airbridge 앱 설치 유입경로 분석</a>
+            <a class="vd-item" data-target="ai-a3">데이터업무 슬랙봇 설계 및 구축</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ANALYSIS ═══════════ -->
+<div id="analysis"></div>
+<div class="divider"><span>Analysis</span></div>
+
+<!-- ── Part 01 ── -->
+<div class="part-header">
+  <div class="part-num">Part 01</div>
+  <div class="part-title">미결제자 원인분석 프로젝트</div>
+</div>
+
+<div class="pcard" id="project1a">
+  <div class="pcard-title">a. 미결제/결제 유저군 간 접속횟수 비교분석</div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">결제전환율 상승을 위한 우선순위 미결제 세그먼트 도출</span></div>
+    <div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">전체 미결제 유저의 80%가 접속 1~2회 신규유저 → 저회차 접속자 결제유도 타겟 선정</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box" onclick="openLightbox(this)" style="max-width:380px">
+    <img src="portfolio_images/notion/notion_01.png" alt="접속횟수별 유저비중">
+    <div class="img-cap">결제 여부에 따른 접속횟수별 유저비중</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="project1b">
+  <div class="pcard-title">b. 미결제/결제 유저군 간 행동 데이터 비교분석</div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">미결제유저의 탐색기능 인지·활용 부족이 결제전환 저해 요인인지 검증</span></div>
+    <div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">미결제유저는 탐색은 오히려 활발하나 결제퍼널에서 급격히 이탈 (주차권선택 단계 40.5%p Gap)</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box" onclick="openLightbox(this)" style="max-width:480px">
+    <img src="portfolio_images/notion/notion_02.png" alt="행동 데이터 비교분석">
+    <div class="img-cap">미결제/결제 유저군 간 행동 데이터 비교분석</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="project1c">
+  <div class="pcard-title">c. 미결제/결제 유저군 간 검색장소 인근 구매가능 주차장 분석</div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">검색위치 대비 인근 구매가능 주차장 수 차이 검증 (카이제곱 검정)</span></div>
+    <div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">미결제유저의 구매가능 주차장 0~1개 비율이 약 1.8배 → 공급부족이 결제전환 저해 요인</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box" onclick="openLightbox(this)" style="max-width:480px">
+    <img src="portfolio_images/notion/notion_03.png" alt="인근 구매가능 주차장 분석">
+    <div class="img-cap">결제 vs 미결제 유저군 도넛차트 / 카이제곱 검정 결과</div>
+  </div></div>
+</div>
+
+
+<!-- ── Part 02 ── -->
+<div class="part-header" style="margin-top:48px">
+  <div class="part-num">Part 02</div>
+  <div class="part-title">데이터기반 영업관리 프로세스 구축 프로젝트</div>
+</div>
+
+<div class="pcard" id="project2a">
+  <div class="pcard-title">a. 영업관리 프로세스 구축</div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">데이터기반 체계적이고 효율적인 영업관리 프로세스 구축</span></div>
+    <div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">영업단 자율적 판단 및 리서치를 위한 데이터 기반 프로세스 체계 완성</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_05.png" alt="영업관리 프로세스">
+    <div class="img-cap">Sales Process 영업관리 프로세스</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="project2b">
+  <div class="pcard-title">b. 통합 데이터셋 구축 및 액션 매트릭스 수립</div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">영업관리와 자동화 추적 대시보드 제작을 위한 기반 마련</span></div>
+    <div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">클릭/거래/매진 데이터 통합 및 수요·공급 지표 기반 영업액션 자동화 체계 수립</span></div>
+  </div>
+  <div class="img-row">
+    <div class="img-box" onclick="openLightbox(this)">
+      <img src="portfolio_images/notion/notion_06.png" alt="통합 데이터셋">
+      <div class="img-cap">통합 데이터셋</div>
+    </div>
+    <div class="img-box" onclick="openLightbox(this)">
+      <img src="portfolio_images/notion/notion_07.png" alt="액션 매트릭스">
+      <div class="img-cap">액션 매트릭스</div>
+    </div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_08.png" alt="수량가격 인상 현황">
+    <div class="img-cap">수량·가격 인상 현황 — 매진추이 Weekly 모니터링</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="project2c">
+  <div class="pcard-title">c. 액션제안 및 모니터링 대시보드 제작</div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">영업 액션(수량·가격 변경)의 효과를 추적하고 신규 액션을 제안하는 대시보드 제작</span></div>
+    <div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">주차권 수량·가격 변경 전후 거래건수·거래액 변화를 실시간 모니터링하는 체계 구축</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full dark" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_09.png" alt="모니터링 대시보드">
+    <div class="img-cap">주차권수량 변경 전후 거래건수·거래액 추이 / 상품가격 변경 전후 거래액 추이</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="project2d">
+  <div class="pcard-title">d. 액션제안 대시보드 1차 고도화</div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">인근대비 상대우위 지표 추가로 제안 수용률 증대</span></div>
+    <div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">Weekday/Weekend 분리 분석으로 구체적 가격인상 근거 제공</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full dark" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_10.png" alt="가격인상 주차권 대시보드">
+    <div class="img-cap">가격인상 주차권 — Weekday / Weekend 분석</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="project2e">
+  <div class="pcard-title">e. 액션제안 대시보드 2차 고도화</div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">상품제안 대상 주차장 포함 상권의 종합적 분석자료 제공으로 제안 수용률 극대화</span></div>
+    <div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">상권·주차장·유저행동·매출 현황을 한 화면에서 확인 가능한 종합 분석 대시보드 완성</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full dark" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_11.png" alt="Sales Analysis 대시보드">
+    <div class="img-cap">Sales Analysis — 상권 종합 분석 대시보드</div>
+  </div></div>
+</div>
+
+<!-- ── Part 03 ── -->
+<div class="part-header" style="margin-top:48px">
+  <div class="part-num">Part 03</div>
+  <div class="part-title">각종 사업/마케팅 분석</div>
+</div>
+
+<div class="pcard" id="project3a">
+  <div class="pcard-title">a. 첫결제 프로모션 쿠폰 최적 지급조건 설계</div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">첫결제 전환 극대화 및 Organic 유저 쿠폰사용 최소화 지급조건 도출</span></div>
+    <div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">약 1,500만원 잠재 GP Loss 방지에 기여</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_12.png" alt="첫결제분석 시뮬레이션">
+    <div class="img-cap">첫결제분석 — 가입후시간 Simulation</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="project3b">
+  <div class="pcard-title">b. 신규주차장 사업계획 달성 시나리오 도출</div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">사업계획 달성을 위한 주요 레버별 달성 목표치 도출</span></div>
+    <div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">25년 상반기 사업계획 미달분 보완을 위한 구체적 목표+수단 시나리오 수립</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_13.png" alt="사업계획 시뮬레이션">
+    <div class="img-cap">사업계획 달성 Simulation</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="project3c">
+  <div class="pcard-title">c. 통계 기반 클릭/거래 이상치 탐지 및 원인 분석</div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">Z-score 기반 이상치 탐지·분석으로 수요증가 및 이슈대응 속도 향상</span></div>
+    <div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">수요증가/이슈발생을 선제적으로 탐지 — 콘서트·스포츠 경기 등 고수요 이벤트 및 특가상품 과다판매 이슈 조기 발견</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_14.png" alt="이상치 탐지 결과">
+    <div class="img-cap">Z-score ≥ 7 조건 고수요 탐지 / Z-score &lt; -3 조건 이슈 발견</div>
+  </div></div>
+  <div class="img-wrap"><div class="img-box img-full dark" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_15.png" alt="이상치 상세 테이블">
+    <div class="img-cap">클릭/거래 이상치 상세 — 실적 그래프 및 Z-score</div>
+  </div></div>
+</div>
+
+<!-- ═══════════ VISUALIZATION ═══════════ -->
+<div id="visualization"></div>
+<div class="divider"><span>Visualization</span></div>
+<p style="text-align:center;font-size:12px;color:var(--muted);margin:-32px 0 36px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
+  <span style="display:inline-flex;align-items:center;gap:5px"><img src="https://cdn.simpleicons.org/looker/4285F4" width="14" height="14" alt="Looker"> Looker Studio</span>
+  <span style="display:inline-flex;align-items:center;gap:5px"><img src="https://cdn.simpleicons.org/googlesheets/34A853" width="14" height="14" alt="Sheets"> Google Sheets</span>
+  <span style="display:inline-flex;align-items:center;gap:5px"><img src="https://img.icons8.com/color/48/tableau-software.png" width="14" height="14" alt="Tableau"> Tableau</span>
+  <span style="display:inline-flex;align-items:center;gap:5px"><img src="https://kepler.gl/favicon.png" width="14" height="14" alt="Kepler"> Kepler.gl</span>
+</p>
+
+<!-- ── Viz 1. 성과 추적 ── -->
+<div class="part-header">
+  <div class="part-num">Visualization 01</div>
+  <div class="part-title">성과 추적</div>
+</div>
+
+<div class="pcard" id="viz-v1a">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">a. W-1(저번주) 성과예측 대시보드 <span class="tool-badge"><img src="https://cdn.simpleicons.org/looker/4285F4" width="10" height="10" alt="Looker" style="border-radius:1px"> Looker Studio</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">전체 주차장의 심층적 일정별 성과를 지표로 수치 확인</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">주차장별 기여치를 매주 자동 집계하여 반복 리포팅 업무 대체</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full dark" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_17.png" alt="성과예측 대시보드">
+    <div class="img-cap">ParkingZone Demand Dashboard — 지도 기반 수요 시각화</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="viz-v1b">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">b. 마케팅 실적 리포트 <span class="tool-badge"><img src="https://cdn.simpleicons.org/looker/4285F4" width="10" height="10" alt="Looker" style="border-radius:1px"> Looker Studio</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">마케팅 부서의 실시간 실적 리포팅 자동화</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">마케팅 부서에서 Weekly 운영현황을 실시간 조회하여 의사결정에 활용</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full dark" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_18.png" alt="마케팅 실적 리포트">
+    <div class="img-cap">모두의주차장 운영현황 — Weekly 리포트</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="viz-v1c">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">c. 공유주차 서비스 자치구별 실적 대시보드 <span class="tool-badge"><img src="https://cdn.simpleicons.org/looker/4285F4" width="10" height="10" alt="Looker" style="border-radius:1px"> Looker Studio</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">공유사업본 주요 자치구별 실적을 한 곳에서 실시간 파악</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">자치구별 실적·예약·충결 비중을 일괄 모니터링하여 지역별 사업 의사결정에 활용</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full dark" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_19.png" alt="공유주차 실적 대시보드">
+    <div class="img-cap">공유 자치구별 실적 대시보드</div>
+  </div></div>
+</div>
+
+<!-- ── Viz 2. 공급 관리 ── -->
+<div class="part-header" style="margin-top:48px">
+  <div class="part-num">Visualization 02</div>
+  <div class="part-title">공급 관리</div>
+</div>
+
+<div class="pcard" id="viz-v2a">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">a. 제휴일반 대시보드 <span class="tool-badge"><img src="https://cdn.simpleicons.org/looker/4285F4" width="10" height="10" alt="Looker" style="border-radius:1px"> Looker Studio</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">제휴 주차장의 공급 현황 및 시간대별 마감 추이를 한 곳에서 파악</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">공급/구매가능/미가동 현황과 SoldOut 추이를 확인하여 재고·가격 관리에 활용</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full dark" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_20.png" alt="제휴일반 대시보드">
+    <div class="img-cap">제휴일반 — Key Index / SoldOut Trend / Heatmap & SoldOutRank</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="viz-v2b">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">b. 판매중단 시설관리 대시보드 <span class="tool-badge"><img src="https://cdn.simpleicons.org/looker/4285F4" width="10" height="10" alt="Looker" style="border-radius:1px"> Looker Studio</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">판매중단 시설의 복구·관리 프로세스 자동화</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">Long/Short Term 유형별로 판매중단 시설을 분류하여 복구 우선순위 관리에 활용</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full dark" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_21.png" alt="판매중단 시설관리">
+    <div class="img-cap">Sales Off Partner — Long Term / Short Term 관리</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="viz-v2c">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">c. 장기권 슬롯관리 대시보드 <span class="tool-badge"><img src="https://cdn.simpleicons.org/looker/4285F4" width="10" height="10" alt="Looker" style="border-radius:1px"> Looker Studio</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">제한된 정기권 슬롯 활용 극대화</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">잔여슬롯을 파악하여 쏘카존 배치, 비연장기관 판매제안 등 자산 운용에 활용</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full dark" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_22.png" alt="장기권 슬롯관리">
+    <div class="img-cap">정기권 주차가능 현황 — 주차가능현장 1,494 / 주차가능수량 26,333</div>
+  </div></div>
+</div>
+
+<!-- ── Viz 3. 유저 상세 ── -->
+<div class="part-header" style="margin-top:48px">
+  <div class="part-num">Visualization 03</div>
+  <div class="part-title">유저 상세</div>
+</div>
+
+<div class="pcard" id="viz-v3a">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">a. 퍼널 대시보드 <span class="tool-badge"><img src="https://cdn.simpleicons.org/looker/4285F4" width="10" height="10" alt="Looker" style="border-radius:1px"> Looker Studio</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">주요 퍼널별 전환율 시각화를 통한 제품개선 인사이트 도출</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">Total/iOS/AOS별 풀 퍼널 및 BM별 주요 퍼널을 실시간 모니터링하여 제품개선에 활용</span></div>
+  </div>
+  <div class="img-row">
+    <div class="img-box dark" onclick="openLightbox(this)">
+      <img src="portfolio_images/notion/notion_23.png" alt="풀 퍼널">
+      <div class="img-cap">풀 퍼널 — Total / iOS / AOS</div>
+    </div>
+    <div class="img-box dark" onclick="openLightbox(this)">
+      <img src="portfolio_images/notion/notion_24.png" alt="주요 퍼널">
+      <div class="img-cap">주요 퍼널 by BM</div>
+    </div>
+  </div>
+</div>
+
+<div class="pcard" id="viz-v3b">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">b. 신규가입유저 코호트 분석 리포트 <span class="tool-badge"><img src="https://cdn.simpleicons.org/googlesheets/34A853" width="10" height="10" alt="Sheets" style="border-radius:1px"> Google Sheets</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">신규가입유저의 코호트별 주요 금액자료 확인을 통한 잔존 이해도 향상</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">코호트별 전환율/기여도/잔존율을 비교하여 유저 잔존 전략 수립에 활용</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_25.png" alt="코호트 분석">
+    <div class="img-cap">전환율 / 기여도 / 잔존율 / 관측값 — 신규가입유저 코호트 분석</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="viz-v3c-tab">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">c. 미결제 유저들의 검색수요 지리공간 분석 <span class="tool-badge"><img src="https://img.icons8.com/color/48/tableau-software.png" width="10" height="10" alt="Tableau" style="border-radius:1px"> Tableau</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">카카오맵 API 역지오코딩을 활용한 검색위치 주소 변환 (검색 이벤트 로깅 시 주소수집 X)</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">미결제 유저 검색 집중 지역을 파악하여 영업(주차장 확보) 및 마케팅(유저 넛지)에 활용</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_04.png" alt="지역별 검색장소 및 키워드">
+    <div class="img-cap">지역별 검색장소 데이터 / 검색 키워드 순위</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="viz-v3c">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">d. 여의도 불꽃축제 동적 수요지도 <span class="tool-badge"><img src="https://kepler.gl/favicon.png" width="10" height="10" alt="Kepler" style="border-radius:1px"> Kepler.gl</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">동적 수요의 변화 양상 및 분포 분석을 통한 공급 확대 및 최적화 전략 수립</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">오전 수요지도로 여의도 내 수요 집중 지점을, 오후 수요지도로 인근 동작·용산·노량진 지역 수요 분산을 파악하여 공급 전략에 활용</span></div>
+  </div>
+  <p style="font-size:12px;color:var(--sub);margin:0 0 10px;line-height:1.7;padding:0 2px">
+    <strong style="color:var(--text)">육각형 클러스터</strong> 유저 검색수요, 색이 진할수록 높음 &middot;
+    <strong style="color:var(--text)">주황/빨강 원형점</strong> 만차로 환불발생한 주차장 &middot;
+    <strong style="color:var(--text)">검정/노랑 원형점</strong> 판매가능 주차장(노랑은 0개인 곳) &middot;
+    <strong style="color:var(--text)">검정 실선</strong> 유저 주차핀 클릭 순서 연결
+  </p>
+  <div class="img-row">
+    <div class="img-box" onclick="openLightbox(this)">
+      <img src="portfolio_images/notion/notion_26.png" alt="오전 수요지도">
+      <div class="img-cap">오전 수요지도 — 여의도 내 수요 집중 지점</div>
+    </div>
+    <div class="img-box" onclick="openLightbox(this)">
+      <img src="portfolio_images/notion/notion_27.png" alt="오후 수요지도">
+      <div class="img-cap">오후 수요지도 — 인근 동작·용산·노량진 수요 분산</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ AI TOOLS ═══════════ -->
+<div id="ai-assisted"></div>
+<div class="divider"><span>AI Usage</span></div>
+<p style="text-align:center;font-size:12px;color:var(--muted);margin:-32px 0 36px;display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap">
+  <span style="display:inline-flex;align-items:center;gap:5px"><img src="https://cdn.simpleicons.org/claude/E67E22" width="14" height="14" alt="Claude"> Claude Code</span>
+</p>
+
+<div class="pcard" id="ai-a1">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">a. BTS 광화문 콘서트 주차장 영향분석 <span class="tool-badge" style="gap:6px"><img src="https://cdn.simpleicons.org/claude/E67E22" width="10" height="10" alt="Claude" style="border-radius:1px"> Claude Code</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">BTS 광화문 콘서트 대비 인근 주차장 수용 가능량 사전 분석 및 수요 예측</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">카카오맵 API·BigQuery·웹서칭을 Claude Code로 오케스트레이션하여 교통통제·무정차역·주차장 수용력 IMPACT MAP 제작, 영업팀 사전 대비에 활용</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full dark" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_28_bts_impact.png" alt="BTS 광화문 콘서트 주차장 영향분석">
+    <div class="img-cap">BTS 광화문 콘서트 주차장 영향분석 — IMPACT MAP (2026.03.28 공연일 기준)</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="ai-a2">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">b. Airbridge 앱 설치 유입경로 분석 <span class="tool-badge" style="gap:6px"><img src="https://cdn.simpleicons.org/claude/E67E22" width="10" height="10" alt="Claude" style="border-radius:1px"> Claude Code</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">Airbridge 앱 설치 이벤트의 채널별 유입경로 현황 분석</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">BigQuery 데이터를 Claude Code로 추출·시각화하여 채널별 인스톨 비중 및 캠페인 성과를 마케팅 의사결정에 활용</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full dark" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_30_airbridge.png" alt="Airbridge 유입경로 분석">
+    <div class="img-cap">Airbridge Install (App) Analysis — 채널별 인스톨 비중 및 Top 10 (2025-08 ~ 2026-01)</div>
+  </div></div>
+</div>
+
+<div class="pcard" id="ai-a3">
+  <div class="pcard-title" style="display:flex;align-items:center;gap:8px">c. 데이터업무 슬랙봇 설계 및 구축 <span class="tool-badge" style="gap:6px"><img src="https://cdn.simpleicons.org/claude/E67E22" width="10" height="10" alt="Claude" style="border-radius:1px"> Claude Code</span></div>
+  <div class="pcard-summary">
+    <div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">데이터업무 요청(추출·분석·해석·이벤트 설계)을 슬랙에서 AI로 자동 처리하는 봇 구축</span></div>
+    <div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">Slack Bolt + Claude API + Jira Cloud API를 GCP Cloud Run에 배포하여, 현업 부서의 데이터업무 요청을 자동 분류·처리·티켓 생성</span></div>
+  </div>
+  <div class="img-wrap"><div class="img-box img-full" onclick="openLightbox(this)">
+    <img src="portfolio_images/notion/notion_29_slackbot.png" alt="슬랙봇 설계서">
+    <div class="img-cap">데이터업무 슬랙봇 설계서 — AI 응답 시뮬레이션 및 시스템 아키텍처</div>
+  </div></div>
+</div>
+
+<div class="footer" id="contact">
+  <strong style="color:var(--text)">정한얼</strong> &middot; Data Analyst<br>
+  <span style="margin-top:4px;display:inline-block">실행 가능한 인사이트 도출로 비즈니스 임팩트를 창출합니다.</span>
+</div>
+
+</div><!-- .page -->
+
+<!-- ── Scripts ── -->
+<script>
+// Lightbox
+function openLightbox(box){
+  const img=box.querySelector('img');if(!img)return;
+  const lb=document.getElementById('lightbox'),li=document.getElementById('lightboxImg');
+  li.src=img.src;lb.classList.add('open');document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';
+}
+document.getElementById('lightbox').addEventListener('click',function(e){
+  if(e.target===this)closeLightbox();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('lightbox').classList.contains('open'))closeLightbox()});
+
+// Float Nav
+(function(){
+  const nav=document.getElementById('floatNav'),hero=document.querySelector('.cover');
+  let vis=false;
+  new IntersectionObserver(([e])=>{
+    const show=!e.isIntersecting;
+    if(show!==vis){vis=show;nav.classList.toggle('visible',show)}
+  }).observe(hero);
+  function spy(){
+    const y=window.scrollY+100;
+    const zones=['analysis','visualization','ai-assisted'];
+    let a=-1;
+    for(let z=zones.length-1;z>=0;z--){
+      const el=document.getElementById(zones[z]);
+      if(el&&el.offsetTop<=y){a=z;break}
+    }
+    nav.querySelectorAll('.nav-btn[data-section]').forEach(t=>{
+      t.classList.remove('active');
+      if(a===0&&t.dataset.section==='analysis')t.classList.add('active');
+      if(a===1&&t.dataset.section==='visualization')t.classList.add('active');
+      if(a===2&&t.dataset.section==='ai-assisted')t.classList.add('active');
+    });
+  }
+  let tick=false;
+  window.addEventListener('scroll',()=>{if(!tick){requestAnimationFrame(()=>{spy();tick=false});tick=true}},{passive:true});
+  spy();
+})();
+
+// Viz Dropdowns (both cover and float nav)
+(function(){
+  const pairs=[
+    ['fnAnaToggle','fnAnaDropdown'],
+    ['fnVizToggle','fnVizDropdown'],
+    ['fnAiToggle','fnAiDropdown'],
+    ['coverAnaToggle','coverAnaDropdown'],
+    ['coverVizToggle','coverVizDropdown'],
+    ['coverAiToggle','coverAiDropdown']
+  ];
+  pairs.forEach(([btnId,ddId])=>{
+    const btn=document.getElementById(btnId),dd=document.getElementById(ddId);
+    if(!btn||!dd)return;
+    let open=false;
+    // Toggle dropdown on button click
+    btn.addEventListener('click',e=>{
+      e.preventDefault();e.stopPropagation();
+      document.querySelectorAll('.viz-dropdown.open').forEach(d=>{if(d!==dd)d.classList.remove('open')});
+      open=!open;dd.classList.toggle('open',open);
+    });
+    dd.addEventListener('click',e=>e.stopPropagation());
+    // Tab switching
+    dd.querySelectorAll('.vd-tab').forEach(tab=>{
+      tab.addEventListener('click',e=>{
+        e.stopPropagation();
+        const panelId=tab.getAttribute('data-panel');
+        dd.querySelectorAll('.vd-tab').forEach(t=>t.classList.remove('active'));
+        dd.querySelectorAll('.vd-panel').forEach(p=>p.classList.remove('active'));
+        tab.classList.add('active');
+        const panel=document.getElementById(panelId);
+        if(panel)panel.classList.add('active');
+      });
+    });
+    // Item click → scroll & close
+    dd.querySelectorAll('.vd-item').forEach(item=>{
+      item.addEventListener('click',()=>{
+        const id=item.getAttribute('data-target');
+        const el=document.getElementById(id);
+        if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+        dd.classList.remove('open');open=false;
+      });
+    });
+  });
+  document.addEventListener('click',()=>{
+    document.querySelectorAll('.viz-dropdown.open').forEach(d=>d.classList.remove('open'));
+  });
+})();
+
+// Search
+function openSearch(){
+  document.getElementById('searchOverlay').classList.add('open');
+  document.getElementById('searchModal').classList.add('open');
+  setTimeout(()=>document.getElementById('searchInput').focus(),50);
+}
+(function(){
+  const ov=document.getElementById('searchOverlay'),md=document.getElementById('searchModal'),
+    inp=document.getElementById('searchInput'),res=document.getElementById('searchResults'),
+    tog=document.getElementById('searchToggle');
+  if(!ov||!md)return;
+  const idx=[];
+  const secs=[
+    {id:'project1a',g:'Analysis',c:'#333',n:'1a',t:'미결제/결제 유저군 간 접속횟수 비교분석'},
+    {id:'project1b',g:'Analysis',c:'#333',n:'1b',t:'미결제/결제 유저군 간 행동 데이터 비교분석'},
+    {id:'project1c',g:'Analysis',c:'#333',n:'1c',t:'검색장소 인근 구매가능 주차장 분석'},
+    {id:'viz-v3c-tab',g:'Visualization',c:'#1a56db',n:'Tab',t:'검색수요 지리공간 분석'},
+    {id:'project2a',g:'Analysis',c:'#333',n:'2a',t:'영업관리 프로세스 구축'},
+    {id:'project2b',g:'Analysis',c:'#333',n:'2b',t:'통합 데이터셋 구축 및 액션 매트릭스 수립'},
+    {id:'project2c',g:'Analysis',c:'#333',n:'2c',t:'액션제안 및 모니터링 대시보드 제작'},
+    {id:'project2d',g:'Analysis',c:'#333',n:'2d',t:'액션제안 대시보드 1차 고도화'},
+    {id:'project2e',g:'Analysis',c:'#333',n:'2e',t:'액션제안 대시보드 2차 고도화'},
+    {id:'project3a',g:'Analysis',c:'#333',n:'3a',t:'첫결제 프로모션 쿠폰 설계'},
+    {id:'project3b',g:'Analysis',c:'#333',n:'3b',t:'사업계획 달성 시나리오'},
+    {id:'project3c',g:'Analysis',c:'#333',n:'3c',t:'클릭/거래이벤트 집행 및 성과 분석'},
+    {id:'viz-v1a',g:'Visualization',c:'#1a56db',n:'V1a',t:'W-1(저번주) 성과예측 대시보드'},
+    {id:'viz-v1b',g:'Visualization',c:'#1a56db',n:'V1b',t:'마케팅 실적 리포트'},
+    {id:'viz-v1c',g:'Visualization',c:'#1a56db',n:'V1c',t:'공유주차 서비스 자치구별 실적'},
+    {id:'viz-v2a',g:'Visualization',c:'#1a56db',n:'V2a',t:'제휴일반 대시보드'},
+    {id:'viz-v2b',g:'Visualization',c:'#1a56db',n:'V2b',t:'판매중단 시설관리 대시보드'},
+    {id:'viz-v2c',g:'Visualization',c:'#1a56db',n:'V2c',t:'장기권 슬롯관리 대시보드'},
+    {id:'viz-v3a',g:'Visualization',c:'#1a56db',n:'V3a',t:'퍼널 대시보드'},
+    {id:'viz-v3b',g:'Visualization',c:'#1a56db',n:'V3b',t:'코호트 분석 리포트'},
+    {id:'viz-v3c',g:'Visualization',c:'#1a56db',n:'V3c',t:'여의도 불꽃축제 동적 수요지도'},
+    {id:'ai-a1',g:'AI Usage',c:'#e67e22',n:'AT1',t:'BTS 광화문 콘서트 주차장 영향분석'},
+    {id:'ai-a2',g:'AI Usage',c:'#e67e22',n:'AT2',t:'Airbridge 앱 설치 유입경로 분석'},
+    {id:'ai-a3',g:'AI Usage',c:'#e67e22',n:'AT3',t:'데이터업무 슬랙봇 설계 및 구축'}
+  ];
+  secs.forEach(s=>{
+    const el=document.getElementById(s.id);if(!el)return;
+    const snips=[];
+    el.querySelectorAll('.sum-value,.img-cap').forEach(e=>{const t=e.textContent.trim();if(t.length>1)snips.push({text:t})});
+    idx.push({id:s.id,group:s.g,color:s.c,num:s.n,title:s.t,snippets:snips});
+  });
+  let fi=-1,ci=[];
+  function open(){ov.classList.add('open');md.classList.add('open');inp.value='';res.innerHTML='';res.classList.remove('has-query');fi=-1;setTimeout(()=>inp.focus(),50)}
+  function close(){ov.classList.remove('open');md.classList.remove('open');inp.blur()}
+  function hl(t,q){if(!q)return t;return t.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>')}
+  function preview(item,q){
+    for(const s of item.snippets){if(s.text.toLowerCase().includes(q)){
+      const i=s.text.toLowerCase().indexOf(q),st=Math.max(0,i-25),en=Math.min(s.text.length,i+q.length+50);
+      return (st>0?'...':'')+s.text.slice(st,en)+(en<s.text.length?'...':'');
+    }}return '';
+  }
+  function render(query){
+    res.innerHTML='';ci=[];fi=-1;
+    if(!query){res.classList.remove('has-query');return}
+    res.classList.add('has-query');
+    const q=query.toLowerCase();
+    const m=idx.filter(i=>i.title.toLowerCase().includes(q)||i.num.toLowerCase().includes(q)||i.snippets.some(s=>s.text.toLowerCase().includes(q)));
+    let lg='';
+    m.forEach(item=>{
+      if(item.group!==lg){lg=item.group;const g=document.createElement('div');g.className='sr-group';g.textContent=lg;res.appendChild(g)}
+      const pv=preview(item,q),div=document.createElement('div');
+      div.className='sr-item';
+      div.innerHTML=`<div class="sr-icon" style="background:${item.color}">${item.num}</div><div class="sr-text"><div class="sr-title">${hl(item.title,query)}</div><div class="sr-breadcrumb">${item.group}</div>${pv?'<div class="sr-preview">'+hl(pv,query)+'</div>':''}</div><div class="sr-arrow">&rsaquo;</div>`;
+      div.addEventListener('click',()=>{close();const sec=document.getElementById(item.id);if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'})});
+      res.appendChild(div);ci.push(div);
+    });
+  }
+  function focus(i){ci.forEach(e=>e.classList.remove('focused'));if(i>=0&&i<ci.length){fi=i;ci[i].classList.add('focused');ci[i].scrollIntoView({block:'nearest'})}}
+  tog.addEventListener('click',open);
+  ov.addEventListener('click',close);
+  document.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open();return}
+    if(e.key==='Escape'&&md.classList.contains('open')){close();return}
+    if(!md.classList.contains('open'))return;
+    if(e.key==='ArrowDown'){e.preventDefault();focus(Math.min(fi+1,ci.length-1))}
+    if(e.key==='ArrowUp'){e.preventDefault();focus(Math.max(fi-1,0))}
+    if(e.key==='Enter'&&fi>=0){e.preventDefault();ci[fi].click()}
+  });
+  const sug=document.getElementById('searchSuggest'),clr=document.getElementById('searchClear');
+  function updateUI(){
+    const has=inp.value.trim().length>0;
+    if(sug)sug.style.display=has?'none':'block';
+    if(clr)clr.classList.toggle('visible',has);
+  }
+  if(clr)clr.addEventListener('click',()=>{inp.value='';render('');updateUI();inp.focus()});
+  let db;inp.addEventListener('input',()=>{clearTimeout(db);db=setTimeout(()=>{render(inp.value.trim());updateUI()},80)});
+  if(sug){sug.querySelectorAll('.search-suggest-tag').forEach(tag=>{
+    tag.addEventListener('click',()=>{
+      const kw=tag.getAttribute('data-kw');
+      inp.value=kw;render(kw);updateUI();inp.focus();
+    });
+  })}
+})();
+</script>
+
+<!-- Scroll to top -->
+<button id="sTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="position:fixed;bottom:20px;right:20px;width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:rgba(255,255,255,.9);backdrop-filter:blur(10px);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all .3s;z-index:998">
+  <svg width="14" height="14" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"><polyline points="3,9 7,4 11,9"/></svg>
+</button>
+<script>
+(function(){const b=document.getElementById('sTop');let v=false;
+window.addEventListener('scroll',()=>{const s=window.scrollY>300;if(s!==v){v=s;b.style.opacity=s?'1':'0';b.style.pointerEvents=s?'auto':'none'}},{passive:true});
+b.addEventListener('mouseover',()=>{b.style.background='var(--text)';b.querySelector('svg').style.stroke='#fff'});
+b.addEventListener('mouseout',()=>{b.style.background='rgba(255,255,255,.9)';b.querySelector('svg').style.stroke='#333'});
+})();
+</script>
+</body>
+</html>
