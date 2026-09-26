@@ -29,8 +29,10 @@ def data_uri(path):
     return cache[path]
 
 
-html = re.sub(r'src="(portfolio_images/thumbs/[^"]+|portfolio_images/notion/notion_00\.jpg)"',
-              lambda m: 'src="%s"' % data_uri(m.group(1)), html)
+# 아티팩트본은 이미지 파일을 함께 발행하므로 경로를 그대로 둔다. 로컬 뷰어본만 base64로 내장한다.
+if not artifact:
+    html = re.sub(r'src="(portfolio_images/thumbs/[^"]+|portfolio_images/notion/notion_00\.jpg)"',
+                  lambda m: 'src="%s"' % data_uri(m.group(1)), html)
 
 
 def srcs(m):
@@ -39,7 +41,8 @@ def srcs(m):
         data_uri("portfolio_images/thumbs/" + os.path.splitext(os.path.basename(f))[0] + ".jpg") for f in files)
 
 
-html = re.sub(r'data-srcs="([^"]+)"', srcs, html)
+if not artifact:
+    html = re.sub(r'data-srcs="([^"]+)"', srcs, html)
 if demo_base:
     html = html.replace('data-demo="demos/', f'data-demo="{demo_base}demos/')
 

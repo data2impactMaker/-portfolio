@@ -147,7 +147,23 @@ async function ask(q){
 ['이번 주 캠페인 성과 알려줘','9월 1차 라이트 쿠폰 드로우 기획 배경','드로우 쿠폰 현황 진단해줘','토스페이 오픈 공지 써줘','영업전략 알려줘'].forEach(t=>{const b=document.createElement('button');b.textContent=t;b.addEventListener('click',()=>ask(t));chips.appendChild(b)});
 send.addEventListener('click',()=>ask(inp.value));
 inp.addEventListener('keydown',e=>{if(e.key==='Enter')ask(inp.value)});
-botMsg(`안녕하세요, 모케터입니다. 캠페인 성과 · 기획 배경 · 쿠폰 현황을 답하고 공지 초안을 씁니다. 아래 예시를 눌러 보세요.<div class="src">이 화면은 포트폴리오용 데모입니다. 응답은 미리 준비한 예시 데이터로 만들어지며 실제 사내 데이터에 연결되지 않습니다.</div>`);
+// 썸네일용 샘플 대화. #sample = 모케터, #sample-databot = 데이터업무 슬랙봇
+const SAMPLE=location.hash.replace('#','');
+if(SAMPLE==='sample'||SAMPLE==='sample-databot'){
+  document.querySelector('.compose .chips').hidden=true;
+  if(SAMPLE==='sample-databot'){
+    document.querySelector('.head b').textContent='데이터봇';document.querySelector('.head span').textContent='데이터업무 요청 접수';document.querySelector('.ch.active').innerHTML='<span class="dot"></span>데이터봇';document.querySelector('.head .av').textContent='D';document.querySelector('.head .av').style.background='linear-gradient(135deg,#1264a3,#36c5f0)';
+    const u=userMsg('지난주 신규가입자 중 첫 결제까지 걸린 시간 분포 뽑아줘. 지역별로도 나눠서.');u.querySelector('.react').hidden=false;
+    const m=botMsg(`요청을 <b>데이터 추출</b>로 분류했습니다. 아래 내용으로 티켓을 만들었어요.`+tbl(['항목','내용'],[['요청 유형','데이터 추출 · 분포 분석'],['기간','지난주 (09-15 ~ 09-21) 가입자'],['지표','가입 → 첫 결제 소요 시간 (중앙값·분위)'],['분할','서울 자치구 · 경기 시군'],['담당','기획분석팀 · 예상 1일']])+`<div class="notice">🎫 Jira 티켓 <b>DATA-412</b> 생성 · 진행 상황은 스레드로 알려드립니다.</div><div class="src">출처: 요청 분류 규칙 · 예시 데이터</div>`);
+    m.querySelector('.av').textContent='D';m.querySelector('.av').style.background='linear-gradient(135deg,#1264a3,#36c5f0)';m.querySelector('.name').firstChild.textContent='데이터봇';
+  }else{
+    const u=userMsg('이번 주 캠페인 성과 알려줘');u.querySelector('.react').hidden=false;
+    botMsg(ANSWERS.perf());
+    const u2=userMsg('9월 1차 라이트 쿠폰 드로우 배경은?');u2.querySelector('.react').hidden=false;
+    botMsg(ANSWERS.background('9월 1차 라이트 쿠폰 드로우'));
+  }
+  log.scrollTop=0;
+}else botMsg(`안녕하세요, 모케터입니다. 캠페인 성과 · 기획 배경 · 쿠폰 현황을 답하고 공지 초안을 씁니다. 아래 예시를 눌러 보세요.<div class="src">이 화면은 포트폴리오용 데모입니다. 응답은 미리 준비한 예시 데이터로 만들어지며 실제 사내 데이터에 연결되지 않습니다.</div>`);
 // 모달 안에서 ESC로 닫기
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&window.parent!==window)window.parent.postMessage('close-demo','*')});
 </script>

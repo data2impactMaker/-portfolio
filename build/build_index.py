@@ -11,6 +11,21 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IMG = "portfolio_images/notion"
 THUMB = "portfolio_images/thumbs"
+FULL = "portfolio_images/full"
+
+# 썸네일 규칙. 기본은 16:10 창을 원본 상단에서 자르되, 원본 폭이 넓으면 최대 1400px 구간만 확대해 글자가 보이게 한다.
+# y: 창 시작 높이 비율, x: 창 시작 폭 비율, w: 창 폭(px), mode: "contain"이면 전체를 축소해 담는다.
+THUMB_CROP = {
+    "notion_01": {"y": 0.30, "w": 652}, "notion_02": {"y": 0.18}, "notion_03": {"y": 0.0, "w": 2000},
+    "notion_08": {"y": 0.35}, "notion_12": {"y": 0.02, "w": 1500}, "notion_13": {"y": 0.47, "w": 1000},
+    "notion_17": {"y": 0.02, "w": 1468}, "notion_18": {"y": 0.0, "w": 3000}, "notion_20": {"y": 0.0, "w": 1484},
+    "notion_23": {"y": 0.0, "w": 1991}, "notion_24": {"y": 0.0, "w": 1475}, "notion_25": {"y": 0.03, "w": 1600},
+    "notion_29_slackbot": {"mode": "contain"}, "notion_2026_fireworks_mobile": {"mode": "contain"},
+    "notion_2026_causal_4to6": {"y": 0.22}, "notion_2026_causal_optin": {"y": 0.25},
+    "notion_2026_crm_onboarding": {"y": 0.35}, "notion_2026_draw_taxonomy": {"y": 0.25},
+    "notion_2026_atlas_buckets": {"y": 0.10}, "notion_2026_moketer_storage": {"y": 0.45},
+    "notion_2026_moketer_arch": {"y": 0.05},
+}
 
 # ── 섹션 정의 ─────────────────────────────────────────────
 SECTIONS = [
@@ -75,17 +90,20 @@ CARDS = [
          title="데이터업무 슬랙봇 설계 및 구축",
          rows=[("목적", "데이터업무 요청(추출·분석·해석·이벤트 설계)을 슬랙에서 AI로 자동 처리하는 봇 구축"),
                ("결과", "Slack Bolt, Claude API, Jira Cloud API를 GCP Cloud Run에 배포하여 요청을 자동 분류·처리·티켓 생성")],
-         imgs=[("notion_29_slackbot.png", "데이터업무 슬랙봇 설계서: AI 응답 시뮬레이션 및 시스템 아키텍처")]),
+         imgs=[("notion_2025_databot_chat.png", "데이터 요청 접수 대화 예시: 요청 분류와 Jira 티켓 자동 생성"),
+               ("notion_29_slackbot.png", "데이터업무 슬랙봇 설계서: AI 응답 시뮬레이션 및 시스템 아키텍처")]),
     dict(id="ai-a1", sec="ai", part="AI 활용 분석·업무 자동화", year="2026", tool="Claude Code · Kakao Map API",
          title="BTS 광화문 콘서트 주차장 영향분석",
          rows=[("목적", "콘서트 대비 인근 주차장 수용 가능량 사전 분석 및 수요 예측"),
                ("결과", "카카오맵 API·BigQuery·웹서칭을 오케스트레이션한 IMPACT MAP 제작, 영업팀 사전 대비에 활용")],
          imgs=[("notion_28_bts_impact.png", "IMPACT MAP (2026.03.28 공연일 기준)")], dark=True),
-    dict(id="ai-a2", sec="ai", part="AI 활용 분석·업무 자동화", year="2026", tool="Claude Code · BigQuery",
-         title="Airbridge 앱 설치 유입경로 분석",
-         rows=[("목적", "Airbridge 앱 설치 이벤트의 채널별 유입경로 현황 분석"),
-               ("결과", "채널별 인스톨 비중 및 캠페인 성과를 추출·시각화하여 마케팅 의사결정에 활용")],
-         imgs=[("notion_30_airbridge.png", "채널별 인스톨 비중 및 Top 10 (2025.08 ~ 2026.01)")], dark=True),
+    dict(id="ai-fireworks", sec="ai", part="AI 활용 분석·업무 자동화", year="2026", tool="Claude Code · Cloudflare",
+         title="여의도 불꽃축제 관람 명소와 주차 안내 웹",
+         rows=[("목적", "축제 당일 관람 명소·교통 통제·주차 경로를 한 페이지로 안내하는 대고객 웹 제작"),
+               ("결과", "수요 분석 결과를 안내 페이지로 옮겨 공개 배포, 모바일 우선 레이아웃 (라이브 페이지 체험 가능)")],
+         demo=("https://www.modubiz.cloud/fireworks-guide/", "불꽃축제 주차 안내 웹", "external"),
+         imgs=[("notion_2026_fireworks_web.png", "불꽃축제 안내 웹: 데스크톱 화면"),
+               ("notion_2026_fireworks_mobile.png", "불꽃축제 안내 웹: 모바일 화면")]),
 
     # 의사결정 체계 ─────────────────────────────
     dict(id="dc-causal", sec="decision", part="순효과 측정·분석 지원", year="2026", tool="DID · CUPED · 회귀 보정",
@@ -100,7 +118,8 @@ CARDS = [
          rows=[("목적", "마케팅 데이터 추출·분석 요청의 대화형 처리와 캠페인 일정·성과 공유"),
                ("결과", "슬랙 질의응답·운영 대시보드·자동화가 같은 GCS 저장소를 보는 구조로 마케팅 분석 요청 95% 감축")],
          demo=("demos/moketer.html", "모케터 슬랙봇"),
-         imgs=[("notion_2026_moketer_system.png", "모케터 시스템 정리: 슬랙 질의응답 4종·운영 대시보드 4종·자동 실행 4종"),
+         imgs=[("notion_2026_moketer_chat.png", "모케터 대화 예시: 주간 캠페인 성과 조회와 기획 배경 질의"),
+               ("notion_2026_moketer_system.png", "모케터 시스템 정리: 슬랙 질의응답 4종·운영 대시보드 4종·자동 실행 4종"),
                ("notion_2026_moketer_arch.png", "아키텍처: Cloud Run 한 서비스에 질의응답·운영 화면·자동 실행"),
                ("notion_2026_slackbots.png", "슬랙봇 통합관리: 봇별 역할·실행 형태·주기")]),
     dict(id="dc-dashboard", sec="decision", part="순효과 측정·분석 지원", year="2026", tool="Flask · GCS · Cloud Run",
@@ -247,12 +266,16 @@ def thumb(fname):
     return f"{THUMB}/{os.path.splitext(fname)[0]}.jpg"
 
 
+def full(fname):
+    return f"{FULL}/{os.path.splitext(fname)[0]}.jpg"
+
+
 def render_card(c):
     sec = next(s for s in SECTIONS if s["id"] == c["sec"])
     imgs = c["imgs"]
     if imgs:
         first = imgs[0][0]
-        srcs = "|".join(f"{IMG}/{f}" for f, _ in imgs)
+        srcs = "|".join(full(f) for f, _ in imgs)
         caps = "|".join(E(cap) for _, cap in imgs)
         count = f'<span class="thumb-count">{len(imgs)}장</span>' if len(imgs) > 1 else ""
         dark = " dark" if c.get("dark") else ""
@@ -266,9 +289,13 @@ def render_card(c):
         for l, t in c["rows"])
     demo = ""
     if c.get("demo"):
-        src, label = c["demo"]
-        demo = (f'<button class="demo-btn" data-demo="{src}" data-title="{E(label)}" onclick="openDemo(this)">'
-                f'<svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l8 5-8 5z"/></svg>{E(label)} 체험하기</button>')
+        src, label = c["demo"][0], c["demo"][1]
+        if len(c["demo"]) > 2 and c["demo"][2] == "external":
+            demo = (f'<a class="demo-btn" href="{src}" target="_blank" rel="noopener">'
+                    f'<svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l8 5-8 5z"/></svg>{E(label)} 라이브 열기</a>')
+        else:
+            demo = (f'<button class="demo-btn" data-demo="{src}" data-title="{E(label)}" onclick="openDemo(this)">'
+                    f'<svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l8 5-8 5z"/></svg>{E(label)} 체험하기</button>')
     year_cls = "tag-year new" if c["year"] == "2026" else "tag-year"
     return f'''<article class="card" id="{c["id"]}" data-sec="{sec["label"]}" data-part="{E(c["part"])}" data-title="{E(c["title"])}">
   {media}
@@ -332,15 +359,34 @@ def make_thumbs():
     from PIL import Image
     import glob
     os.makedirs(os.path.join(ROOT, THUMB), exist_ok=True)
+    os.makedirs(os.path.join(ROOT, FULL), exist_ok=True)
+    used = {os.path.splitext(f)[0] for c in CARDS for f, _ in c["imgs"]}
     for f in sorted(glob.glob(os.path.join(ROOT, IMG, "notion_*"))):
         name = os.path.splitext(os.path.basename(f))[0]
-        if name == "notion_00":
+        if name not in used:
             continue
         im = Image.open(f).convert("RGB")
         w, h = im.size
-        th = int(w * 10 / 16)
-        if h > th:
-            im = im.crop((0, 0, w, th))
+        # 라이트박스용: 원본 비율 유지, 최대 폭 1400
+        fw = min(w, 1400)
+        im.resize((fw, int(h * fw / w)), Image.LANCZOS).save(os.path.join(ROOT, FULL, name + ".jpg"), quality=80, optimize=True)
+        # 썸네일
+        spec = THUMB_CROP.get(name, {})
+        if spec.get("mode") == "contain":
+            canvas = Image.new("RGB", (720, 450), (244, 244, 245))
+            fit = im.copy()
+            fit.thumbnail((700, 430), Image.LANCZOS)
+            canvas.paste(fit, ((720 - fit.size[0]) // 2, (450 - fit.size[1]) // 2))
+            canvas.save(os.path.join(ROOT, THUMB, name + ".jpg"), quality=82, optimize=True)
+            continue
+        cw = int(min(w, spec.get("w", 1400)))
+        ch = int(cw * 10 / 16)
+        if ch > h:
+            ch = h
+            cw = int(min(w, ch * 16 / 10))
+        x0 = int(min(max(0, spec.get("x", 0.0)) * w, w - cw))
+        y0 = int(min(max(0, spec.get("y", 0.0)) * h, h - ch))
+        im = im.crop((x0, y0, x0 + cw, y0 + ch))
         im = im.resize((720, int(720 * im.size[1] / im.size[0])), Image.LANCZOS)
         im.save(os.path.join(ROOT, THUMB, name + ".jpg"), quality=82, optimize=True)
 
