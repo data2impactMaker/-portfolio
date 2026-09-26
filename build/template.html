@@ -136,6 +136,21 @@
   .lb-next{right:16px;top:50%;transform:translateY(-50%)}
   .lb-btn.hidden{display:none}
 
+  /* ── Demo modal ── */
+  .demo-btn{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#fff;background:var(--blue);border:none;border-radius:6px;padding:5px 11px;cursor:pointer;font-family:inherit;margin-top:2px;align-self:flex-start}
+  .demo-btn:hover{filter:brightness(.92)}
+  .demo-btn svg{width:11px;height:11px}
+  .demo-modal{position:fixed;inset:0;z-index:2100;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s}
+  .demo-modal.open{opacity:1;pointer-events:auto}
+  .demo-frame{width:min(1100px,100%);height:min(720px,100%);background:#fff;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 12px 48px rgba(0,0,0,.4)}
+  .demo-bar{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--alt);font-size:12px}
+  .demo-bar b{font-size:13px}
+  .demo-bar .note{color:var(--muted);font-size:11px}
+  .demo-bar a{margin-left:auto;font-size:11px;color:var(--blue);text-decoration:none;white-space:nowrap}
+  .demo-bar button{border:none;background:#fff;border:1px solid var(--border);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1}
+  .demo-frame iframe{flex:1;border:none;width:100%}
+  @media(max-width:700px){.demo-modal{padding:0}.demo-frame{border-radius:0;height:100%}}
+
   /* ── Footer ── */
   .footer{text-align:center;padding:40px 20px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:56px}
   .footer p{margin-top:4px}
@@ -204,6 +219,14 @@
   <div class="lb-cap" id="lightboxCap"></div>
 </div>
 
+<!-- Demo modal -->
+<div class="demo-modal" id="demoModal">
+  <div class="demo-frame">
+    <div class="demo-bar"><b id="demoTitle"></b><span class="note">예시 데이터로 동작하는 체험판</span><a id="demoOpen" href="#" target="_blank" rel="noopener">새 창에서 열기</a><button onclick="closeDemo()" title="닫기">&times;</button></div>
+    <iframe id="demoFrame" src="about:blank" title="체험 데모"></iframe>
+  </div>
+</div>
+
 <div class="page">
 
 <!-- Cover -->
@@ -248,6 +271,22 @@
 </button>
 
 <script>
+// Demo modal
+function openDemo(btn){
+  const src=btn.dataset.demo,title=btn.dataset.title;
+  document.getElementById('demoTitle').textContent=title;
+  document.getElementById('demoOpen').href=src;
+  document.getElementById('demoFrame').src=src;
+  document.getElementById('demoModal').classList.add('open');document.body.style.overflow='hidden';
+}
+function closeDemo(){
+  document.getElementById('demoModal').classList.remove('open');document.body.style.overflow='';
+  document.getElementById('demoFrame').src='about:blank';
+}
+document.getElementById('demoModal').addEventListener('click',function(e){if(e.target===this)closeDemo()});
+window.addEventListener('message',e=>{if(e.data==='close-demo')closeDemo()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('demoModal').classList.contains('open'))closeDemo()});
+
 // Lightbox (카드별 여러 장 넘김)
 let lbSrcs=[],lbCaps=[],lbIdx=0;
 function showLightbox(){

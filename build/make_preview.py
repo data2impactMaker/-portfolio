@@ -14,6 +14,8 @@ os.chdir(ROOT)
 
 out_path = sys.argv[1]
 artifact = "--artifact" in sys.argv
+# --demo-base=<prefix>: 데모 링크 앞에 붙일 경로(로컬 뷰어용)
+demo_base = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--demo-base=")), "")
 
 html = open("index.html", encoding="utf-8").read()
 cache = {}
@@ -38,6 +40,8 @@ def srcs(m):
 
 
 html = re.sub(r'data-srcs="([^"]+)"', srcs, html)
+if demo_base:
+    html = html.replace('data-demo="demos/', f'data-demo="{demo_base}demos/')
 
 if artifact:
     head = re.search(r"<title>.*?</style>", html, re.S).group(0)

@@ -136,6 +136,21 @@
   .lb-next{right:16px;top:50%;transform:translateY(-50%)}
   .lb-btn.hidden{display:none}
 
+  /* ── Demo modal ── */
+  .demo-btn{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#fff;background:var(--blue);border:none;border-radius:6px;padding:5px 11px;cursor:pointer;font-family:inherit;margin-top:2px;align-self:flex-start}
+  .demo-btn:hover{filter:brightness(.92)}
+  .demo-btn svg{width:11px;height:11px}
+  .demo-modal{position:fixed;inset:0;z-index:2100;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s}
+  .demo-modal.open{opacity:1;pointer-events:auto}
+  .demo-frame{width:min(1100px,100%);height:min(720px,100%);background:#fff;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 12px 48px rgba(0,0,0,.4)}
+  .demo-bar{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--alt);font-size:12px}
+  .demo-bar b{font-size:13px}
+  .demo-bar .note{color:var(--muted);font-size:11px}
+  .demo-bar a{margin-left:auto;font-size:11px;color:var(--blue);text-decoration:none;white-space:nowrap}
+  .demo-bar button{border:none;background:#fff;border:1px solid var(--border);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1}
+  .demo-frame iframe{flex:1;border:none;width:100%}
+  @media(max-width:700px){.demo-modal{padding:0}.demo-frame{border-radius:0;height:100%}}
+
   /* ── Footer ── */
   .footer{text-align:center;padding:40px 20px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:56px}
   .footer p{margin-top:4px}
@@ -170,7 +185,7 @@
 </div>
 <div class="viz-wrap">
   <button class="nav-btn" id="fn-decisionToggle" data-section="decision">의사결정 체계 <span class="caret">&#9662;</span></button>
-  <div class="viz-dropdown" id="fn-decisionDropdown"><div class="vd-panel"><div class="vd-group">순효과 측정·분석 지원</div><a class="vd-item" data-target="dc-causal">인과추론 기반 본부 액션별 순효과 측정</a><a class="vd-item" data-target="dc-moketer">대화형 슬랙봇 &#x27;모케터&#x27;와 CRM 대시보드</a><div class="vd-group">미결제자 원인분석</div><a class="vd-item" data-target="project1a">미결제/결제 유저군 간 접속횟수 비교분석</a><a class="vd-item" data-target="project1b">미결제/결제 유저군 간 행동 데이터 비교분석</a><a class="vd-item" data-target="project1c">검색장소 인근 구매가능 주차장 분석</a><div class="vd-group">데이터기반 영업관리 프로세스</div><a class="vd-item" data-target="project2a">영업관리 프로세스 구축</a><a class="vd-item" data-target="project2b">통합 데이터셋 구축 및 액션 매트릭스 수립</a><a class="vd-item" data-target="project2c">액션제안 및 모니터링 대시보드 제작</a><a class="vd-item" data-target="project2d">액션제안 대시보드 1차 고도화</a><a class="vd-item" data-target="project2e">액션제안 대시보드 2차 고도화</a><div class="vd-group">사업·마케팅 분석</div><a class="vd-item" data-target="project3a">첫결제 프로모션 쿠폰 최적 지급조건 설계</a><a class="vd-item" data-target="project3b">신규주차장 사업계획 달성 시나리오 도출</a><a class="vd-item" data-target="project3c">통계 기반 클릭/거래 이상치 탐지 및 원인 분석</a></div></div>
+  <div class="viz-dropdown" id="fn-decisionDropdown"><div class="vd-panel"><div class="vd-group">순효과 측정·분석 지원</div><a class="vd-item" data-target="dc-causal">인과추론 기반 본부 액션별 순효과 측정</a><a class="vd-item" data-target="dc-moketer">대화형 슬랙봇 &#x27;모케터&#x27;</a><a class="vd-item" data-target="dc-dashboard">CRM 캠페인 대시보드 (마케팅 허브)</a><div class="vd-group">미결제자 원인분석</div><a class="vd-item" data-target="project1a">미결제/결제 유저군 간 접속횟수 비교분석</a><a class="vd-item" data-target="project1b">미결제/결제 유저군 간 행동 데이터 비교분석</a><a class="vd-item" data-target="project1c">검색장소 인근 구매가능 주차장 분석</a><div class="vd-group">데이터기반 영업관리 프로세스</div><a class="vd-item" data-target="project2a">영업관리 프로세스 구축</a><a class="vd-item" data-target="project2b">통합 데이터셋 구축 및 액션 매트릭스 수립</a><a class="vd-item" data-target="project2c">액션제안 및 모니터링 대시보드 제작</a><a class="vd-item" data-target="project2d">액션제안 대시보드 1차 고도화</a><a class="vd-item" data-target="project2e">액션제안 대시보드 2차 고도화</a><div class="vd-group">사업·마케팅 분석</div><a class="vd-item" data-target="project3a">첫결제 프로모션 쿠폰 최적 지급조건 설계</a><a class="vd-item" data-target="project3b">신규주차장 사업계획 달성 시나리오 도출</a><a class="vd-item" data-target="project3c">통계 기반 클릭/거래 이상치 탐지 및 원인 분석</a></div></div>
 </div>
 <div class="viz-wrap">
   <button class="nav-btn" id="fn-infraToggle" data-section="infra">지표·인프라 <span class="caret">&#9662;</span></button>
@@ -219,6 +234,14 @@
   <div class="lb-cap" id="lightboxCap"></div>
 </div>
 
+<!-- Demo modal -->
+<div class="demo-modal" id="demoModal">
+  <div class="demo-frame">
+    <div class="demo-bar"><b id="demoTitle"></b><span class="note">예시 데이터로 동작하는 체험판</span><a id="demoOpen" href="#" target="_blank" rel="noopener">새 창에서 열기</a><button onclick="closeDemo()" title="닫기">&times;</button></div>
+    <iframe id="demoFrame" src="about:blank" title="체험 데모"></iframe>
+  </div>
+</div>
+
 <div class="page">
 
 <!-- Cover -->
@@ -232,7 +255,7 @@
       <h1>정한얼</h1>
       <p class="cover-desc">실행 가능한 인사이트 도출로 비즈니스 임팩트를 창출하는 데이터 분석가입니다.</p>
       <p class="cover-desc">간결하고 직관적인 분석으로 조직의 성과에 기여하며, AI를 적극 활용해 풀어야 할 비즈니스 문제 자체에 집중합니다.</p>
-      <p class="cover-desc small">현재 쏘카 CGO 산하 플랫폼데이터팀에서 주차 비즈니스를 담당하고 있습니다. 결과물 30건을 AI 자동화, 의사결정 체계, 지표·인프라, Visualization 네 영역으로 정리했습니다.</p>
+      <p class="cover-desc small">현재 쏘카 CGO 산하 플랫폼데이터팀에서 주차 비즈니스를 담당하고 있습니다. 결과물 31건을 AI 자동화, 의사결정 체계, 지표·인프라, Visualization 네 영역으로 정리했습니다.</p>
     </div>
   </div>
   <div class="cover-bottom">
@@ -250,7 +273,7 @@
 </div>
 <div class="viz-wrap">
   <button class="nav-btn" id="cv-decisionToggle" data-section="decision">의사결정 체계 <span class="caret">&#9662;</span></button>
-  <div class="viz-dropdown" id="cv-decisionDropdown"><div class="vd-panel"><div class="vd-group">순효과 측정·분석 지원</div><a class="vd-item" data-target="dc-causal">인과추론 기반 본부 액션별 순효과 측정</a><a class="vd-item" data-target="dc-moketer">대화형 슬랙봇 &#x27;모케터&#x27;와 CRM 대시보드</a><div class="vd-group">미결제자 원인분석</div><a class="vd-item" data-target="project1a">미결제/결제 유저군 간 접속횟수 비교분석</a><a class="vd-item" data-target="project1b">미결제/결제 유저군 간 행동 데이터 비교분석</a><a class="vd-item" data-target="project1c">검색장소 인근 구매가능 주차장 분석</a><div class="vd-group">데이터기반 영업관리 프로세스</div><a class="vd-item" data-target="project2a">영업관리 프로세스 구축</a><a class="vd-item" data-target="project2b">통합 데이터셋 구축 및 액션 매트릭스 수립</a><a class="vd-item" data-target="project2c">액션제안 및 모니터링 대시보드 제작</a><a class="vd-item" data-target="project2d">액션제안 대시보드 1차 고도화</a><a class="vd-item" data-target="project2e">액션제안 대시보드 2차 고도화</a><div class="vd-group">사업·마케팅 분석</div><a class="vd-item" data-target="project3a">첫결제 프로모션 쿠폰 최적 지급조건 설계</a><a class="vd-item" data-target="project3b">신규주차장 사업계획 달성 시나리오 도출</a><a class="vd-item" data-target="project3c">통계 기반 클릭/거래 이상치 탐지 및 원인 분석</a></div></div>
+  <div class="viz-dropdown" id="cv-decisionDropdown"><div class="vd-panel"><div class="vd-group">순효과 측정·분석 지원</div><a class="vd-item" data-target="dc-causal">인과추론 기반 본부 액션별 순효과 측정</a><a class="vd-item" data-target="dc-moketer">대화형 슬랙봇 &#x27;모케터&#x27;</a><a class="vd-item" data-target="dc-dashboard">CRM 캠페인 대시보드 (마케팅 허브)</a><div class="vd-group">미결제자 원인분석</div><a class="vd-item" data-target="project1a">미결제/결제 유저군 간 접속횟수 비교분석</a><a class="vd-item" data-target="project1b">미결제/결제 유저군 간 행동 데이터 비교분석</a><a class="vd-item" data-target="project1c">검색장소 인근 구매가능 주차장 분석</a><div class="vd-group">데이터기반 영업관리 프로세스</div><a class="vd-item" data-target="project2a">영업관리 프로세스 구축</a><a class="vd-item" data-target="project2b">통합 데이터셋 구축 및 액션 매트릭스 수립</a><a class="vd-item" data-target="project2c">액션제안 및 모니터링 대시보드 제작</a><a class="vd-item" data-target="project2d">액션제안 대시보드 1차 고도화</a><a class="vd-item" data-target="project2e">액션제안 대시보드 2차 고도화</a><div class="vd-group">사업·마케팅 분석</div><a class="vd-item" data-target="project3a">첫결제 프로모션 쿠폰 최적 지급조건 설계</a><a class="vd-item" data-target="project3b">신규주차장 사업계획 달성 시나리오 도출</a><a class="vd-item" data-target="project3c">통계 기반 클릭/거래 이상치 탐지 및 원인 분석</a></div></div>
 </div>
 <div class="viz-wrap">
   <button class="nav-btn" id="cv-infraToggle" data-section="infra">지표·인프라 <span class="caret">&#9662;</span></button>
@@ -304,7 +327,7 @@
 
 <section class="sec" id="decision">
 <div class="sec-head"><div class="sec-label" style="color:#1a56db">의사결정 체계</div><h2 class="sec-title">데이터 기반 의사결정 체계 고도화</h2><ul class="sec-intro"><li>인과추론(DID·CUPED·회귀) 기반 본부 액션별 순효과 측정</li><li>CRM 대시보드·대화형 슬랙봇 개발로 마케팅 분석 요청 95% 감축</li><li>Action Item까지 도출하는 분석 리포팅 표준화로 본부 의사결정 가속화</li></ul></div>
-<div class="part-head"><span class="part-title">순효과 측정·분석 지원</span><span class="part-count">2</span></div>
+<div class="part-head"><span class="part-title">순효과 측정·분석 지원</span><span class="part-count">3</span></div>
 <div class="grid"><article class="card" id="dc-causal" data-sec="의사결정 체계" data-part="순효과 측정·분석 지원" data-title="인과추론 기반 본부 액션별 순효과 측정">
   <div class="thumb" data-srcs="portfolio_images/notion/notion_2026_causal_4to6.png|portfolio_images/notion/notion_2026_causal_optin.png|portfolio_images/notion/notion_2026_impact_standard.png" data-caps="4~6월 앱푸시 캠페인 종합 증분: 방문은 늘고 결제는 그대로|마케팅 수신동의 유도 인앱 상세 성과분석: 실험군 대비 대조군 증분|고수요 외부이벤트 영향도 분석 표준: 수요 예측·공급 산정·판매 실행·성과 네 축 판정" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_causal_4to6.jpg" alt="인과추론 기반 본부 액션별 순효과 측정" loading="lazy"><span class="thumb-count">3장</span><div class="thumb-cap">4~6월 앱푸시 캠페인 종합 증분: 방문은 늘고 결제는 그대로</div></div>
   <div class="card-body">
@@ -313,12 +336,20 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">공급 확대·상품 조정·CRM 캠페인·신규 기능 등 본부 액션의 순효과 측정</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">실험군 대비 대조군 증분(%p)과 평시 기준선 대비 판정으로 자연 증분·외부 요인을 제외한 순효과 산출</span></div></div>
   </div>
 </article>
-<article class="card" id="dc-moketer" data-sec="의사결정 체계" data-part="순효과 측정·분석 지원" data-title="대화형 슬랙봇 &#x27;모케터&#x27;와 CRM 대시보드">
-  <div class="thumb" data-srcs="portfolio_images/notion/notion_2026_moketer_system.png|portfolio_images/notion/notion_2026_moketer_arch.png|portfolio_images/notion/notion_2026_slackbots.png" data-caps="모케터 시스템 정리: 슬랙 질의응답 4종·운영 대시보드 4종·자동 실행 4종|아키텍처: Cloud Run 한 서비스에 질의응답·운영 화면·자동 실행|슬랙봇 통합관리: 봇별 역할·실행 형태·주기" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_moketer_system.jpg" alt="대화형 슬랙봇 &#x27;모케터&#x27;와 CRM 대시보드" loading="lazy"><span class="thumb-count">3장</span><div class="thumb-cap">모케터 시스템 정리: 슬랙 질의응답 4종·운영 대시보드 4종·자동 실행 4종</div></div>
+<article class="card" id="dc-moketer" data-sec="의사결정 체계" data-part="순효과 측정·분석 지원" data-title="대화형 슬랙봇 &#x27;모케터&#x27;">
+  <div class="thumb" data-srcs="portfolio_images/notion/notion_2026_moketer_system.png|portfolio_images/notion/notion_2026_moketer_arch.png|portfolio_images/notion/notion_2026_slackbots.png" data-caps="모케터 시스템 정리: 슬랙 질의응답 4종·운영 대시보드 4종·자동 실행 4종|아키텍처: Cloud Run 한 서비스에 질의응답·운영 화면·자동 실행|슬랙봇 통합관리: 봇별 역할·실행 형태·주기" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_moketer_system.jpg" alt="대화형 슬랙봇 &#x27;모케터&#x27;" loading="lazy"><span class="thumb-count">3장</span><div class="thumb-cap">모케터 시스템 정리: 슬랙 질의응답 4종·운영 대시보드 4종·자동 실행 4종</div></div>
   <div class="card-body">
-    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Claude API · Slack · Looker Studio</span></div>
-    <h3 class="card-title">대화형 슬랙봇 &#x27;모케터&#x27;와 CRM 대시보드</h3>
-    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">마케팅 데이터 추출·분석 요청의 대화형 처리와 캠페인 일정·성과 공유</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">슬랙 질의응답·운영 대시보드·자동화가 같은 GCS 저장소를 보는 구조로 마케팅 분석 요청 95% 감축</span></div></div>
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Claude API · Slack · Cloud Run</span></div>
+    <h3 class="card-title">대화형 슬랙봇 &#x27;모케터&#x27;</h3>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">마케팅 데이터 추출·분석 요청의 대화형 처리와 캠페인 일정·성과 공유</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">슬랙 질의응답·운영 대시보드·자동화가 같은 GCS 저장소를 보는 구조로 마케팅 분석 요청 95% 감축</span></div></div><button class="demo-btn" data-demo="demos/moketer.html" data-title="모케터 슬랙봇" onclick="openDemo(this)"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l8 5-8 5z"/></svg>모케터 슬랙봇 체험하기</button>
+  </div>
+</article>
+<article class="card" id="dc-dashboard" data-sec="의사결정 체계" data-part="순효과 측정·분석 지원" data-title="CRM 캠페인 대시보드 (마케팅 허브)">
+  <div class="thumb" data-srcs="portfolio_images/notion/notion_2026_moketer_storage.png" data-caps="저장소 구성: campaigns·knowledge·banners·approvals 경로별 용도" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_moketer_storage.jpg" alt="CRM 캠페인 대시보드 (마케팅 허브)" loading="lazy"><div class="thumb-cap">저장소 구성: campaigns·knowledge·banners·approvals 경로별 용도</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Flask · GCS · Cloud Run</span></div>
+    <h3 class="card-title">CRM 캠페인 대시보드 (마케팅 허브)</h3>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">캠페인 기획·실행·분석 상태와 앱 배너 운영·퍼포먼스 마케팅 성과를 한 화면에서 운영</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">캠페인 폴더의 기획서·세팅 가이드·분석 보고를 자동 인식해 캘린더·KPI에 표시, 슬랙봇과 같은 저장소를 참조</span></div></div><button class="demo-btn" data-demo="demos/crm-dashboard.html" data-title="CRM 캠페인 대시보드" onclick="openDemo(this)"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l8 5-8 5z"/></svg>CRM 캠페인 대시보드 체험하기</button>
   </div>
 </article></div>
 <div class="part-head"><span class="part-title">미결제자 원인분석</span><span class="part-count">3</span></div>
@@ -542,6 +573,22 @@
 </button>
 
 <script>
+// Demo modal
+function openDemo(btn){
+  const src=btn.dataset.demo,title=btn.dataset.title;
+  document.getElementById('demoTitle').textContent=title;
+  document.getElementById('demoOpen').href=src;
+  document.getElementById('demoFrame').src=src;
+  document.getElementById('demoModal').classList.add('open');document.body.style.overflow='hidden';
+}
+function closeDemo(){
+  document.getElementById('demoModal').classList.remove('open');document.body.style.overflow='';
+  document.getElementById('demoFrame').src='about:blank';
+}
+document.getElementById('demoModal').addEventListener('click',function(e){if(e.target===this)closeDemo()});
+window.addEventListener('message',e=>{if(e.data==='close-demo')closeDemo()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('demoModal').classList.contains('open'))closeDemo()});
+
 // Lightbox (카드별 여러 장 넘김)
 let lbSrcs=[],lbCaps=[],lbIdx=0;
 function showLightbox(){

@@ -95,13 +95,20 @@ CARDS = [
          imgs=[("notion_2026_causal_4to6.png", "4~6월 앱푸시 캠페인 종합 증분: 방문은 늘고 결제는 그대로"),
                ("notion_2026_causal_optin.png", "마케팅 수신동의 유도 인앱 상세 성과분석: 실험군 대비 대조군 증분"),
                ("notion_2026_impact_standard.png", "고수요 외부이벤트 영향도 분석 표준: 수요 예측·공급 산정·판매 실행·성과 네 축 판정")]),
-    dict(id="dc-moketer", sec="decision", part="순효과 측정·분석 지원", year="2026", tool="Claude API · Slack · Looker Studio",
-         title="대화형 슬랙봇 '모케터'와 CRM 대시보드",
+    dict(id="dc-moketer", sec="decision", part="순효과 측정·분석 지원", year="2026", tool="Claude API · Slack · Cloud Run",
+         title="대화형 슬랙봇 '모케터'",
          rows=[("목적", "마케팅 데이터 추출·분석 요청의 대화형 처리와 캠페인 일정·성과 공유"),
                ("결과", "슬랙 질의응답·운영 대시보드·자동화가 같은 GCS 저장소를 보는 구조로 마케팅 분석 요청 95% 감축")],
+         demo=("demos/moketer.html", "모케터 슬랙봇"),
          imgs=[("notion_2026_moketer_system.png", "모케터 시스템 정리: 슬랙 질의응답 4종·운영 대시보드 4종·자동 실행 4종"),
                ("notion_2026_moketer_arch.png", "아키텍처: Cloud Run 한 서비스에 질의응답·운영 화면·자동 실행"),
                ("notion_2026_slackbots.png", "슬랙봇 통합관리: 봇별 역할·실행 형태·주기")]),
+    dict(id="dc-dashboard", sec="decision", part="순효과 측정·분석 지원", year="2026", tool="Flask · GCS · Cloud Run",
+         title="CRM 캠페인 대시보드 (마케팅 허브)",
+         rows=[("목적", "캠페인 기획·실행·분석 상태와 앱 배너 운영·퍼포먼스 마케팅 성과를 한 화면에서 운영"),
+               ("결과", "캠페인 폴더의 기획서·세팅 가이드·분석 보고를 자동 인식해 캘린더·KPI에 표시, 슬랙봇과 같은 저장소를 참조")],
+         demo=("demos/crm-dashboard.html", "CRM 캠페인 대시보드"),
+         imgs=[("notion_2026_moketer_storage.png", "저장소 구성: campaigns·knowledge·banners·approvals 경로별 용도")]),
     dict(id="project1a", sec="decision", part="미결제자 원인분석", year="2025", tool="BigQuery",
          title="미결제/결제 유저군 간 접속횟수 비교분석",
          rows=[("목적", "결제전환율 상승을 위한 우선순위 미결제 세그먼트 도출"),
@@ -257,13 +264,18 @@ def render_card(c):
     rows = "".join(
         f'<div class="sum-row"><span class="sum-label">{E(l)}</span><span class="sum-value">{E(t)}</span></div>'
         for l, t in c["rows"])
+    demo = ""
+    if c.get("demo"):
+        src, label = c["demo"]
+        demo = (f'<button class="demo-btn" data-demo="{src}" data-title="{E(label)}" onclick="openDemo(this)">'
+                f'<svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l8 5-8 5z"/></svg>{E(label)} 체험하기</button>')
     year_cls = "tag-year new" if c["year"] == "2026" else "tag-year"
     return f'''<article class="card" id="{c["id"]}" data-sec="{sec["label"]}" data-part="{E(c["part"])}" data-title="{E(c["title"])}">
   {media}
   <div class="card-body">
     <div class="card-meta"><span class="{year_cls}">{c["year"]}</span><span class="tag-tool">{E(c["tool"])}</span></div>
     <h3 class="card-title">{E(c["title"])}</h3>
-    <div class="card-summary">{rows}</div>
+    <div class="card-summary">{rows}</div>{demo}
   </div>
 </article>'''
 

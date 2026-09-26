@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM 캠페인 대시보드 체험 데모</title>
+<style>
+  :root{--bg:#f4f5f7;--panel:#fff;--side:#15161a;--text:#17181c;--sub:#5f6470;--muted:#9aa0ad;--border:#e4e6eb;--blue:#1a56db;--green:#1a7f37;--red:#c0392b;--amber:#b7791f;--r:14px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow-x:hidden}
+  body{font-family:'Noto Sans KR','Inter',-apple-system,sans-serif;font-size:13px;color:var(--text);background:var(--bg);line-height:1.55;-webkit-font-smoothing:antialiased}
+  td{white-space:nowrap}
+  .app{display:flex;min-height:100%}
+  .side{width:200px;flex-shrink:0;background:var(--side);color:#fff;padding:16px 12px;display:flex;flex-direction:column;gap:6px}
+  .brand{font-weight:800;font-size:14px;padding:4px 8px 12px}
+  .brand small{display:block;font-weight:500;font-size:10px;opacity:.6}
+  .tile{padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600;font-size:13px;opacity:.75;display:flex;align-items:center;gap:8px}
+  .tile:hover{background:rgba(255,255,255,.08);opacity:1}
+  .tile.active{background:#2a2c33;opacity:1}
+  .tile i{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .side .foot{margin-top:auto;font-size:10px;opacity:.5;padding:8px}
+  .main{flex:1;min-width:0;padding:18px 20px 28px;display:flex;flex-direction:column;gap:14px}
+  .hero{background:var(--side);color:#fff;border-radius:var(--r);padding:16px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .hero h1{font-size:17px;font-weight:800}
+  .hero .demo{margin-left:auto;font-size:10px;background:rgba(255,255,255,.12);padding:3px 10px;border-radius:100px}
+  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  .kpi{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px}
+  .kpi .lab{font-size:10px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .kpi .val{font-size:24px;font-weight:800;letter-spacing:-.5px;font-variant-numeric:tabular-nums;margin-top:2px}
+  .kpi .sub{font-size:11px;color:var(--sub)}
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px}
+  .panel h2{font-size:13px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .panel h2 .cnt{font-size:10px;color:var(--muted);background:var(--bg);border-radius:100px;padding:0 7px;font-weight:700}
+  .seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-left:auto}
+  .seg button{font-family:inherit;font-size:11px;padding:4px 10px;border:none;background:#fff;cursor:pointer;color:var(--sub)}
+  .seg button.on{background:var(--text);color:#fff}
+  .week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+  .day{min-height:120px;border:1px solid var(--border);border-radius:10px;padding:6px;background:#fafbfc}
+  .day.today{border-color:var(--blue);background:#f2f6ff}
+  .day .d{font-size:10px;color:var(--muted);font-weight:700;margin-bottom:4px}
+  .card{border-radius:8px;padding:5px 7px;font-size:11px;font-weight:600;margin-bottom:4px;cursor:pointer;border:1px solid transparent;line-height:1.35;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .card:hover{border-color:var(--text)}
+  .t-push{background:#e8f0fe;color:#1a56db}.t-inapp{background:#fdecd7;color:#b7791f}.t-lms{background:#e6f4ea;color:#1a7f37}.t-trigger{background:#efe7fb;color:#6b3fbf}
+  .st{display:inline-block;font-size:9px;padding:0 5px;border-radius:4px;background:#fff;margin-left:4px;vertical-align:1px}
+  .list{display:flex;flex-direction:column;gap:6px}
+  .row{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--border);border-radius:10px;cursor:pointer;background:#fff}
+  .row:hover{border-color:var(--text)}
+  .row .nm{font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .meta{font-size:11px;color:var(--sub);white-space:nowrap}
+  .tag{font-size:10px;padding:1px 7px;border-radius:100px;font-weight:700}
+  .tbl-wrap{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:12px}
+  th{font-size:10px;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--border)}
+  td{padding:7px 8px;border-bottom:1px solid #f0f1f4;font-variant-numeric:tabular-nums}
+  td.n{text-align:right}
+  td.sig{background:#e6f4ea;color:var(--green);font-weight:700}
+  .drawer{position:fixed;top:0;right:0;bottom:0;width:min(520px,100vw);background:#fff;box-shadow:-8px 0 30px rgba(0,0,0,.15);transform:translateX(100%);transition:transform .25s;z-index:20;display:flex;flex-direction:column}
+  .drawer.open{transform:none}
+  .drawer .dh{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+  .drawer .dh b{font-size:15px;flex:1;min-width:0}
+  .drawer .dh button{border:none;background:var(--bg);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px}
+  .tabs{display:flex;border-bottom:1px solid var(--border);padding:0 18px}
+  .tabs button{font-family:inherit;font-size:12px;font-weight:700;padding:10px 12px;border:none;background:none;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer}
+  .tabs button.on{color:var(--blue);border-bottom-color:var(--blue)}
+  .dbody{padding:16px 18px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:12px}
+  .kv{display:grid;grid-template-columns:90px 1fr;gap:6px 10px;font-size:12px}
+  .kv b{color:var(--sub);font-weight:700}
+  .step{display:flex;gap:10px;align-items:flex-start;font-size:12px}
+  .step i{width:20px;height:20px;border-radius:50%;background:var(--text);color:#fff;font-style:normal;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .gate{background:#fff7e0;border:1px solid #f1e3a0;border-radius:8px;padding:8px 10px;font-size:12px}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s;z-index:19}
+  .overlay.open{opacity:1;pointer-events:auto}
+  .gantt{display:grid;grid-template-columns:150px 1fr;gap:4px 10px;align-items:center;font-size:11px}
+  .bar-wrap{position:relative;height:18px;background:#f0f1f4;border-radius:4px}
+  .bar{position:absolute;top:2px;bottom:2px;border-radius:3px;font-size:9px;color:#fff;padding:0 6px;line-height:14px;white-space:nowrap;overflow:hidden}
+  .alert{display:flex;gap:8px;align-items:center;font-size:12px;padding:8px 10px;border-radius:8px;background:#fdecec;color:var(--red);border:1px solid #f5c6c6}
+  .alert.ok{background:#e6f4ea;color:var(--green);border-color:#bfe3c8}
+  .view{display:none;flex-direction:column;gap:14px}.view.on{display:flex}
+  @media(max-width:760px){.side{display:none}.kpis{grid-template-columns:repeat(2,1fr)}.week{grid-template-columns:repeat(2,1fr)}.main{padding:12px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand">마케팅 허브<small>기획분석팀 · 데모</small></div>
+    <div class="tile active" data-view="crm"><i style="background:#1a56db"></i>CRM 캠페인</div>
+    <div class="tile" data-view="banner"><i style="background:#b7791f"></i>앱 배너 운영</div>
+    <div class="tile" data-view="pm"><i style="background:#1a7f37"></i>퍼포먼스 마케팅</div>
+    <div class="foot">예시 데이터로 동작합니다. 실제 사내 데이터·저장소에 연결되지 않습니다.</div>
+  </aside>
+  <main class="main">
+    <div class="hero"><h1 id="heroTitle">CRM 캠페인 대시보드</h1><span id="heroSub" style="font-size:12px;opacity:.7">기획 · 실행 · 분석 상태가 한 화면에</span><span class="demo">예시 데이터 · 실제 서비스 아님</span></div>
+
+    <div class="view on" id="view-crm">
+      <div class="kpis">
+        <div class="kpi"><div class="lab">누적 캠페인</div><div class="val">128</div><div class="sub">전체 등록</div></div>
+        <div class="kpi"><div class="lab">이번 주 예정</div><div class="val" id="kWeek">3</div><div class="sub">기획 · 세팅 중</div></div>
+        <div class="kpi"><div class="lab">진행중</div><div class="val">4</div><div class="sub">상시 · 트리거형</div></div>
+        <div class="kpi"><div class="lab">이번 주 세션 순증</div><div class="val">+4,835</div><div class="sub">실험군 − 대조군 · 3시간 기준</div></div>
+      </div>
+      <div class="panel"><h2>주간 캘린더 <span class="cnt" id="calCnt"></span><div class="seg" id="typeSeg"><button class="on" data-t="all">전체</button><button data-t="push">앱푸시</button><button data-t="inapp">인앱</button><button data-t="lms">LMS</button><button data-t="trigger">트리거</button></div></h2><div class="week" id="week"></div><div style="font-size:11px;color:var(--muted);margin-top:8px">카드를 누르면 기획 · 실행 · 분석 탭이 열립니다.</div></div>
+      <div class="panel"><h2>진행중 캠페인 <span class="cnt">4</span></h2><div class="list" id="running"></div></div>
+    </div>
+
+    <div class="view" id="view-banner">
+      <div class="kpis">
+        <div class="kpi"><div class="lab">오늘 라이브</div><div class="val">7</div><div class="sub">지면 4곳</div></div>
+        <div class="kpi"><div class="lab">D-1 만료</div><div class="val" style="color:var(--red)">2</div><div class="sub">교체 필요</div></div>
+        <div class="kpi"><div class="lab">슬롯 공백</div><div class="val" style="color:var(--amber)">1</div><div class="sub">검색 배너 09-30</div></div>
+        <div class="kpi"><div class="lab">운영표 불일치</div><div class="val">0</div><div class="sub">어드민 등록 현황 대조</div></div>
+      </div>
+      <div class="panel"><h2>검증</h2><div class="list">
+        <div class="alert">D-1 만료: 지도 하단 배너 "9월 드로우 이벤트" 09-27 종료, 다음 소재 미등록</div>
+        <div class="alert">D-1 만료: 메인 팝업 "토스페이 프로모션" 09-27 종료</div>
+        <div class="alert ok">운영표와 앱 노출 피드 일치 (09-26 11:00 대조)</div>
+      </div></div>
+      <div class="panel"><h2>지면별 간트 <span class="cnt">이번 주</span></h2><div class="gantt" id="gantt"></div></div>
+    </div>
+
+    <div class="view" id="view-pm">
+      <div class="kpis">
+        <div class="kpi"><div class="lab">주간 광고비</div><div class="val">1,240만</div><div class="sub">WoW +6%</div></div>
+        <div class="kpi"><div class="lab">설치</div><div class="val">8,930</div><div class="sub">CPI 1,389원</div></div>
+        <div class="kpi"><div class="lab">설치 후 구매</div><div class="val">1,102</div><div class="sub">전환 12.3%</div></div>
+        <div class="kpi"><div class="lab">ROAS</div><div class="val">187%</div><div class="sub">순매출 기준</div></div>
+      </div>
+      <div class="panel"><h2>채널별 성과 <span class="cnt">주간</span></h2><div class="tbl-wrap"><table>
+        <tr><th>채널</th><th>비용</th><th>설치</th><th>CPI</th><th>구매</th><th>ROAS</th></tr>
+        <tr><td>Google UAC</td><td class="n">520만</td><td class="n">4,120</td><td class="n">1,262원</td><td class="n">540</td><td class="n sig">201%</td></tr>
+        <tr><td>Meta</td><td class="n">380만</td><td class="n">2,610</td><td class="n">1,456원</td><td class="n">318</td><td class="n">168%</td></tr>
+        <tr><td>Apple Search Ads</td><td class="n">210만</td><td class="n">1,540</td><td class="n">1,364원</td><td class="n">190</td><td class="n sig">192%</td></tr>
+        <tr><td>Naver GFA</td><td class="n">130만</td><td class="n">660</td><td class="n">1,970원</td><td class="n">54</td><td class="n">96%</td></tr>
+      </table></div></div>
+    </div>
+  </main>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer">
+  <div class="dh"><b id="dTitle"></b><button id="dClose">&times;</button></div>
+  <div class="tabs"><button class="on" data-tab="plan">기획</button><button data-tab="exec">실행</button><button data-tab="analysis">분석</button></div>
+  <div class="dbody" id="dBody"></div>
+</aside>
+
+<script>
+// 예시 데이터. 실제 캠페인·수치가 아니다.
+const DAYS=['월','화','수','목','금','토','일'];const TODAY=4; // 금요일
+const CAMPS=[
+  {id:1,d:0,type:'push',name:'여수세계섬박람회 개막 안내',st:'완료',size:'106만',target:'전체 · 푸시 수신동의 회원',benefit:'없음',kpi:'MAU 증분',res:{s:'+1,120',p:'+48',b:'0'},sig:['s']},
+  {id:2,d:2,type:'lms',name:'위클리특가 이탈 90일 LMS',st:'완료',size:'12만',target:'최근 90일 미결제 · 문자 수신동의',benefit:'주차권 10% 쿠폰',kpi:'거래액 증분',res:{s:'+410',p:'+130',b:'+64'},sig:['p','b']},
+  {id:3,d:4,type:'push',name:'9월 1차 라이트 쿠폰 드로우',st:'발송',size:'71만',target:'9월 미접속 · 광고 푸시 수신 가능',benefit:'10%·30%·50% 할인쿠폰 추첨',kpi:'MAU 증분',res:{s:'+3,075',p:'+219',b:'+72'},sig:['s','p','b']},
+  {id:4,d:5,type:'inapp',name:'위클리특가 주말 사용자',st:'세팅',size:'18만',target:'최근 4주 주말 결제 2회 이상',benefit:'주말 특가 노출',kpi:'거래액 증분',res:null,sig:[]},
+  {id:5,d:6,type:'trigger',name:'첫구매 유도 실험 (트리거)',st:'기획',size:'상시',target:'가입 후 7일 미구매',benefit:'첫결제 3,000원 쿠폰',kpi:'거래액 증분',res:null,sig:[]},
+];
+const RUN=[
+  {name:'세차 제휴 주차장 인앱 (상시)',type:'inapp',meta:'08-20 시작 · 반경 500m 결제 목표'},
+  {name:'첫구매 유도 트리거 캔버스',type:'trigger',meta:'가입 D+3 · D+7 발송'},
+  {name:'정기권 만료 D-7 알림',type:'push',meta:'매일 09:00 · 대상 자동 추출'},
+  {name:'마케팅 수신동의 유도 인앱',type:'inapp',meta:'미동의 회원 접속 시'},
+];
+const TN={push:'앱푸시',inapp:'인앱',lms:'LMS',trigger:'트리거'};
+const week=document.getElementById('week');let filter='all';
+function renderWeek(){
+  week.innerHTML='';let n=0;
+  DAYS.forEach((d,i)=>{
+    const day=document.createElement('div');day.className='day'+(i===TODAY?' today':'');day.innerHTML=`<div class="d">${d} 09-${22+i}</div>`;
+    CAMPS.filter(c=>c.d===i&&(filter==='all'||c.type===filter)).forEach(c=>{n++;const el=document.createElement('div');el.className='card t-'+c.type;el.innerHTML=`${c.name}<span class="st">${c.st}</span>`;el.title=c.name;el.addEventListener('click',()=>openDrawer(c));day.appendChild(el)});
+    week.appendChild(day);
+  });
+  document.getElementById('calCnt').textContent=n+'건';
+}
+document.getElementById('typeSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;filter=b.dataset.t;[...e.currentTarget.children].forEach(x=>x.classList.toggle('on',x===b));renderWeek()});
+renderWeek();
+const running=document.getElementById('running');
+RUN.forEach(r=>{const el=document.createElement('div');el.className='row';el.innerHTML=`<span class="tag t-${r.type}">${TN[r.type]}</span><span class="nm">${r.name}</span><span class="meta">${r.meta}</span>`;el.addEventListener('click',()=>openDrawer({name:r.name,type:r.type,st:'진행중',size:'상시',target:r.meta,benefit:'캠페인 설정 참조',kpi:'거래액 증분',res:{s:'+280',p:'+61',b:'+19'},sig:['b']}));running.appendChild(el)});
+
+// 드로어
+const drawer=document.getElementById('drawer'),overlay=document.getElementById('overlay'),dBody=document.getElementById('dBody');let cur=null,tab='plan';
+function openDrawer(c){cur=c;tab='plan';document.getElementById('dTitle').textContent=c.name;[...document.querySelectorAll('.tabs button')].forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));renderTab();drawer.classList.add('open');overlay.classList.add('open')}
+function closeDrawer(){drawer.classList.remove('open');overlay.classList.remove('open')}
+document.getElementById('dClose').addEventListener('click',closeDrawer);overlay.addEventListener('click',closeDrawer);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});
+document.querySelector('.tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;tab=b.dataset.tab;[...e.currentTarget.children].forEach(x=>x.classList.toggle('on',x===b));renderTab()});
+function renderTab(){
+  const c=cur;
+  if(tab==='plan')dBody.innerHTML=`<div class="kv"><b>유형</b><span>${TN[c.type]}</span><b>상태</b><span>${c.st}</span><b>목적</b><span>${c.kpi} (서브: 인지)</span><b>대상</b><span>${c.target}</span><b>혜택</b><span>${c.benefit}</span><b>발송 규모</b><span>${c.size}</span><b>실험 설계</b><span>실험군 90% · 대조군 10% 무작위</span></div><div class="gate">🙋 사람이 컨펌한 지점: 기획 방향 → 기획안 → 공지글 → 최종 발송 (4개 게이트)</div><div style="font-size:11px;color:var(--muted)">기획서 · 세팅 가이드 · 미리보기는 저장소의 캠페인 폴더에서 자동으로 읽어 옵니다 (데모에서는 생략).</div>`;
+  else if(tab==='exec')dBody.innerHTML=`<div class="step"><i>1</i><div><b>세그먼트 추출</b>: 조건 쿼리 실행 후 CSV 업로드 (external_id + group)</div></div><div class="step"><i>2</i><div><b>딥링크 생성</b>: 랜딩 화면 연결, 파라미터 검증</div></div><div class="step"><i>3</i><div><b>카피 · 미리보기</b>: iOS · Android 잠금화면 미리보기 생성 후 DM 승인</div></div><div class="step"><i>4</i><div><b>캔버스 세팅</b>: 클릭 단위 세팅 가이드대로 발송 시각 · 대조군 비율 입력</div></div><div class="step"><i>5</i><div><b>공지 · 예약 발송</b>: 전사 채널 공지 후 예약 발송, 상태값 기획 → 완료 자동 갱신</div></div>`;
+  else{
+    if(!c.res){dBody.innerHTML=`<div class="gate">아직 발송 전입니다. 발송 후 전환 기간(단발 3시간 · 인앱 24시간)이 지나면 실험군 대비 대조군 증분을 자동 집계합니다.</div>`;return}
+    const cell=(k,v)=>`<td class="n ${c.sig.includes(k)?'sig':''}">${v}</td>`;
+    dBody.innerHTML=`<div class="tbl-wrap"><table><tr><th>지표</th><th>실험군</th><th>대조군</th><th>순증</th></tr><tr><td>세션 시작</td><td class="n">12.4%</td><td class="n">9.1%</td>${cell('s',c.res.s)}</tr><tr><td>주차장 핀 클릭</td><td class="n">3.2%</td><td class="n">2.9%</td>${cell('p',c.res.p)}</tr><tr><td>구매</td><td class="n">0.41%</td><td class="n">0.33%</td>${cell('b',c.res.b)}</tr></table></div><div style="font-size:11px;color:var(--sub)">순증 = 실험군 인원 × (실험군 비율 − 대조군 비율). 색칠된 셀만 2-비율 z-검정에서 유의. 상대 lift %는 쓰지 않습니다.</div><div class="gate">부작용 점검: 앱 삭제 · 수신거부 증가 없음 (예시)</div>`;
+  }
+}
+// 배너 간트
+const G=[['지도 하단 배너','9월 드로우 이벤트',0,6,'#1a56db'],['지도 하단 배너','토스페이 프로모션',3,7,'#b7791f'],['메인 팝업','토스페이 프로모션',2,6,'#b7791f'],['검색 배너','정기권 특가',0,4,'#1a7f37'],['검색 배너','(공백)',4,7,'#d0d3da'],['이벤트 탭','추석 연휴 주차 안내',1,7,'#6b3fbf']];
+const gantt=document.getElementById('gantt');
+G.forEach(([slot,name,a,b,col])=>{gantt.insertAdjacentHTML('beforeend',`<div>${slot}</div><div class="bar-wrap"><div class="bar" style="left:${a/7*100}%;width:${(b-a)/7*100}%;background:${col}">${name}</div></div>`)});
+// 뷰 전환
+const TITLES={crm:['CRM 캠페인 대시보드','기획 · 실행 · 분석 상태가 한 화면에'],banner:['앱 배너 운영','오늘 라이브 보드 · 간트 · 검증'],pm:['퍼포먼스 마케팅','채널별 비용 · 설치 · 구매 실적']};
+document.querySelectorAll('.tile').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.tile').forEach(x=>x.classList.toggle('active',x===t));document.querySelectorAll('.view').forEach(v=>v.classList.toggle('on',v.id==='view-'+t.dataset.view));document.getElementById('heroTitle').textContent=TITLES[t.dataset.view][0];document.getElementById('heroSub').textContent=TITLES[t.dataset.view][1]}));
+// 모달 안에서 ESC로 닫기
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&window.parent!==window)window.parent.postMessage('close-demo','*')});
+</script>
+</body>
+</html>
