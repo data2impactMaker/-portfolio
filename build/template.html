@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정한얼 포트폴리오 | Data Analyst</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root{--bg:#fff;--surface:#fff;--alt:#f7f7f8;--text:#111;--sub:#555;--muted:#999;--border:#e0e0e0;--blue:#1a56db;--radius:8px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;overflow-x:hidden}
+  body{font-family:'Noto Sans KR','Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  td{white-space:nowrap}
+
+  /* ── Nav Common ── */
+  .nav-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:600;color:var(--sub);text-decoration:none;cursor:pointer;transition:all .2s;white-space:nowrap;border:1px solid var(--border);background:#fff;font-family:inherit}
+  .nav-btn .caret{font-size:9px}
+  .nav-btn:hover{background:var(--text);color:#fff;border-color:var(--text)}
+  .nav-btn.active{color:#fff;background:var(--text);border-color:var(--text)}
+
+  /* ── Float Nav ── */
+  .float-nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:999;display:flex;align-items:center;gap:4px;padding:5px 6px;border-radius:12px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.06);box-shadow:0 2px 16px rgba(0,0,0,.06);opacity:0;pointer-events:none;transition:opacity .3s;max-width:calc(100vw - 24px)}
+  .float-nav.visible{opacity:1;pointer-events:auto}
+  .float-nav .nav-btn{border:none;background:transparent}
+  .float-nav .nav-btn:hover{background:rgba(26,86,219,.05);color:var(--blue)}
+  .float-nav .nav-btn.active{color:#fff;background:var(--text)}
+  .fn-sep{width:1px;height:16px;background:var(--border);flex-shrink:0}
+  .fn-search{width:28px;height:28px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .2s;flex-shrink:0}
+  .fn-search:hover{background:var(--alt);color:var(--text)}
+
+  /* ── Dropdown ── */
+  .viz-wrap{position:relative;display:inline-block}
+  .viz-dropdown{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:340px;background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,.08);box-shadow:0 8px 32px rgba(0,0,0,.12);opacity:0;pointer-events:none;transition:all .2s;z-index:1000;overflow:hidden;text-align:left}
+  .viz-dropdown.open{opacity:1;pointer-events:auto}
+  .vd-panel{padding:6px 0;max-height:320px;overflow-y:auto}
+  .vd-group{padding:8px 16px 2px;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+  .vd-item{display:block;padding:5px 16px;font-size:12px;color:var(--sub);text-decoration:none;cursor:pointer;transition:all .15s;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+  .vd-item:hover{background:var(--alt);color:var(--blue)}
+
+  /* ── Search ── */
+  .search-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.25);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s}
+  .search-overlay.open{opacity:1;pointer-events:auto}
+  .search-modal{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-8px);z-index:1001;width:540px;max-width:calc(100vw - 32px);background:#fff;border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,.18);overflow:hidden;opacity:0;pointer-events:none;transition:all .2s}
+  .search-modal.open{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+  .si-wrap{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .si-wrap svg{flex-shrink:0;color:var(--muted)}
+  .si-wrap input{flex:1;border:none;outline:none;font-size:14px;font-family:inherit;background:transparent;color:var(--text)}
+  .si-wrap input::placeholder{color:#bbb}
+  .si-clear{display:none;width:20px;height:20px;border-radius:50%;border:none;background:var(--alt);color:var(--muted);font-size:14px;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;line-height:1;padding:0}
+  .si-clear.visible{display:flex}
+  .si-wrap .kbd{font-size:9px;color:var(--muted);background:var(--alt);border:1px solid var(--border);padding:1px 5px;border-radius:3px}
+  .search-results{max-height:380px;overflow-y:auto;padding:4px 0}
+  .search-results.has-query:empty::after{content:'일치하는 결과가 없습니다';display:block;padding:28px;text-align:center;font-size:12px;color:#bbb}
+  .search-suggest{padding:12px 16px}
+  .search-suggest-title{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px}
+  .search-suggest-tags{display:flex;gap:6px;flex-wrap:wrap}
+  .search-suggest-tag{font-size:11px;color:var(--sub);padding:4px 10px;border:1px solid var(--border);border-radius:100px;cursor:pointer;transition:all .15s;background:#fff}
+  .search-suggest-tag:hover{background:var(--text);color:#fff;border-color:var(--text)}
+  .sr-group{padding:4px 16px 2px;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+  .sr-item{display:flex;align-items:center;gap:8px;padding:8px 16px;cursor:pointer;transition:background .1s}
+  .sr-item:hover,.sr-item.focused{background:var(--alt)}
+  .sr-item .sr-text{flex:1;min-width:0}
+  .sr-item .sr-title{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sr-item mark{background:#fff3cd;border-radius:2px;padding:0 1px}
+  .sr-item .sr-breadcrumb{font-size:10px;color:var(--muted)}
+  .sr-item .sr-preview{font-size:10px;color:var(--sub);margin-top:1px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .sr-item .sr-arrow{color:#ccc;font-size:10px}
+  @keyframes sfound{0%,20%{box-shadow:0 0 0 3px rgba(26,86,219,.4)}100%{box-shadow:none}}
+  .search-found{animation:sfound 2.5s ease-out}
+
+  /* ── Page ── */
+  .page{max-width:980px;margin:0 auto;padding:0 32px}
+
+  /* ── Cover ── */
+  .cover{padding:90px 0 48px}
+  .cover-inner{display:flex;align-items:center;gap:36px;max-width:760px;margin:0 auto}
+  .cover-photo{flex-shrink:0}
+  .cover-photo img{width:140px;height:175px;object-fit:cover;border-radius:12px;border:1px solid var(--border)}
+  .cover-text{flex:1}
+  .cover-role{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px}
+  .cover-text h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin-bottom:8px}
+  .cover-desc{font-size:13px;color:var(--sub);line-height:1.8;margin-bottom:4px}
+  .cover-desc.small{font-size:12px;margin-top:10px}
+  .cover-bottom{text-align:center;margin-top:28px}
+  .cover-search{max-width:400px;margin:0 auto 12px}
+  .cover-search button{display:flex;align-items:center;gap:6px;width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--alt);cursor:pointer;font-family:inherit;font-size:12px;color:var(--muted);transition:all .2s}
+  .cover-search button:hover{border-color:#bbb}
+  .cover-search .kbd{margin-left:auto;font-size:9px;background:#eee;border:1px solid #ddd;padding:1px 4px;border-radius:3px}
+  .cover-nav{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+
+  /* ── Section ── */
+  .sec{margin-top:64px}
+  .sec-head{border-bottom:2px solid var(--text);padding-bottom:14px;margin-bottom:22px}
+  .sec-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:2px}
+  .sec-title{font-size:21px;font-weight:800;letter-spacing:-.3px;margin-bottom:8px}
+  .sec-intro{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .sec-intro li{font-size:12px;color:var(--sub);padding-left:12px;position:relative}
+  .sec-intro li::before{content:'';position:absolute;left:0;top:9px;width:4px;height:4px;border-radius:50%;background:var(--muted)}
+  .part-head{display:flex;align-items:center;gap:8px;margin:26px 0 10px}
+  .part-title{font-size:13px;font-weight:700;color:var(--text)}
+  .part-count{font-size:10px;font-weight:700;color:var(--muted);background:var(--alt);border:1px solid var(--border);border-radius:100px;padding:0 7px;line-height:16px}
+
+  /* ── Grid Card ── */
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .card{background:var(--alt);border-radius:12px;border:1px solid transparent;overflow:hidden;transition:border-color .2s,box-shadow .2s;display:flex;flex-direction:column}
+  .card:hover{border-color:var(--border);box-shadow:0 2px 14px rgba(0,0,0,.06)}
+  .thumb{position:relative;aspect-ratio:16/8;background:#fff;border-bottom:1px solid var(--border);overflow:hidden;cursor:zoom-in}
+  .thumb img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .3s}
+  .thumb:hover img{transform:scale(1.02)}
+  .thumb.dark{background:#1a1a2e}
+  .thumb-cap{position:absolute;left:0;right:0;bottom:0;padding:5px 10px;font-size:10px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.55));text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;transition:opacity .2s}
+  .thumb:hover .thumb-cap{opacity:1}
+  .thumb-count{position:absolute;top:8px;right:8px;font-size:10px;font-weight:700;color:#fff;background:rgba(0,0,0,.55);padding:1px 7px;border-radius:100px}
+  .thumb-empty{display:flex;align-items:center;justify-content:center;cursor:default;background:repeating-linear-gradient(135deg,#fafafa 0 10px,#f2f2f3 10px 20px)}
+  .thumb-empty span{font-size:11px;color:var(--muted);background:#fff;border:1px dashed var(--border);padding:4px 12px;border-radius:100px}
+  .card-body{padding:12px 16px 14px;display:flex;flex-direction:column;gap:6px}
+  .card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .tag-year{font-size:10px;font-weight:700;color:var(--sub);background:#fff;border:1px solid var(--border);border-radius:4px;padding:0 6px;line-height:17px}
+  .tag-year.new{color:#fff;background:var(--text);border-color:var(--text)}
+  .tag-tool{font-size:10px;font-weight:600;color:var(--muted)}
+  .card-title{font-size:14px;font-weight:700;line-height:1.45;color:var(--text)}
+  .card-summary{display:flex;flex-direction:column;gap:4px;background:#fff;border-radius:6px;padding:8px 10px;border:1px solid var(--border)}
+  .sum-row{display:flex;align-items:baseline;gap:8px;font-size:12px}
+  .sum-label{font-weight:700;color:#fff;background:var(--blue);flex-shrink:0;font-size:10px;padding:0 7px;border-radius:4px;line-height:17px}
+  .sum-value{color:var(--text);line-height:1.55}
+
+  /* ── Lightbox ── */
+  .lightbox{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;padding:24px;gap:10px}
+  .lightbox.open{opacity:1;pointer-events:auto}
+  .lightbox img{max-width:95vw;max-height:86vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 32px rgba(0,0,0,.4);background:#fff}
+  .lb-cap{color:#ddd;font-size:12px;text-align:center;max-width:90vw}
+  .lb-btn{position:fixed;z-index:2001;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+  .lb-btn:hover{background:rgba(255,255,255,.3)}
+  .lb-close{top:16px;right:20px}
+  .lb-prev{left:16px;top:50%;transform:translateY(-50%)}
+  .lb-next{right:16px;top:50%;transform:translateY(-50%)}
+  .lb-btn.hidden{display:none}
+
+  /* ── Footer ── */
+  .footer{text-align:center;padding:40px 20px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:56px}
+  .footer p{margin-top:4px}
+
+  /* ── Scroll top ── */
+  #sTop{position:fixed;bottom:20px;right:20px;width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:rgba(255,255,255,.9);backdrop-filter:blur(10px);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all .3s;z-index:998}
+  #sTop.visible{opacity:1;pointer-events:auto}
+  #sTop:hover{background:var(--text)}
+  #sTop:hover svg{stroke:#fff}
+
+  /* ── Responsive ── */
+  @media(max-width:700px){
+    .page{padding:0 16px}
+    .cover{padding:56px 0 36px}
+    .cover-inner{flex-direction:column;text-align:center}
+    .cover-text h1{font-size:28px}
+    .grid{grid-template-columns:1fr}
+    .float-nav{padding:4px 5px;gap:2px}
+    .float-nav .nav-btn{padding:5px 8px;font-size:10px}
+    .viz-dropdown{width:280px;left:auto;right:-40px;transform:none}
+    .sec-title{font-size:18px}
+  }
+</style>
+</head>
+<body>
+
+<!-- Float Nav -->
+<nav class="float-nav" id="floatNav">
+{{FLOAT_NAV}}
+  <div class="fn-sep"></div>
+  <button class="fn-search" id="searchToggle" title="검색 (Ctrl+K)">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
+  </button>
+</nav>
+
+<!-- Search -->
+<div class="search-overlay" id="searchOverlay"></div>
+<div class="search-modal" id="searchModal">
+  <div class="si-wrap">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="7" r="5"/><line x1="11" y1="11" x2="15" y2="15"/></svg>
+    <input type="text" id="searchInput" placeholder="프로젝트명, 목적, 결과, 도구로 검색" autocomplete="off">
+    <button class="si-clear" id="searchClear">&times;</button>
+    <span class="kbd">ESC</span>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+  <div class="search-suggest" id="searchSuggest">
+    <div class="search-suggest-title">추천 키워드</div>
+    <div class="search-suggest-tags">
+      <span class="search-suggest-tag" data-kw="CRM">CRM</span>
+      <span class="search-suggest-tag" data-kw="인과추론">인과추론</span>
+      <span class="search-suggest-tag" data-kw="슬랙봇">슬랙봇</span>
+      <span class="search-suggest-tag" data-kw="전환율">전환율</span>
+      <span class="search-suggest-tag" data-kw="퍼널">퍼널</span>
+      <span class="search-suggest-tag" data-kw="지표">지표</span>
+      <span class="search-suggest-tag" data-kw="Claude">Claude</span>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-btn lb-close" onclick="closeLightbox()" title="닫기">&times;</button>
+  <button class="lb-btn lb-prev" id="lbPrev" onclick="stepLightbox(-1)" title="이전">&lsaquo;</button>
+  <button class="lb-btn lb-next" id="lbNext" onclick="stepLightbox(1)" title="다음">&rsaquo;</button>
+  <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
+  <div class="lb-cap" id="lightboxCap"></div>
+</div>
+
+<div class="page">
+
+<!-- Cover -->
+<header class="cover" id="hero">
+  <div class="cover-inner">
+    <div class="cover-photo">
+      <img src="portfolio_images/notion/notion_00.jpg" alt="정한얼">
+    </div>
+    <div class="cover-text">
+      <div class="cover-role">Data Analyst</div>
+      <h1>정한얼</h1>
+      <p class="cover-desc">실행 가능한 인사이트 도출로 비즈니스 임팩트를 창출하는 데이터 분석가입니다.</p>
+      <p class="cover-desc">간결하고 직관적인 분석으로 조직의 성과에 기여하며, AI를 적극 활용해 풀어야 할 비즈니스 문제 자체에 집중합니다.</p>
+      <p class="cover-desc small">현재 쏘카 CGO 산하 플랫폼데이터팀에서 주차 비즈니스를 담당하고 있습니다. 결과물 {{CARD_COUNT}}건을 AI 자동화, 의사결정 체계, 지표·인프라, Visualization 네 영역으로 정리했습니다.</p>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div class="cover-search">
+      <button onclick="openSearch()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><line x1="8.5" y1="8.5" x2="12" y2="12"/></svg>
+        원하는 내용을 검색하세요
+        <span class="kbd">Ctrl+K</span>
+      </button>
+    </div>
+    <div class="cover-nav">
+{{COVER_NAV}}
+    </div>
+  </div>
+</header>
+
+{{SECTIONS}}
+
+<footer class="footer" id="contact">
+  <strong style="color:var(--text)">정한얼</strong> &middot; Data Analyst
+  <p>실행 가능한 인사이트 도출로 비즈니스 임팩트를 창출합니다.</p>
+</footer>
+
+</div>
+
+<button id="sTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="맨 위로">
+  <svg width="14" height="14" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"><polyline points="3,9 7,4 11,9"/></svg>
+</button>
+
+<script>
+// Lightbox (카드별 여러 장 넘김)
+let lbSrcs=[],lbCaps=[],lbIdx=0;
+function showLightbox(){
+  document.getElementById('lightboxImg').src=lbSrcs[lbIdx];
+  document.getElementById('lightboxCap').textContent=(lbSrcs.length>1?`${lbIdx+1} / ${lbSrcs.length}  `:'')+(lbCaps[lbIdx]||'');
+  const multi=lbSrcs.length>1;
+  document.getElementById('lbPrev').classList.toggle('hidden',!multi);
+  document.getElementById('lbNext').classList.toggle('hidden',!multi);
+}
+function openLightbox(box){
+  lbSrcs=(box.dataset.srcs||'').split('|').filter(Boolean);
+  lbCaps=(box.dataset.caps||'').split('|');
+  if(!lbSrcs.length)return;
+  lbIdx=0;showLightbox();
+  document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';
+}
+function stepLightbox(d){if(!lbSrcs.length)return;lbIdx=(lbIdx+d+lbSrcs.length)%lbSrcs.length;showLightbox()}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow=''}
+document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLightbox()});
+document.addEventListener('keydown',e=>{
+  const lb=document.getElementById('lightbox');if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLightbox();
+  if(e.key==='ArrowRight')stepLightbox(1);
+  if(e.key==='ArrowLeft')stepLightbox(-1);
+});
+
+// Float Nav + scroll spy
+(function(){
+  const nav=document.getElementById('floatNav'),hero=document.querySelector('.cover'),top=document.getElementById('sTop');
+  let vis=false;
+  new IntersectionObserver(([e])=>{const show=!e.isIntersecting;if(show!==vis){vis=show;nav.classList.toggle('visible',show);top.classList.toggle('visible',show)}}).observe(hero);
+  const zones=[{{SECTION_IDS}}];
+  function spy(){
+    const y=window.scrollY+120;let a='';
+    for(let z=zones.length-1;z>=0;z--){const el=document.getElementById(zones[z]);if(el&&el.offsetTop<=y){a=zones[z];break}}
+    nav.querySelectorAll('.nav-btn[data-section]').forEach(t=>t.classList.toggle('active',t.dataset.section===a));
+  }
+  let tick=false;
+  window.addEventListener('scroll',()=>{if(!tick){requestAnimationFrame(()=>{spy();tick=false});tick=true}},{passive:true});
+  spy();
+})();
+
+// Dropdowns
+(function(){
+  document.querySelectorAll('.viz-wrap').forEach(w=>{
+    const btn=w.querySelector('.nav-btn'),dd=w.querySelector('.viz-dropdown');
+    if(!btn||!dd)return;
+    btn.addEventListener('click',e=>{
+      e.preventDefault();e.stopPropagation();
+      const was=dd.classList.contains('open');
+      document.querySelectorAll('.viz-dropdown.open').forEach(d=>d.classList.remove('open'));
+      if(!was)dd.classList.add('open');
+    });
+    dd.addEventListener('click',e=>e.stopPropagation());
+    dd.querySelectorAll('.vd-item').forEach(item=>item.addEventListener('click',()=>{
+      const el=document.getElementById(item.dataset.target);
+      if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.remove('search-found');void el.offsetWidth;el.classList.add('search-found')}
+      dd.classList.remove('open');
+    }));
+  });
+  document.addEventListener('click',()=>document.querySelectorAll('.viz-dropdown.open').forEach(d=>d.classList.remove('open')));
+})();
+
+// Search (카드 DOM에서 색인 생성)
+function openSearch(){document.getElementById('searchToggle').click()}
+(function(){
+  const ov=document.getElementById('searchOverlay'),md=document.getElementById('searchModal'),
+    inp=document.getElementById('searchInput'),res=document.getElementById('searchResults'),
+    tog=document.getElementById('searchToggle'),sug=document.getElementById('searchSuggest'),clr=document.getElementById('searchClear');
+  const idx=[...document.querySelectorAll('.card')].map(el=>({
+    id:el.id,group:el.dataset.sec,part:el.dataset.part,title:el.dataset.title,
+    snippets:[...el.querySelectorAll('.sum-value,.tag-tool,.thumb-cap')].map(e=>e.textContent.trim()).filter(t=>t.length>1)
+  }));
+  let fi=-1,ci=[];
+  function open(){ov.classList.add('open');md.classList.add('open');inp.value='';res.innerHTML='';res.classList.remove('has-query');fi=-1;updateUI();setTimeout(()=>inp.focus(),50)}
+  function close(){ov.classList.remove('open');md.classList.remove('open');inp.blur()}
+  function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+  function hl(t,q){t=esc(t);if(!q)return t;return t.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>')}
+  function preview(item,q){
+    for(const s of item.snippets){const l=s.toLowerCase();if(l.includes(q)){
+      const i=l.indexOf(q),st=Math.max(0,i-25),en=Math.min(s.length,i+q.length+50);
+      return (st>0?'...':'')+s.slice(st,en)+(en<s.length?'...':'');
+    }}return '';
+  }
+  function render(query){
+    res.innerHTML='';ci=[];fi=-1;
+    if(!query){res.classList.remove('has-query');return}
+    res.classList.add('has-query');
+    const q=query.toLowerCase();
+    const m=idx.filter(i=>i.title.toLowerCase().includes(q)||i.part.toLowerCase().includes(q)||i.snippets.some(s=>s.toLowerCase().includes(q)));
+    let lg='';
+    m.forEach(item=>{
+      if(item.group!==lg){lg=item.group;const g=document.createElement('div');g.className='sr-group';g.textContent=lg;res.appendChild(g)}
+      const pv=preview(item,q),div=document.createElement('div');
+      div.className='sr-item';
+      div.innerHTML=`<div class="sr-text"><div class="sr-title">${hl(item.title,query)}</div><div class="sr-breadcrumb">${esc(item.group)} · ${esc(item.part)}</div>${pv?'<div class="sr-preview">'+hl(pv,query)+'</div>':''}</div><div class="sr-arrow">&rsaquo;</div>`;
+      div.addEventListener('click',()=>{close();const sec=document.getElementById(item.id);if(sec){sec.scrollIntoView({behavior:'smooth',block:'center'});sec.classList.remove('search-found');void sec.offsetWidth;sec.classList.add('search-found')}});
+      res.appendChild(div);ci.push(div);
+    });
+  }
+  function focus(i){ci.forEach(e=>e.classList.remove('focused'));if(i>=0&&i<ci.length){fi=i;ci[i].classList.add('focused');ci[i].scrollIntoView({block:'nearest'})}}
+  function updateUI(){const has=inp.value.trim().length>0;sug.style.display=has?'none':'block';clr.classList.toggle('visible',has)}
+  tog.addEventListener('click',open);
+  ov.addEventListener('click',close);
+  document.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open();return}
+    if(!md.classList.contains('open'))return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='ArrowDown'){e.preventDefault();focus(Math.min(fi+1,ci.length-1))}
+    if(e.key==='ArrowUp'){e.preventDefault();focus(Math.max(fi-1,0))}
+    if(e.key==='Enter'&&fi>=0){e.preventDefault();ci[fi].click()}
+  });
+  clr.addEventListener('click',()=>{inp.value='';render('');updateUI();inp.focus()});
+  let db;inp.addEventListener('input',()=>{clearTimeout(db);db=setTimeout(()=>{render(inp.value.trim());updateUI()},80)});
+  sug.querySelectorAll('.search-suggest-tag').forEach(tag=>tag.addEventListener('click',()=>{const kw=tag.dataset.kw;inp.value=kw;render(kw);updateUI();inp.focus()}));
+})();
+</script>
+</body>
+</html>
