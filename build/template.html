@@ -90,8 +90,7 @@
   .fgrp button{position:relative;z-index:1;font-family:inherit;font-size:12.5px;font-weight:600;color:#6b6b73;background:none;border:none;border-radius:999px;padding:7px 14px;cursor:pointer;letter-spacing:-.1px;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;transition:color .25s}
   .fgrp button:hover{color:var(--text)}
   .fgrp button.on{color:#fff}
-  .fgrp button .dot{width:6px;height:6px;border-radius:50%;background:var(--c,#a1a1aa);transition:background .25s,box-shadow .25s}
-  .fgrp button.on .dot{background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.18)}
+  .fgrp button .dot{display:none}
   .fdiv{width:1px;height:18px;background:#e6e6ea;margin:0 6px}
   @media(max-width:700px){.fctl{border-radius:20px;padding:5px}.fgrp{flex-wrap:wrap;justify-content:center}.fgrp .pill{display:none}.fgrp button.on{background:var(--text)}}
   .card.yr-hide,.part-head.yr-hide,.grid.yr-hide,.sec.yr-hide{display:none}
@@ -110,7 +109,7 @@
   .sec-intro{list-style:none;display:flex;flex-direction:column;gap:2px}
   .sec-intro li{font-size:12px;color:var(--sub);padding-left:12px;position:relative}
   .sec-intro li::before{content:'';position:absolute;left:0;top:9px;width:4px;height:4px;border-radius:50%;background:var(--muted)}
-  .part{border:1px solid var(--border);border-left:3px solid var(--sc,var(--text));border-radius:14px;padding:16px 16px 16px 18px;margin-top:18px;background:#fff}
+  .part{border:1px solid var(--border);border-radius:14px;padding:18px 18px 18px;margin-top:16px;background:#fff}
   .part-head{display:flex;align-items:center;gap:8px;margin:0 0 4px}
   .part-title{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.2px}
   .part-count{font-size:10px;font-weight:700;color:var(--muted);background:var(--alt);border:1px solid var(--border);border-radius:100px;padding:0 7px;line-height:16px}
