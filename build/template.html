@@ -357,7 +357,7 @@ function showLightbox(){lbReset();
   // 이전 이미지가 남아 보이지 않게 비우고 새 이미지를 올린다
   im.removeAttribute('src');im.style.opacity='0';
   const next=new Image();next.onload=()=>{if(next.src===im.dataset.want){im.src=next.src;im.style.opacity='1'}};
-  im.dataset.want=next.src=lbSrcs[lbIdx];
+  next.src=lbSrcs[lbIdx];im.dataset.want=next.src;if(next.complete){im.src=next.src;im.style.opacity='1'}
   document.getElementById('lightboxCap').textContent=(lbSrcs.length>1?`${lbIdx+1} / ${lbSrcs.length}  `:'')+(lbCaps[lbIdx]||'');
   const multi=lbSrcs.length>1;
   document.getElementById('lbPrev').classList.toggle('hidden',!multi);
