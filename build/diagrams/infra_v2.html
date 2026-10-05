@@ -55,14 +55,14 @@
 <!-- 1. 이벤트 로그 설계: 현행 / 프레임워크 적용 후 -->
 <section class="page" id="eventlog">
   <div class="eyebrow">이벤트 로그 설계 프레임워크</div>
-  <h1>기능 목록에서 출발하던 로그 설계를 비즈니스 질문에서 출발하도록 바꿨습니다</h1>
-  <p class="sub">요구사항 정의서와 유저플로우 링크만 넣으면 KPI 체계와 화면×이벤트 설계안이 표준 양식으로 나오고, 자료로 알 수 없는 것만 확인 요청으로 돌아옵니다.</p>
+  <h1>이벤트 로그 설계 프레임워크 적용 전후 비교</h1>
+  <p class="sub">요구사항 정의서 · 유저플로우 입력으로 KPI 체계와 화면×이벤트 설계안을 표준 양식으로 산출, 미확인 항목은 확인 요청으로 회신</p>
   <div class="stage">
     <div class="card"><h3><span class="n">01</span>설계 출발점</h3>
       <div class="face asis"><div class="lab">현행</div>
-        <div class="row"><b>출발:</b> 화면에 있는 버튼·요소 목록</div>
+        <div class="row"><b>출발:</b> 화면 요소 목록</div>
         <div class="row"><b>수집 범위:</b> 요소별 전수 수집</div>
-        <div class="row"><b>KPI 연결:</b> 수집 후 사후에 찾음</div></div>
+        <div class="row"><b>KPI 연결:</b> 수집 후 사후 연결</div></div>
       <div class="face tobe"><div class="lab">프레임워크 적용 후</div>
         <div class="row"><b>출발:</b> 비즈니스 질문과 가설</div>
         <div class="row"><b>수집 범위:</b> KPI에 직결되는 이벤트만</div>
@@ -70,79 +70,23 @@
     <div class="card"><h3><span class="n">02</span>설계 과정</h3>
       <div class="face asis"><div class="lab">현행</div>
         <div class="row"><b>이름 규칙:</b> 담당자마다 제각각</div>
-        <div class="row"><b>기존 이벤트:</b> 있는지 모른 채 새로 만듦</div>
-        <div class="row"><b>검증:</b> 적재 후 수기 확인</div></div>
+        <div class="row"><b>기존 이벤트:</b> 기존 이벤트 미확인 상태로 신규 생성</div>
+        <div class="row"><b>검증:</b> 적재 후 수기 검증</div></div>
       <div class="face tobe"><div class="lab">프레임워크 적용 후</div>
         <div class="row"><b>이름 규칙:</b> view·click 2종, 의미는 파라미터</div>
         <div class="row"><b>기존 이벤트:</b> 정본 조회 후 재사용 우선</div>
-        <div class="row"><b>검증:</b> 등록 전 자동 lint, 실제 수집 여부 조회</div></div></div>
+        <div class="row"><b>검증:</b> 등록 전 lint 검증 · 실제 수집 여부 조회</div></div></div>
     <div class="card"><h3><span class="n">03</span>산출물과 소통</h3>
       <div class="face asis"><div class="lab">현행</div>
-        <div class="row"><b>산출물:</b> 엑셀 표, 문서마다 양식 다름</div>
-        <div class="row"><b>빈칸 처리:</b> 추측으로 채움</div>
-        <div class="row"><b>소요:</b> 설계 회의 여러 차례</div></div>
+        <div class="row"><b>산출물:</b> 엑셀 표 · 문서별 양식 상이</div>
+        <div class="row"><b>빈칸 처리:</b> 추정값으로 작성</div>
+        <div class="row"><b>소요:</b> 설계 회의 다회</div></div>
       <div class="face tobe"><div class="lab">프레임워크 적용 후</div>
         <div class="row"><b>산출물:</b> 표준 양식(KPI 체계·화면×이벤트·등록안)</div>
-        <div class="row"><b>빈칸 처리:</b> 확인 필요 목록으로 되물음</div>
+        <div class="row"><b>빈칸 처리:</b> 확인 필요 목록으로 회신</div>
         <div class="row"><b>소요:</b> 자료 링크 입력 후 설계안 즉시 생성</div></div></div>
   </div>
 </section>
 
-<!-- 2. 데이터마트 · Git 기반 지표 SSOT -->
-<section class="page" id="ssot">
-  <div class="eyebrow">데이터마트 · Git 기반 지표 SSOT</div>
-  <h1>지표와 이벤트 정의를 한 곳에 두고, 모든 화면이 같은 정의를 읽습니다</h1>
-  <div class="tldr">리포트마다 산식이 달라 숫자가 어긋나던 문제를 <span class="hl">정의의 단일 원천</span>으로 풀었습니다. 지표는 BigQuery 마트 한 곳, 이벤트는 Git 마스터 한 곳에서만 정의하고, 대시보드·리포트 봇·슬랙봇·에이전트가 그 정의를 그대로 가져다 씁니다.</div>
-  <div class="flow">
-    <div class="step"><div class="k">원천</div><div class="t">운영 데이터와 로그</div><div class="d">결제·주차장·회원 DB, GA4·Amplitude 행동 로그, 날씨·공휴일 외부 데이터</div></div>
-    <div class="step"><div class="k">적재 · 변환</div><div class="t">Airflow + dbt</div><div class="d">원천을 마트로 정기 변환. 배포 전 DAG·모델 파싱 검증</div></div>
-    <div class="step core"><div class="k">단일 원천</div><div class="t">BigQuery 마트 · Git 정의 저장소</div><div class="d">지표 산식은 마트에, 이벤트 정의는 <span class="mono">event_master.yaml</span>에. 등록 전 lint가 규칙을 검사하고 변경은 PR로 남습니다</div></div>
-    <div class="step"><div class="k">소비처</div><div class="t">같은 정의를 읽는 화면들</div><div class="d">마케팅 대시보드, 리포팅·감시 봇 15종, 슬랙봇 모케터, AI 분석 에이전트</div></div>
-  </div>
-  <div class="two">
-    <div>
-      <table class="spec">
-        <tr><th>정의 항목</th><th>어디에 있나</th><th>무엇을 막나</th></tr>
-        <tr><td>지표 산식</td><td>BigQuery 마트 테이블 · 공용 SQL 13종</td><td>리포트마다 다른 숫자</td></tr>
-        <tr><td>이벤트 이름·파라미터</td><td>이벤트 마스터 134건 · 값 체계 룰 14종</td><td>같은 행동을 다른 이름으로 수집</td></tr>
-        <tr><td>변경 이력</td><td>Git PR · CODEOWNERS 리뷰</td><td>누가 왜 바꿨는지 모르는 정의</td></tr>
-        <tr><td>등록 검증</td><td>lint 자동 검사 · 오류면 배포 차단</td><td>규칙 위반 이벤트의 유입</td></tr>
-      </table>
-    </div>
-    <div class="box"><div style="font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:8px">정의를 바꿀 때</div>
-      <ul class="kp"><li><b>설계 요청</b>: 새 지표나 이벤트가 필요해지면</li><li><b>에이전트 설계</b>: 정본을 조회해 재사용 여부를 먼저 판단</li><li><b>lint 검증</b>: 이름 규칙·값 체계·중복을 자동 검사</li><li><b>PR 리뷰·머지</b>: 담당자 리뷰 후 정본 반영</li><li><b>즉시 적용</b>: 모든 소비처가 새 정의를 읽음</li></ul></div>
-  </div>
-</section>
 
-<!-- 3. CRM 분석 · 의사결정 통합 저장소 -->
-<section class="page" id="gcs">
-  <div class="eyebrow">CRM 분석 · 의사결정 통합 저장소</div>
-  <h1>캠페인의 기획, 실행, 분석, 결정을 한 폴더에 쌓습니다</h1>
-  <p class="sub">저장소가 곧 운영 데이터입니다. 사람이 만든 문서든 에이전트가 만든 분석이든 같은 자리에 들어가고, 슬랙봇·대시보드·에이전트는 그 파일을 직접 읽어 같은 숫자와 같은 맥락으로 답합니다.</p>
-  <div class="two" style="grid-template-columns:.8fr 1.2fr">
-    <div class="tree">
-      <b>campaigns/</b> <span class="c">캠페인마다 한 폴더</span><br>
-      &nbsp;&nbsp;기획서 <span class="c">목적 · 타겟 · 실험 설계</span><br>
-      &nbsp;&nbsp;세팅 가이드 <span class="c">카피 · 미리보기 · 발송 조건</span><br>
-      &nbsp;&nbsp;분석 보고 <span class="c">실험군 대비 대조군 · 퍼널</span><br>
-      &nbsp;&nbsp;카드 <span class="c">상태 · KPI · 대조군 비율</span><br>
-      <b>knowledge/</b> <span class="c">정책 · 가이드 · 운영 규칙</span><br>
-      <b>approvals/</b> <span class="c">검토 요청과 승인 기록</span><br>
-      <b>recommendations/</b> <span class="c">주간 추천과 채택 · 비채택 사유</span>
-    </div>
-    <div class="tiles">
-      <div class="tile co"><div class="ic">📂</div><div class="t">저장하면 끝</div><div class="d">기획서를 폴더에 넣는 순간 대시보드 카드가 생기고 슬랙봇이 같은 문서로 답합니다. 따로 등록하는 일이 없습니다</div></div>
-      <div class="tile"><div class="ic">🧭</div><div class="t">결정의 이유가 남는다</div><div class="d">누가 왜 채택했는지, 어떤 후보를 왜 보류했는지가 캠페인 옆에 기록됩니다</div></div>
-      <div class="tile"><div class="ic">🤖</div><div class="t">AI가 맥락을 읽는다</div><div class="d">에이전트가 과거 기획과 분석을 직접 찾아 읽고 다음 캠페인을 설계합니다. 검색 색인을 따로 두지 않습니다</div></div>
-    </div>
-  </div>
-  <div class="next">
-    <h2>이 저장소 위에서 다음에 할 수 있는 것</h2>
-    <ul class="kp">
-      <li><b>주간 추천의 자기 학습</b>: 채택·비채택 사유와 성과가 쌓이면 다음 주 추천 점수가 그 결과를 반영한다</li>
-      <li><b>성과 예측</b>: 같은 양식으로 쌓인 수백 건의 기획·결과를 근거로 발송 전에 기대 순증을 제시한다</li>
-      <li><b>기획안 자동 초안</b>: 비슷한 과거 캠페인을 찾아 목적·타겟·소재를 채운 초안을 먼저 내놓는다</li>
-    </ul>
-  </div>
-</section>
 </body></html>

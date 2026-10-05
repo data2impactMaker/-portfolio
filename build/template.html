@@ -93,8 +93,8 @@
   .fgrp button .dot{display:none}
   .fdiv{width:1px;height:18px;background:#e6e6ea;margin:0 6px}
   @media(max-width:700px){.fctl{border-radius:20px;padding:5px}.fgrp{flex-wrap:wrap;justify-content:center}.fgrp .pill{display:none}.fgrp button.on{background:var(--text)}}
-  .card.yr-hide,.part-head.yr-hide,.grid.yr-hide,.sec.yr-hide{display:none}
-  .card.yr-hide,.part-head.yr-hide,.grid.yr-hide,.sec.yr-hide{display:none}
+  .card.yr-hide,.part.yr-hide,.sec.yr-hide{display:none}
+  .card.yr-hide,.part.yr-hide,.sec.yr-hide{display:none}
   .cover-search{max-width:400px;margin:0 auto 12px}
   .cover-search button{display:flex;align-items:center;gap:6px;width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--alt);cursor:pointer;font-family:inherit;font-size:12px;color:var(--muted);transition:all .2s}
   .cover-search button:hover{border-color:#bbb}
@@ -322,7 +322,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
   function apply(){
     host.querySelectorAll('.fgrp').forEach(g=>{const v=g.dataset.k==='year'?year:sec;g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));movePill(g)});
     cards.forEach(c=>{const s=c.closest('.sec').dataset.sec;c.classList.toggle('yr-hide',(year!=='all'&&c.dataset.year!==year)||(sec!=='all'&&s!==sec))});
-    document.querySelectorAll('.grid').forEach(g=>{const vis=[...g.querySelectorAll('.card')].filter(c=>!c.classList.contains('yr-hide'));g.classList.toggle('yr-hide',!vis.length);const ph=g.previousElementSibling;if(ph&&ph.classList.contains('part-head')){ph.classList.toggle('yr-hide',!vis.length);const cnt=ph.querySelector('.part-count');if(cnt)cnt.textContent=vis.length}});
+    document.querySelectorAll('.part').forEach(pt=>{const vis=[...pt.querySelectorAll('.card')].filter(c=>!c.classList.contains('yr-hide'));pt.classList.toggle('yr-hide',!vis.length);const cnt=pt.querySelector('.part-count');if(cnt)cnt.textContent=vis.length});
     document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('yr-hide',![...s.querySelectorAll('.card')].some(c=>!c.classList.contains('yr-hide'))));
   }
   host.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.closest('.fgrp').dataset.k==='year')year=b.dataset.v;else sec=b.dataset.v;apply()});
