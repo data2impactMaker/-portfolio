@@ -320,12 +320,16 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
   host.innerHTML=`<div class="fctl"><div class="fgrp" data-k="year"><i class="pill"></i>${years.map(y=>`<button data-v="${y}">${y}</button>`).join('')}<button data-v="all">전체</button></div></div><div class="fctl"><div class="fgrp" data-k="sec"><i class="pill"></i><button data-v="all">전체</button>${secs.map(s=>`<button data-v="${s.id}"><span class="dot" style="--c:${s.color}"></span>${s.label}</button>`).join('')}</div></div>`;
   function movePill(g){const on=g.querySelector('button.on'),p=g.querySelector('.pill');if(!on)return;p.style.left=on.offsetLeft+'px';p.style.width=on.offsetWidth+'px'}
   function apply(){
+    // 연도에 맞는 영역만 노출. 선택한 영역에 그 연도 카드가 없으면 전체로 되돌린다
+    const avail=new Set(cards.filter(c=>year==='all'||c.dataset.year===year).map(c=>c.closest('.sec').dataset.sec));
+    host.querySelectorAll('[data-k="sec"] button').forEach(b=>{const ok=b.dataset.v==='all'||avail.has(b.dataset.v);b.style.display=ok?'':'none'});
+    if(sec!=='all'&&!avail.has(sec))sec='all';
     host.querySelectorAll('.fgrp').forEach(g=>{const v=g.dataset.k==='year'?year:sec;g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));movePill(g)});
     cards.forEach(c=>{const s=c.closest('.sec').dataset.sec;c.classList.toggle('yr-hide',(year!=='all'&&c.dataset.year!==year)||(sec!=='all'&&s!==sec))});
     document.querySelectorAll('.part').forEach(pt=>{const vis=[...pt.querySelectorAll('.card')].filter(c=>!c.classList.contains('yr-hide'));pt.classList.toggle('yr-hide',!vis.length);const cnt=pt.querySelector('.part-count');if(cnt)cnt.textContent=vis.length});
     document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('yr-hide',![...s.querySelectorAll('.card')].some(c=>!c.classList.contains('yr-hide'))));
   }
-  host.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.closest('.fgrp').dataset.k==='year')year=b.dataset.v;else sec=b.dataset.v;apply()});
+  host.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.closest('.fgrp').dataset.k==='year')year=b.dataset.v;else sec=b.dataset.v;apply();requestAnimationFrame(()=>host.querySelectorAll('.fgrp').forEach(movePill))});
   apply();
   const re=()=>host.querySelectorAll('.fgrp').forEach(movePill);
   window.addEventListener('resize',re);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(re);setTimeout(re,300);
