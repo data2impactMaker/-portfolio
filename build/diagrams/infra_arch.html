@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>지표 SSOT · 통합 저장소 아키텍처 그림</title>
+<style>
+  html,body{overflow-x:hidden;margin:0;background:#fff}
+  td{white-space:nowrap}
+  body{font-family:'Pretendard Variable','Noto Sans KR',-apple-system,sans-serif}
+  svg{display:block}
+  .pane{stroke-width:1.6;rx:18}
+  .pane.y{fill:#fdf9e6;stroke:#e9d77a} .pane.g{fill:#eef8ee;stroke:#8fcf93} .pane.b{fill:#eaf1fc;stroke:#8fb3ec} .pane.p{fill:#f3effb;stroke:#b9a3e6} .pane.r{fill:#fdeef0;stroke:#eba3ad} .pane.o{fill:#fff4e5;stroke:#f3b56a} .pane.gray{fill:#f7f7f8;stroke:#c9ccd3}
+  .ptitle{font-size:19px;font-weight:800;fill:#18181b}
+  .ptitle.y{fill:#8a6d00}.ptitle.g{fill:#1f6b2a}.ptitle.b{fill:#1d4f9c}.ptitle.p{fill:#5b3fa6}.ptitle.r{fill:#a33a4a}.ptitle.o{fill:#9a5b06}
+  .node{fill:#fff;stroke:#c9ccd3;stroke-width:1.4;rx:12}
+  .node.hi{stroke:#1d4f9c;stroke-width:2}
+  .nt{font-size:13.5px;font-weight:700;fill:#18181b}
+  .ns{font-size:11px;fill:#5b6470}
+  .mono{font-family:'SF Mono',Menlo,monospace;font-size:11px;fill:#334155}
+  .banner{fill:#fff;stroke:#9ca3af;stroke-width:1.6;stroke-dasharray:7 5;rx:16}
+  .bt{font-size:20px;font-weight:800;fill:#18181b}
+  .bs{font-size:14px;font-style:italic;fill:#4b5563}
+  .arrow{fill:none;stroke:#334155;stroke-width:2.2;marker-end:url(#tri)}
+  .arrow.soft{stroke:#8fb3ec;marker-end:url(#tri-b)}
+  .ic{fill:none;stroke:#334155;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .ic.b{stroke:#1d4f9c}.ic.p{stroke:#5b3fa6}.ic.g{stroke:#1f6b2a}.ic.y{stroke:#8a6d00}.ic.o{stroke:#9a5b06}
+  .lab{font-size:12px;fill:#334155}
+  .step{fill:#fff;stroke:#1d4f9c;stroke-width:1.4;rx:9}
+  .stept{font-size:11.5px;font-weight:700;fill:#1d4f9c}
+  .ribbon{fill:#fff7ea;stroke:#f3b56a;stroke-width:1.6;rx:14}
+</style></head>
+<body>
+<svg id="ssot" width="1400" height="820" viewBox="0 0 1400 820" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="tri" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#334155"/></marker>
+    <marker id="tri-b" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#8fb3ec"/></marker>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8"/></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 4v16M15 4v16"/></symbol>
+    <symbol id="i-git" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="9" r="2.5"/><path d="M6 8.5v7M18 11.5c0 3-3 4-6 4H8.5"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></symbol>
+    <symbol id="i-bot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="3"/><circle cx="9" cy="14" r="1.5"/><circle cx="15" cy="14" r="1.5"/><path d="M12 8V4M9 4h6"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H8l-5 3 1.5-5A8 8 0 1 1 21 12z"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 17l.8 2.2L22 20l-2.2.8L19 23l-.8-2.2L16 20l2.2-.8z"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1-1 9z"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="6" rx="1.5"/><rect x="14" y="4" width="7" height="6" rx="1.5"/><rect x="8.5" y="14" width="7" height="6" rx="1.5"/><path d="M6.5 10v2h11v-2M12 12v2"/></symbol>
+  </defs>
+
+  <!-- 상단 배너 -->
+  <rect x="30" y="24" width="1340" height="70" class="banner"/>
+  <text x="700" y="54" text-anchor="middle" class="bt">하나의 정의, 모든 화면</text>
+  <text x="700" y="78" text-anchor="middle" class="bs">지표 산식과 이벤트 정의를 한 곳에 두고 대시보드 · 리포트 봇 · 슬랙봇 · 에이전트가 그 정의를 그대로 읽는다</text>
+  <path d="M700,94 L700,118" class="arrow"/>
+
+  <!-- 원천 -->
+  <rect x="30" y="130" width="280" height="420" class="pane y"/>
+  <text x="170" y="164" text-anchor="middle" class="ptitle y">원천 데이터</text>
+  <rect x="52" y="186" width="236" height="62" class="node"/><use href="#i-db" x="66" y="200" width="30" height="30" class="ic y"/><text x="108" y="212" class="nt">운영 DB</text><text x="108" y="230" class="ns">결제 · 주차장 · 회원</text>
+  <rect x="52" y="262" width="236" height="62" class="node"/><use href="#i-phone" x="66" y="276" width="30" height="30" class="ic y"/><text x="108" y="288" class="nt">행동 로그</text><text x="108" y="306" class="ns">GA4 · Amplitude 이벤트</text>
+  <rect x="52" y="338" width="236" height="62" class="node"/><use href="#i-cloud" x="66" y="352" width="30" height="30" class="ic y"/><text x="108" y="364" class="nt">외부 데이터</text><text x="108" y="382" class="ns">날씨 · 공휴일 · 공공 주차장</text>
+  <rect x="52" y="414" width="236" height="62" class="node"/><use href="#i-chart" x="66" y="428" width="30" height="30" class="ic y"/><text x="108" y="440" class="nt">마케팅 실적</text><text x="108" y="458" class="ns">Braze · Airbridge · 배너 클릭</text>
+  <text x="170" y="520" text-anchor="middle" class="lab">쏘카가 적재, 우리가 변환</text>
+
+  <!-- 적재 · 변환 -->
+  <path d="M310,340 L352,340" class="arrow"/>
+  <rect x="352" y="130" width="190" height="420" class="pane g"/>
+  <text x="447" y="164" text-anchor="middle" class="ptitle g">적재 · 변환</text>
+  <rect x="372" y="200" width="150" height="88" class="node"/><use href="#i-flow" x="430" y="206" width="34" height="34" class="ic g"/><text x="447" y="262" text-anchor="middle" class="nt">Airflow</text><text x="447" y="278" text-anchor="middle" class="ns">정기 적재 DAG</text>
+  <path d="M447,292 L447,316" class="arrow"/>
+  <rect x="372" y="320" width="150" height="88" class="node"/><use href="#i-gear" x="430" y="326" width="34" height="34" class="ic g"/><text x="447" y="382" text-anchor="middle" class="nt">dbt</text><text x="447" y="398" text-anchor="middle" class="ns">raw → 마트 모델</text>
+  <rect x="372" y="430" width="150" height="76" class="node"/><use href="#i-check" x="382" y="452" width="26" height="26" class="ic g"/><text x="416" y="458" class="nt">배포 전 검증</text><text x="416" y="476" class="ns">DAG 적재 · 모델 파싱</text>
+  <text x="447" y="536" text-anchor="middle" class="lab">실패하면 슬랙 경보</text>
+
+  <!-- 단일 원천 -->
+  <path d="M542,340 L584,340" class="arrow"/>
+  <rect x="584" y="130" width="470" height="420" class="pane b"/>
+  <text x="819" y="164" text-anchor="middle" class="ptitle b">단일 원천 SSOT</text>
+  <rect x="606" y="186" width="200" height="180" class="node hi"/>
+  <use href="#i-table" x="690" y="196" width="34" height="34" class="ic b"/>
+  <text x="706" y="252" text-anchor="middle" class="nt">BigQuery 데이터마트</text>
+  <text x="706" y="272" text-anchor="middle" class="ns">지표 산식은 여기서만 정의</text>
+  <text x="706" y="294" text-anchor="middle" class="mono">마트 테이블 · 공용 SQL 13종</text>
+  <text x="706" y="312" text-anchor="middle" class="mono">스키마 문서 · SQL 규칙</text>
+  <text x="706" y="344" text-anchor="middle" class="ns">리포트마다 다른 숫자를 막는다</text>
+  <rect x="832" y="186" width="200" height="180" class="node hi"/>
+  <use href="#i-git" x="916" y="196" width="34" height="34" class="ic b"/>
+  <text x="932" y="252" text-anchor="middle" class="nt">Git 지표 정의 저장소</text>
+  <text x="932" y="272" text-anchor="middle" class="ns">이벤트 정의는 여기서만 등록</text>
+  <text x="932" y="294" text-anchor="middle" class="mono">event_master.yaml 134건</text>
+  <text x="932" y="312" text-anchor="middle" class="mono">값 체계 룰 14종 · lint</text>
+  <text x="932" y="344" text-anchor="middle" class="ns">같은 행동의 다른 이름을 막는다</text>
+  <!-- 정의 변경 흐름 -->
+  <text x="606" y="402" class="lab" font-weight="700">정의를 바꿀 때</text>
+  <rect x="606" y="414" width="78" height="40" class="step"/><text x="645" y="439" text-anchor="middle" class="stept">설계 요청</text>
+  <path d="M684,434 L694,434" class="arrow soft"/>
+  <rect x="694" y="414" width="78" height="40" class="step"/><text x="733" y="439" text-anchor="middle" class="stept">정본 조회</text>
+  <path d="M772,434 L782,434" class="arrow soft"/>
+  <rect x="782" y="414" width="78" height="40" class="step"/><text x="821" y="439" text-anchor="middle" class="stept">lint 검증</text>
+  <path d="M860,434 L870,434" class="arrow soft"/>
+  <rect x="870" y="414" width="78" height="40" class="step"/><text x="909" y="439" text-anchor="middle" class="stept">PR 리뷰</text>
+  <path d="M948,434 L958,434" class="arrow soft"/>
+  <rect x="958" y="414" width="76" height="40" class="step" fill="#1d4f9c"/><text x="996" y="439" text-anchor="middle" class="stept" fill="#fff">정본 반영</text>
+  <text x="819" y="486" text-anchor="middle" class="ns">이름 규칙 위반은 등록 전에 막히고, 변경 이력은 PR로 남는다</text>
+  <text x="819" y="522" text-anchor="middle" class="lab">재배포 없이 정의만 고치면 모든 소비처가 바뀐다</text>
+
+  <!-- 소비처 -->
+  <path d="M1054,340 L1096,340" class="arrow"/>
+  <rect x="1096" y="130" width="274" height="420" class="pane p"/>
+  <text x="1233" y="164" text-anchor="middle" class="ptitle p">소비처</text>
+  <rect x="1118" y="186" width="230" height="62" class="node"/><use href="#i-chart" x="1132" y="200" width="30" height="30" class="ic p"/><text x="1174" y="212" class="nt">마케팅 대시보드</text><text x="1174" y="230" class="ns">캠페인 · 배너 · 퍼마 화면</text>
+  <rect x="1118" y="262" width="230" height="62" class="node"/><use href="#i-bot" x="1132" y="276" width="30" height="30" class="ic p"/><text x="1174" y="288" class="nt">리포팅 · 감시 봇 15종</text><text x="1174" y="306" class="ns">헬스체크 · 이상치 · 적재 감시</text>
+  <rect x="1118" y="338" width="230" height="62" class="node"/><use href="#i-chat" x="1132" y="352" width="30" height="30" class="ic p"/><text x="1174" y="364" class="nt">슬랙봇 모케터</text><text x="1174" y="382" class="ns">성과 · 쿠폰 · 정책 질의응답</text>
+  <rect x="1118" y="414" width="230" height="62" class="node"/><use href="#i-spark" x="1132" y="428" width="30" height="30" class="ic p"/><text x="1174" y="440" class="nt">AI 분석 에이전트</text><text x="1174" y="458" class="ns">같은 정의로 쿼리 작성</text>
+  <text x="1233" y="520" text-anchor="middle" class="lab">숫자가 서로 어긋나지 않는다</text>
+
+  <!-- 하단 거버넌스 -->
+  <rect x="30" y="580" width="1340" height="2" fill="#c9ccd3"/>
+  <text x="700" y="618" text-anchor="middle" class="bs">자동 게이트: 이벤트 lint · Airflow CI · golden 양식 비교 · 헬스체크 발송 채널 화이트리스트</text>
+  <!-- 이전/이후 한 줄 -->
+  <rect x="30" y="650" width="655" height="130" class="pane gray"/>
+  <text x="52" y="682" class="nt" fill="#5b6470">이전</text>
+  <text x="52" y="708" class="lab">· 리포트마다 지표 산식이 조금씩 달라 같은 지표의 숫자가 어긋났다</text>
+  <text x="52" y="732" class="lab">· 이벤트 이름이 담당자마다 달라 같은 행동을 여러 이름으로 쌓았다</text>
+  <text x="52" y="756" class="lab">· 정의가 슬랙 스레드와 사람 머릿속에만 있었다</text>
+  <rect x="715" y="650" width="655" height="130" class="pane b"/>
+  <text x="737" y="682" class="nt" fill="#1d4f9c">이후</text>
+  <text x="737" y="708" class="lab">· 지표는 마트 한 곳, 이벤트는 마스터 YAML 한 곳에서만 정의한다</text>
+  <text x="737" y="732" class="lab">· 등록 전 lint가 규칙 위반을 막고 변경은 PR로 이력이 남는다</text>
+  <text x="737" y="756" class="lab">· 대시보드 · 봇 · 에이전트가 같은 정의를 읽어 숫자가 일치한다</text>
+</svg>
+
+<svg id="gcs" width="1400" height="860" viewBox="0 0 1400 860" xmlns="http://www.w3.org/2000/svg">
+  <!-- 쓰기 단계 -->
+  <rect x="30" y="24" width="1340" height="330" rx="20" fill="#fbfbfd" stroke="#b9a3e6" stroke-width="1.6" stroke-dasharray="8 6"/>
+  <text x="54" y="340" class="ptitle p" font-size="17">쓰기 단계: 일이 끝나면 문서가 저장소에 들어간다</text>
+  <rect x="54" y="48" width="330" height="270" class="pane g"/>
+  <text x="219" y="82" text-anchor="middle" class="ptitle g">만드는 쪽</text>
+  <rect x="76" y="104" width="286" height="58" class="node"/><use href="#i-spark" x="90" y="118" width="30" height="30" class="ic g"/><text x="132" y="128" class="nt">CRM 에이전트</text><text x="132" y="146" class="ns">기획서 · 세팅 가이드 · 공지 초안</text>
+  <rect x="76" y="174" width="286" height="58" class="node"/><use href="#i-gear" x="90" y="188" width="30" height="30" class="ic g"/><text x="132" y="198" class="nt">분석 스윕 (매일 08:00)</text><text x="132" y="216" class="ns">실험군 대비 대조군 · 퍼널 집계</text>
+  <rect x="76" y="244" width="286" height="58" class="node"/><use href="#i-check" x="90" y="258" width="30" height="30" class="ic g"/><text x="132" y="268" class="nt">사람의 결정</text><text x="132" y="286" class="ns">검토 · 승인 · 채택과 비채택 사유</text>
+  <path d="M384,183 L430,183" class="arrow"/>
+  <!-- 저장소 -->
+  <rect x="430" y="48" width="540" height="270" class="pane b"/>
+  <text x="700" y="82" text-anchor="middle" class="ptitle b">통합 저장소 (GCS 버킷)</text>
+  <rect x="452" y="100" width="300" height="200" class="node hi"/>
+  <use href="#i-doc" x="464" y="110" width="22" height="22" class="ic b"/><text x="494" y="127" class="nt">campaigns/ 캠페인마다 한 폴더</text>
+  <text x="494" y="152" class="mono">기획서 ········ 목적 · 타겟 · 실험 설계</text>
+  <text x="494" y="174" class="mono">세팅 가이드 ··· 카피 · 미리보기 · 조건</text>
+  <text x="494" y="196" class="mono">분석 보고 ····· 증분 · 퍼널 · 리포트</text>
+  <text x="494" y="218" class="mono">카드(meta) ···· 상태 · KPI · 대조군</text>
+  <text x="494" y="240" class="mono">승인 기록 ····· 누가 · 언제 · 왜</text>
+  <text x="494" y="276" class="ns">사람 문서와 에이전트 산출물이 같은 자리에 쌓인다</text>
+  <rect x="768" y="100" width="180" height="60" class="node"/><use href="#i-doc" x="778" y="116" width="26" height="26" class="ic b"/><text x="812" y="124" class="nt">knowledge/</text><text x="812" y="142" class="ns">정책 · 가이드 · 규칙</text>
+  <rect x="768" y="170" width="180" height="60" class="node"/><use href="#i-doc" x="778" y="186" width="26" height="26" class="ic b"/><text x="812" y="194" class="nt">recommendations/</text><text x="812" y="212" class="ns">주간 추천 · 채택 사유</text>
+  <rect x="768" y="240" width="180" height="60" class="node"/><use href="#i-table" x="778" y="256" width="26" height="26" class="ic b"/><text x="812" y="264" class="nt">_meta/ 색인</text><text x="812" y="282" class="ns">폴더를 훑어 자동 재작성</text>
+  <path d="M970,183 L1016,183" class="arrow"/>
+  <!-- 즉시 반영 -->
+  <rect x="1016" y="48" width="330" height="270" class="pane y"/>
+  <text x="1181" y="82" text-anchor="middle" class="ptitle y">저장하면 끝</text>
+  <rect x="1038" y="104" width="286" height="58" class="node"/><use href="#i-chart" x="1052" y="118" width="30" height="30" class="ic y"/><text x="1094" y="128" class="nt">대시보드 카드 자동 등록</text><text x="1094" y="146" class="ns">캘린더 · KPI · 상태 갱신</text>
+  <rect x="1038" y="174" width="286" height="58" class="node"/><use href="#i-chat" x="1052" y="188" width="30" height="30" class="ic y"/><text x="1094" y="198" class="nt">슬랙 공지 · 알림</text><text x="1094" y="216" class="ns">전사 채널 · 담당자 DM</text>
+  <rect x="1038" y="244" width="286" height="58" class="node"/><use href="#i-check" x="1052" y="258" width="30" height="30" class="ic y"/><text x="1094" y="268" class="nt">따로 등록할 일이 없다</text><text x="1094" y="286" class="ns">파일이 곧 운영 데이터</text>
+
+  <!-- 연결 화살표 (저장소 → 읽기 단계) -->
+  <path d="M700,354 L700,398" class="arrow"/>
+
+  <!-- 읽기 단계 -->
+  <rect x="30" y="398" width="1340" height="300" rx="20" fill="#fbfbfd" stroke="#8fb3ec" stroke-width="1.6" stroke-dasharray="8 6"/>
+  <text x="54" y="684" class="ptitle b" font-size="17">읽기 단계: 같은 파일을 읽으니 같은 숫자와 같은 맥락으로 답한다</text>
+  <rect x="54" y="422" width="240" height="230" class="pane gray"/>
+  <text x="174" y="456" text-anchor="middle" class="ptitle" fill="#5b6470">질문</text>
+  <rect x="76" y="478" width="196" height="150" class="node"/>
+  <text x="174" y="512" text-anchor="middle" class="nt">"이번 주 캠페인 성과는?"</text>
+  <text x="174" y="540" text-anchor="middle" class="nt">"9월 드로우 기획 배경은?"</text>
+  <text x="174" y="568" text-anchor="middle" class="nt">"다음 주 뭘 보내야 하지?"</text>
+  <text x="174" y="606" text-anchor="middle" class="ns">마케터 · 팀장 · 유관 부서</text>
+  <path d="M294,537 L340,537" class="arrow"/>
+  <rect x="340" y="422" width="700" height="230" class="pane p"/>
+  <text x="690" y="456" text-anchor="middle" class="ptitle p">읽는 쪽 (저장소를 직접 읽음 · 별도 색인 없음)</text>
+  <rect x="362" y="482" width="210" height="140" class="node"/><use href="#i-chat" x="452" y="492" width="30" height="30" class="ic p"/><text x="467" y="546" text-anchor="middle" class="nt">슬랙봇 모케터</text><text x="467" y="566" text-anchor="middle" class="ns">기획서 · 분석 보고를 읽어</text><text x="467" y="584" text-anchor="middle" class="ns">성과와 배경을 답한다</text>
+  <rect x="585" y="482" width="210" height="140" class="node"/><use href="#i-chart" x="675" y="492" width="30" height="30" class="ic p"/><text x="690" y="546" text-anchor="middle" class="nt">마케팅 대시보드</text><text x="690" y="566" text-anchor="middle" class="ns">카드와 색인을 읽어</text><text x="690" y="584" text-anchor="middle" class="ns">캘린더 · KPI를 그린다</text>
+  <rect x="808" y="482" width="210" height="140" class="node"/><use href="#i-spark" x="898" y="492" width="30" height="30" class="ic p"/><text x="913" y="546" text-anchor="middle" class="nt">AI 에이전트</text><text x="913" y="566" text-anchor="middle" class="ns">과거 기획 · 결과를 찾아 읽어</text><text x="913" y="584" text-anchor="middle" class="ns">다음 캠페인을 설계한다</text>
+  <path d="M1040,537 L1086,537" class="arrow"/>
+  <rect x="1086" y="422" width="260" height="230" class="pane r"/>
+  <text x="1216" y="456" text-anchor="middle" class="ptitle r">답</text>
+  <rect x="1108" y="478" width="216" height="150" class="node"/>
+  <text x="1216" y="510" text-anchor="middle" class="nt">같은 숫자</text><text x="1216" y="530" text-anchor="middle" class="ns">누가 물어도 같은 분석 보고 기준</text>
+  <text x="1216" y="562" text-anchor="middle" class="nt">같은 맥락</text><text x="1216" y="582" text-anchor="middle" class="ns">왜 그렇게 결정했는지까지</text>
+  <text x="1216" y="612" text-anchor="middle" class="ns">출처 파일과 시각을 함께 표기</text>
+
+  <!-- 앞으로 -->
+  <rect x="30" y="724" width="1340" height="112" class="ribbon"/>
+  <text x="54" y="756" class="ptitle o" font-size="17">이 저장소 위에서 다음에 할 수 있는 것</text>
+  <use href="#i-spark" x="54" y="780" width="26" height="26" class="ic o"/><text x="90" y="792" class="nt">추천의 자기 학습</text><text x="90" y="812" class="ns">채택 · 비채택 사유와 성과가 쌓이면 다음 주 추천 점수가 그 결과를 반영한다</text>
+  <use href="#i-chart" x="520" y="780" width="26" height="26" class="ic o"/><text x="556" y="792" class="nt">발송 전 성과 예측</text><text x="556" y="812" class="ns">같은 양식으로 쌓인 수백 건의 기획 · 결과를 근거로 기대 순증을 제시한다</text>
+  <use href="#i-doc" x="986" y="780" width="26" height="26" class="ic o"/><text x="1022" y="792" class="nt">기획안 자동 초안</text><text x="1022" y="812" class="ns">비슷한 과거 캠페인을 찾아 목적 · 타겟 · 소재를 채운 초안을 먼저 낸다</text>
+</svg>
+</body></html>
