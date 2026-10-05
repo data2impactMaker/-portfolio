@@ -82,6 +82,20 @@
   .cover-desc{font-size:13px;color:var(--sub);line-height:1.8;margin-bottom:4px}
   .cover-desc.small{font-size:12px;margin-top:10px}
   .cover-bottom{text-align:center;margin-top:28px}
+  /* ── Year bars ── */
+  .year-bars{display:flex;justify-content:center;align-items:flex-end;gap:10px;margin:0 auto 18px;max-width:400px}
+  .yb{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:none;border:none;font-family:inherit;padding:0}
+  .yb .bar{width:100%;height:56px;display:flex;align-items:flex-end;justify-content:center;border-radius:6px;background:var(--alt);overflow:hidden;position:relative}
+  .yb .bar i{display:block;width:100%;background:#d4d4d8;border-radius:6px 6px 0 0;transition:height .5s cubic-bezier(.2,.7,.2,1),background .2s;height:0}
+  .yb .bar b{position:absolute;top:6px;left:0;right:0;font-size:11px;font-weight:700;color:var(--sub)}
+  .yb .lab{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.3px}
+  .yb.active .bar i{background:var(--blue)}
+  .yb.active .lab{color:var(--text)}
+  .yb.active .bar b{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+  .yb:hover .bar i{background:#a1a1aa}
+  .yb.active:hover .bar i{background:var(--blue)}
+  .year-note{font-size:11px;color:var(--muted);margin:-10px 0 14px}
+  .card.yr-hide,.part-head.yr-hide,.grid.yr-hide,.sec.yr-hide{display:none}
   .cover-search{max-width:400px;margin:0 auto 12px}
   .cover-search button{display:flex;align-items:center;gap:6px;width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--alt);cursor:pointer;font-family:inherit;font-size:12px;color:var(--muted);transition:all .2s}
   .cover-search button:hover{border-color:#bbb}
@@ -181,19 +195,19 @@
 <nav class="float-nav" id="floatNav">
 <div class="viz-wrap">
   <button class="nav-btn" id="fn-aiToggle" data-section="ai">AI 자동화 <span class="caret">&#9662;</span></button>
-  <div class="viz-dropdown" id="fn-aiDropdown"><div class="vd-panel"><div class="vd-group">CRM 자동화</div><a class="vd-item" data-target="ai-crm-agent">CRM 에이전틱 워크플로우 구축</a><div class="vd-group">AI 활용 분석·업무 자동화</div><a class="vd-item" data-target="ai-a3">데이터업무 슬랙봇 설계 및 구축</a><a class="vd-item" data-target="ai-a1">BTS 광화문 콘서트 주차장 영향분석</a><a class="vd-item" data-target="ai-fireworks">여의도 불꽃축제 관람 명소와 주차 안내 웹</a></div></div>
+  <div class="viz-dropdown" id="fn-aiDropdown"><div class="vd-panel"><div class="vd-group">CRM 마케팅 자동화</div><a class="vd-item" data-target="ai-crm-agent">CRM 에이전틱 워크플로우 구축</a><div class="vd-group">AI 활용 프로젝트</div><a class="vd-item" data-target="ai-a3">데이터업무 슬랙봇 설계 및 구축</a><a class="vd-item" data-target="ai-a1">BTS 광화문 콘서트 주차장 영향분석</a><a class="vd-item" data-target="ai-fireworks">여의도 불꽃축제 관람 명소와 주차 안내 웹</a></div></div>
 </div>
 <div class="viz-wrap">
-  <button class="nav-btn" id="fn-decisionToggle" data-section="decision">의사결정 체계 <span class="caret">&#9662;</span></button>
-  <div class="viz-dropdown" id="fn-decisionDropdown"><div class="vd-panel"><div class="vd-group">순효과 측정·분석 지원</div><a class="vd-item" data-target="dc-causal">인과추론 기반 본부 액션별 순효과 측정</a><a class="vd-item" data-target="dc-moketer">대화형 슬랙봇 &#x27;모케터&#x27;</a><a class="vd-item" data-target="dc-dashboard">CRM 캠페인 대시보드 (마케팅 허브)</a><div class="vd-group">미결제자 원인분석</div><a class="vd-item" data-target="project1a">미결제/결제 유저군 간 접속횟수 비교분석</a><a class="vd-item" data-target="project1b">미결제/결제 유저군 간 행동 데이터 비교분석</a><a class="vd-item" data-target="project1c">검색장소 인근 구매가능 주차장 분석</a><div class="vd-group">데이터기반 영업관리 프로세스</div><a class="vd-item" data-target="project2a">영업관리 프로세스 구축</a><a class="vd-item" data-target="project2b">통합 데이터셋 구축 및 액션 매트릭스 수립</a><a class="vd-item" data-target="project2c">액션제안 및 모니터링 대시보드 제작</a><a class="vd-item" data-target="project2d">액션제안 대시보드 1차 고도화</a><a class="vd-item" data-target="project2e">액션제안 대시보드 2차 고도화</a><div class="vd-group">사업·마케팅 분석</div><a class="vd-item" data-target="project3a">첫결제 프로모션 쿠폰 최적 지급조건 설계</a><a class="vd-item" data-target="project3b">신규주차장 사업계획 달성 시나리오 도출</a><a class="vd-item" data-target="project3c">통계 기반 클릭/거래 이상치 탐지 및 원인 분석</a></div></div>
+  <button class="nav-btn" id="fn-decisionToggle" data-section="decision">데이터 분석 <span class="caret">&#9662;</span></button>
+  <div class="viz-dropdown" id="fn-decisionDropdown"><div class="vd-panel"><div class="vd-group">캠페인 효과 측정</div><a class="vd-item" data-target="dc-causal">인과추론 기반 본부 액션별 순효과 측정</a><a class="vd-item" data-target="dc-moketer">대화형 슬랙봇 &#x27;모케터&#x27;</a><a class="vd-item" data-target="dc-dashboard">CRM 캠페인 대시보드 (마케팅 허브)</a><div class="vd-group">유저 행동 분석</div><a class="vd-item" data-target="project1a">미결제/결제 유저군 간 접속횟수 비교분석</a><a class="vd-item" data-target="project1b">미결제/결제 유저군 간 행동 데이터 비교분석</a><a class="vd-item" data-target="project1c">검색장소 인근 구매가능 주차장 분석</a><div class="vd-group">영업 관리 분석</div><a class="vd-item" data-target="project2a">영업관리 프로세스 구축</a><a class="vd-item" data-target="project2b">통합 데이터셋 구축 및 액션 매트릭스 수립</a><a class="vd-item" data-target="project2c">액션제안 및 모니터링 대시보드 제작</a><a class="vd-item" data-target="project2d">액션제안 대시보드 1차 고도화</a><a class="vd-item" data-target="project2e">액션제안 대시보드 2차 고도화</a><div class="vd-group">사업 기획 분석</div><a class="vd-item" data-target="project3a">첫결제 프로모션 쿠폰 최적 지급조건 설계</a><a class="vd-item" data-target="project3b">신규주차장 사업계획 달성 시나리오 도출</a><a class="vd-item" data-target="project3c">통계 기반 클릭/거래 이상치 탐지 및 원인 분석</a></div></div>
 </div>
 <div class="viz-wrap">
-  <button class="nav-btn" id="fn-infraToggle" data-section="infra">지표·인프라 <span class="caret">&#9662;</span></button>
-  <div class="viz-dropdown" id="fn-infraDropdown"><div class="vd-panel"><div class="vd-group">지표 체계·분석 인프라</div><a class="vd-item" data-target="if-eventlog">이벤트 로그 설계 프레임워크</a><a class="vd-item" data-target="if-ssot">데이터마트·Git 기반 지표 SSOT</a><a class="vd-item" data-target="if-gcs">CRM 분석·의사결정 통합 저장소</a></div></div>
+  <button class="nav-btn" id="fn-infraToggle" data-section="infra">데이터 인프라 <span class="caret">&#9662;</span></button>
+  <div class="viz-dropdown" id="fn-infraDropdown"><div class="vd-panel"><div class="vd-group">지표 정의·데이터 인프라</div><a class="vd-item" data-target="if-eventlog">이벤트 로그 설계 프레임워크</a><a class="vd-item" data-target="if-ssot">데이터마트·Git 기반 지표 SSOT</a><a class="vd-item" data-target="if-gcs">CRM 분석·의사결정 통합 저장소</a></div></div>
 </div>
 <div class="viz-wrap">
-  <button class="nav-btn" id="fn-vizToggle" data-section="viz">Visualization <span class="caret">&#9662;</span></button>
-  <div class="viz-dropdown" id="fn-vizDropdown"><div class="vd-panel"><div class="vd-group">성과 추적</div><a class="vd-item" data-target="viz-v1a">W-1(저번주) 성과예측 대시보드</a><a class="vd-item" data-target="viz-v1b">마케팅 실적 리포트</a><a class="vd-item" data-target="viz-v1c">공유주차 서비스 자치구별 실적 대시보드</a><div class="vd-group">공급 관리</div><a class="vd-item" data-target="viz-v2a">제휴일반 대시보드</a><a class="vd-item" data-target="viz-v2b">판매중단 시설관리 대시보드</a><a class="vd-item" data-target="viz-v2c">장기권 슬롯관리 대시보드</a><div class="vd-group">유저 상세</div><a class="vd-item" data-target="viz-v3a">퍼널 대시보드</a><a class="vd-item" data-target="viz-v3b">신규가입유저 코호트 분석 리포트</a><a class="vd-item" data-target="viz-v3c-tab">미결제 유저 검색수요 지리공간 분석</a><a class="vd-item" data-target="viz-v3c">여의도 불꽃축제 동적 수요지도</a></div></div>
+  <button class="nav-btn" id="fn-vizToggle" data-section="viz">대시보드 <span class="caret">&#9662;</span></button>
+  <div class="viz-dropdown" id="fn-vizDropdown"><div class="vd-panel"><div class="vd-group">성과 추적</div><a class="vd-item" data-target="viz-v1a">W-1(저번주) 성과예측 대시보드</a><a class="vd-item" data-target="viz-v1b">마케팅 실적 리포트</a><a class="vd-item" data-target="viz-v1c">공유주차 서비스 자치구별 실적 대시보드</a><div class="vd-group">공급 관리</div><a class="vd-item" data-target="viz-v2a">제휴일반 대시보드</a><a class="vd-item" data-target="viz-v2b">판매중단 시설관리 대시보드</a><a class="vd-item" data-target="viz-v2c">장기권 슬롯관리 대시보드</a><div class="vd-group">유저 분석</div><a class="vd-item" data-target="viz-v3a">퍼널 대시보드</a><a class="vd-item" data-target="viz-v3b">신규가입유저 코호트 분석 리포트</a><a class="vd-item" data-target="viz-v3c-tab">미결제 유저 검색수요 지리공간 분석</a><a class="vd-item" data-target="viz-v3c">여의도 불꽃축제 동적 수요지도</a></div></div>
 </div>
   <div class="fn-sep"></div>
   <button class="fn-search" id="searchToggle" title="검색 (Ctrl+K)">
@@ -214,13 +228,13 @@
   <div class="search-suggest" id="searchSuggest">
     <div class="search-suggest-title">추천 키워드</div>
     <div class="search-suggest-tags">
-      <span class="search-suggest-tag" data-kw="CRM">CRM</span>
-      <span class="search-suggest-tag" data-kw="인과추론">인과추론</span>
-      <span class="search-suggest-tag" data-kw="슬랙봇">슬랙봇</span>
-      <span class="search-suggest-tag" data-kw="전환율">전환율</span>
+      <span class="search-suggest-tag" data-kw="대시보드">대시보드</span>
+      <span class="search-suggest-tag" data-kw="A/B">A/B 테스트</span>
       <span class="search-suggest-tag" data-kw="퍼널">퍼널</span>
-      <span class="search-suggest-tag" data-kw="지표">지표</span>
-      <span class="search-suggest-tag" data-kw="Claude">Claude</span>
+      <span class="search-suggest-tag" data-kw="자동화">자동화</span>
+      <span class="search-suggest-tag" data-kw="지도">지도</span>
+      <span class="search-suggest-tag" data-kw="전환율">전환율</span>
+      <span class="search-suggest-tag" data-kw="AI">AI</span>
     </div>
   </div>
 </div>
@@ -259,6 +273,8 @@
     </div>
   </div>
   <div class="cover-bottom">
+    <div class="year-bars" id="yearBars"></div>
+    <div class="year-note" id="yearNote"></div>
     <div class="cover-search">
       <button onclick="openSearch()">
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><line x1="8.5" y1="8.5" x2="12" y2="12"/></svg>
@@ -269,28 +285,28 @@
     <div class="cover-nav">
 <div class="viz-wrap">
   <button class="nav-btn" id="cv-aiToggle" data-section="ai">AI 자동화 <span class="caret">&#9662;</span></button>
-  <div class="viz-dropdown" id="cv-aiDropdown"><div class="vd-panel"><div class="vd-group">CRM 자동화</div><a class="vd-item" data-target="ai-crm-agent">CRM 에이전틱 워크플로우 구축</a><div class="vd-group">AI 활용 분석·업무 자동화</div><a class="vd-item" data-target="ai-a3">데이터업무 슬랙봇 설계 및 구축</a><a class="vd-item" data-target="ai-a1">BTS 광화문 콘서트 주차장 영향분석</a><a class="vd-item" data-target="ai-fireworks">여의도 불꽃축제 관람 명소와 주차 안내 웹</a></div></div>
+  <div class="viz-dropdown" id="cv-aiDropdown"><div class="vd-panel"><div class="vd-group">CRM 마케팅 자동화</div><a class="vd-item" data-target="ai-crm-agent">CRM 에이전틱 워크플로우 구축</a><div class="vd-group">AI 활용 프로젝트</div><a class="vd-item" data-target="ai-a3">데이터업무 슬랙봇 설계 및 구축</a><a class="vd-item" data-target="ai-a1">BTS 광화문 콘서트 주차장 영향분석</a><a class="vd-item" data-target="ai-fireworks">여의도 불꽃축제 관람 명소와 주차 안내 웹</a></div></div>
 </div>
 <div class="viz-wrap">
-  <button class="nav-btn" id="cv-decisionToggle" data-section="decision">의사결정 체계 <span class="caret">&#9662;</span></button>
-  <div class="viz-dropdown" id="cv-decisionDropdown"><div class="vd-panel"><div class="vd-group">순효과 측정·분석 지원</div><a class="vd-item" data-target="dc-causal">인과추론 기반 본부 액션별 순효과 측정</a><a class="vd-item" data-target="dc-moketer">대화형 슬랙봇 &#x27;모케터&#x27;</a><a class="vd-item" data-target="dc-dashboard">CRM 캠페인 대시보드 (마케팅 허브)</a><div class="vd-group">미결제자 원인분석</div><a class="vd-item" data-target="project1a">미결제/결제 유저군 간 접속횟수 비교분석</a><a class="vd-item" data-target="project1b">미결제/결제 유저군 간 행동 데이터 비교분석</a><a class="vd-item" data-target="project1c">검색장소 인근 구매가능 주차장 분석</a><div class="vd-group">데이터기반 영업관리 프로세스</div><a class="vd-item" data-target="project2a">영업관리 프로세스 구축</a><a class="vd-item" data-target="project2b">통합 데이터셋 구축 및 액션 매트릭스 수립</a><a class="vd-item" data-target="project2c">액션제안 및 모니터링 대시보드 제작</a><a class="vd-item" data-target="project2d">액션제안 대시보드 1차 고도화</a><a class="vd-item" data-target="project2e">액션제안 대시보드 2차 고도화</a><div class="vd-group">사업·마케팅 분석</div><a class="vd-item" data-target="project3a">첫결제 프로모션 쿠폰 최적 지급조건 설계</a><a class="vd-item" data-target="project3b">신규주차장 사업계획 달성 시나리오 도출</a><a class="vd-item" data-target="project3c">통계 기반 클릭/거래 이상치 탐지 및 원인 분석</a></div></div>
+  <button class="nav-btn" id="cv-decisionToggle" data-section="decision">데이터 분석 <span class="caret">&#9662;</span></button>
+  <div class="viz-dropdown" id="cv-decisionDropdown"><div class="vd-panel"><div class="vd-group">캠페인 효과 측정</div><a class="vd-item" data-target="dc-causal">인과추론 기반 본부 액션별 순효과 측정</a><a class="vd-item" data-target="dc-moketer">대화형 슬랙봇 &#x27;모케터&#x27;</a><a class="vd-item" data-target="dc-dashboard">CRM 캠페인 대시보드 (마케팅 허브)</a><div class="vd-group">유저 행동 분석</div><a class="vd-item" data-target="project1a">미결제/결제 유저군 간 접속횟수 비교분석</a><a class="vd-item" data-target="project1b">미결제/결제 유저군 간 행동 데이터 비교분석</a><a class="vd-item" data-target="project1c">검색장소 인근 구매가능 주차장 분석</a><div class="vd-group">영업 관리 분석</div><a class="vd-item" data-target="project2a">영업관리 프로세스 구축</a><a class="vd-item" data-target="project2b">통합 데이터셋 구축 및 액션 매트릭스 수립</a><a class="vd-item" data-target="project2c">액션제안 및 모니터링 대시보드 제작</a><a class="vd-item" data-target="project2d">액션제안 대시보드 1차 고도화</a><a class="vd-item" data-target="project2e">액션제안 대시보드 2차 고도화</a><div class="vd-group">사업 기획 분석</div><a class="vd-item" data-target="project3a">첫결제 프로모션 쿠폰 최적 지급조건 설계</a><a class="vd-item" data-target="project3b">신규주차장 사업계획 달성 시나리오 도출</a><a class="vd-item" data-target="project3c">통계 기반 클릭/거래 이상치 탐지 및 원인 분석</a></div></div>
 </div>
 <div class="viz-wrap">
-  <button class="nav-btn" id="cv-infraToggle" data-section="infra">지표·인프라 <span class="caret">&#9662;</span></button>
-  <div class="viz-dropdown" id="cv-infraDropdown"><div class="vd-panel"><div class="vd-group">지표 체계·분석 인프라</div><a class="vd-item" data-target="if-eventlog">이벤트 로그 설계 프레임워크</a><a class="vd-item" data-target="if-ssot">데이터마트·Git 기반 지표 SSOT</a><a class="vd-item" data-target="if-gcs">CRM 분석·의사결정 통합 저장소</a></div></div>
+  <button class="nav-btn" id="cv-infraToggle" data-section="infra">데이터 인프라 <span class="caret">&#9662;</span></button>
+  <div class="viz-dropdown" id="cv-infraDropdown"><div class="vd-panel"><div class="vd-group">지표 정의·데이터 인프라</div><a class="vd-item" data-target="if-eventlog">이벤트 로그 설계 프레임워크</a><a class="vd-item" data-target="if-ssot">데이터마트·Git 기반 지표 SSOT</a><a class="vd-item" data-target="if-gcs">CRM 분석·의사결정 통합 저장소</a></div></div>
 </div>
 <div class="viz-wrap">
-  <button class="nav-btn" id="cv-vizToggle" data-section="viz">Visualization <span class="caret">&#9662;</span></button>
-  <div class="viz-dropdown" id="cv-vizDropdown"><div class="vd-panel"><div class="vd-group">성과 추적</div><a class="vd-item" data-target="viz-v1a">W-1(저번주) 성과예측 대시보드</a><a class="vd-item" data-target="viz-v1b">마케팅 실적 리포트</a><a class="vd-item" data-target="viz-v1c">공유주차 서비스 자치구별 실적 대시보드</a><div class="vd-group">공급 관리</div><a class="vd-item" data-target="viz-v2a">제휴일반 대시보드</a><a class="vd-item" data-target="viz-v2b">판매중단 시설관리 대시보드</a><a class="vd-item" data-target="viz-v2c">장기권 슬롯관리 대시보드</a><div class="vd-group">유저 상세</div><a class="vd-item" data-target="viz-v3a">퍼널 대시보드</a><a class="vd-item" data-target="viz-v3b">신규가입유저 코호트 분석 리포트</a><a class="vd-item" data-target="viz-v3c-tab">미결제 유저 검색수요 지리공간 분석</a><a class="vd-item" data-target="viz-v3c">여의도 불꽃축제 동적 수요지도</a></div></div>
+  <button class="nav-btn" id="cv-vizToggle" data-section="viz">대시보드 <span class="caret">&#9662;</span></button>
+  <div class="viz-dropdown" id="cv-vizDropdown"><div class="vd-panel"><div class="vd-group">성과 추적</div><a class="vd-item" data-target="viz-v1a">W-1(저번주) 성과예측 대시보드</a><a class="vd-item" data-target="viz-v1b">마케팅 실적 리포트</a><a class="vd-item" data-target="viz-v1c">공유주차 서비스 자치구별 실적 대시보드</a><div class="vd-group">공급 관리</div><a class="vd-item" data-target="viz-v2a">제휴일반 대시보드</a><a class="vd-item" data-target="viz-v2b">판매중단 시설관리 대시보드</a><a class="vd-item" data-target="viz-v2c">장기권 슬롯관리 대시보드</a><div class="vd-group">유저 분석</div><a class="vd-item" data-target="viz-v3a">퍼널 대시보드</a><a class="vd-item" data-target="viz-v3b">신규가입유저 코호트 분석 리포트</a><a class="vd-item" data-target="viz-v3c-tab">미결제 유저 검색수요 지리공간 분석</a><a class="vd-item" data-target="viz-v3c">여의도 불꽃축제 동적 수요지도</a></div></div>
 </div>
     </div>
   </div>
 </header>
 
-<section class="sec" id="ai">
+<section class="sec" id="ai" data-sec="ai">
 <div class="sec-head"><div class="sec-label" style="color:#e67e22">AI 자동화</div><h2 class="sec-title">AI 기반 CRM 업무 자동화</h2><ul class="sec-intro"><li>에이전틱 워크플로우 개발로 CRM 전 과정 자동화</li><li>CRM 캠페인별 성과지표 정의 및 A/B 테스트 분석 자동화 포함</li><li>시니어 마케터 1인 채용 없이 운영, 연 약 5,000만원 절감 효과</li></ul></div>
-<div class="part-head"><span class="part-title">CRM 자동화</span><span class="part-count">1</span></div>
-<div class="grid"><article class="card" id="ai-crm-agent" data-sec="AI 자동화" data-part="CRM 자동화" data-title="CRM 에이전틱 워크플로우 구축">
+<div class="part-head"><span class="part-title">CRM 마케팅 자동화</span><span class="part-count">1</span></div>
+<div class="grid"><article class="card" id="ai-crm-agent" data-sec="AI 자동화" data-part="CRM 마케팅 자동화" data-title="CRM 에이전틱 워크플로우 구축" data-year="2026">
   <div class="thumb" data-srcs="portfolio_images/full/notion_2026_crm_workflow.jpg|portfolio_images/full/notion_2026_crm_onboarding.jpg|portfolio_images/full/notion_2026_crm_w36_auto.jpg" data-caps="CRM 캠페인 발송 에이전틱 워크플로우: 3개 검수 포인트 외 자동 처리|CRM 에이전트 워크플로우 온보딩 가이드: 4단계 진행과 4개 컨펌 게이트|에이전트가 자동 작성한 W36 CRM 캠페인 종합 성과분석" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_crm_workflow.jpg" alt="CRM 에이전틱 워크플로우 구축" loading="lazy"><span class="thumb-count">3장</span><div class="thumb-cap">CRM 캠페인 발송 에이전틱 워크플로우: 3개 검수 포인트 외 자동 처리</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Claude Code · Braze</span></div>
@@ -298,8 +314,8 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">CRM 캠페인 기획·세팅·발송·성과분석 전 과정의 에이전틱 워크플로우 자동화</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">사람은 기획 방향·기획안·공지글·발송 4개 게이트에서만 개입, 주간 종합 성과분석까지 에이전트가 자동 작성</span></div></div>
   </div>
 </article></div>
-<div class="part-head"><span class="part-title">AI 활용 분석·업무 자동화</span><span class="part-count">3</span></div>
-<div class="grid"><article class="card" id="ai-a3" data-sec="AI 자동화" data-part="AI 활용 분석·업무 자동화" data-title="데이터업무 슬랙봇 설계 및 구축">
+<div class="part-head"><span class="part-title">AI 활용 프로젝트</span><span class="part-count">3</span></div>
+<div class="grid"><article class="card" id="ai-a3" data-sec="AI 자동화" data-part="AI 활용 프로젝트" data-title="데이터업무 슬랙봇 설계 및 구축" data-year="2025">
   <div class="thumb" data-srcs="portfolio_images/full/notion_2025_databot_chat.jpg|portfolio_images/full/notion_29_slackbot.jpg" data-caps="데이터 요청 접수 대화 예시: 요청 분류와 Jira 티켓 자동 생성|데이터업무 슬랙봇 설계서: AI 응답 시뮬레이션 및 시스템 아키텍처" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2025_databot_chat.jpg" alt="데이터업무 슬랙봇 설계 및 구축" loading="lazy"><span class="thumb-count">2장</span><div class="thumb-cap">데이터 요청 접수 대화 예시: 요청 분류와 Jira 티켓 자동 생성</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Claude API · Slack Bolt · Cloud Run</span></div>
@@ -307,7 +323,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">데이터업무 요청(추출·분석·해석·이벤트 설계)을 슬랙에서 AI로 자동 처리하는 봇 구축</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">Slack Bolt, Claude API, Jira Cloud API를 GCP Cloud Run에 배포하여 요청을 자동 분류·처리·티켓 생성</span></div></div>
   </div>
 </article>
-<article class="card" id="ai-a1" data-sec="AI 자동화" data-part="AI 활용 분석·업무 자동화" data-title="BTS 광화문 콘서트 주차장 영향분석">
+<article class="card" id="ai-a1" data-sec="AI 자동화" data-part="AI 활용 프로젝트" data-title="BTS 광화문 콘서트 주차장 영향분석" data-year="2026">
   <div class="thumb dark" data-srcs="portfolio_images/full/notion_28_bts_impact.jpg" data-caps="IMPACT MAP (2026.03.28 공연일 기준)" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_28_bts_impact.jpg" alt="BTS 광화문 콘서트 주차장 영향분석" loading="lazy"><div class="thumb-cap">IMPACT MAP (2026.03.28 공연일 기준)</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Claude Code · Kakao Map API</span></div>
@@ -315,7 +331,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">콘서트 대비 인근 주차장 수용 가능량 사전 분석 및 수요 예측</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">카카오맵 API·BigQuery·웹서칭을 오케스트레이션한 IMPACT MAP 제작, 영업팀 사전 대비에 활용</span></div></div>
   </div>
 </article>
-<article class="card" id="ai-fireworks" data-sec="AI 자동화" data-part="AI 활용 분석·업무 자동화" data-title="여의도 불꽃축제 관람 명소와 주차 안내 웹">
+<article class="card" id="ai-fireworks" data-sec="AI 자동화" data-part="AI 활용 프로젝트" data-title="여의도 불꽃축제 관람 명소와 주차 안내 웹" data-year="2026">
   <div class="thumb" data-srcs="portfolio_images/full/notion_2026_fireworks_web.jpg|portfolio_images/full/notion_2026_fireworks_mobile.jpg" data-caps="불꽃축제 안내 웹: 데스크톱 화면|불꽃축제 안내 웹: 모바일 화면" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_fireworks_web.jpg" alt="여의도 불꽃축제 관람 명소와 주차 안내 웹" loading="lazy"><span class="thumb-count">2장</span><div class="thumb-cap">불꽃축제 안내 웹: 데스크톱 화면</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Claude Code · Cloudflare</span></div>
@@ -325,10 +341,10 @@
 </article></div>
 </section>
 
-<section class="sec" id="decision">
-<div class="sec-head"><div class="sec-label" style="color:#1a56db">의사결정 체계</div><h2 class="sec-title">데이터 기반 의사결정 체계 고도화</h2><ul class="sec-intro"><li>인과추론(DID·CUPED·회귀) 기반 본부 액션별 순효과 측정</li><li>CRM 대시보드·대화형 슬랙봇 개발로 마케팅 분석 요청 95% 감축</li><li>Action Item까지 도출하는 분석 리포팅 표준화로 본부 의사결정 가속화</li></ul></div>
-<div class="part-head"><span class="part-title">순효과 측정·분석 지원</span><span class="part-count">3</span></div>
-<div class="grid"><article class="card" id="dc-causal" data-sec="의사결정 체계" data-part="순효과 측정·분석 지원" data-title="인과추론 기반 본부 액션별 순효과 측정">
+<section class="sec" id="decision" data-sec="decision">
+<div class="sec-head"><div class="sec-label" style="color:#1a56db">데이터 분석</div><h2 class="sec-title">데이터 기반 의사결정 체계 고도화</h2><ul class="sec-intro"><li>인과추론(DID·CUPED·회귀) 기반 본부 액션별 순효과 측정</li><li>CRM 대시보드·대화형 슬랙봇 개발로 마케팅 분석 요청 95% 감축</li><li>Action Item까지 도출하는 분석 리포팅 표준화로 본부 의사결정 가속화</li></ul></div>
+<div class="part-head"><span class="part-title">캠페인 효과 측정</span><span class="part-count">3</span></div>
+<div class="grid"><article class="card" id="dc-causal" data-sec="데이터 분석" data-part="캠페인 효과 측정" data-title="인과추론 기반 본부 액션별 순효과 측정" data-year="2026">
   <div class="thumb" data-srcs="portfolio_images/full/notion_2026_causal_4to6.jpg|portfolio_images/full/notion_2026_causal_optin.jpg|portfolio_images/full/notion_2026_impact_standard.jpg" data-caps="4~6월 앱푸시 캠페인 종합 증분: 방문은 늘고 결제는 그대로|마케팅 수신동의 유도 인앱 상세 성과분석: 실험군 대비 대조군 증분|고수요 외부이벤트 영향도 분석 표준: 수요 예측·공급 산정·판매 실행·성과 네 축 판정" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_causal_4to6.jpg" alt="인과추론 기반 본부 액션별 순효과 측정" loading="lazy"><span class="thumb-count">3장</span><div class="thumb-cap">4~6월 앱푸시 캠페인 종합 증분: 방문은 늘고 결제는 그대로</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">DID · CUPED · 회귀 보정</span></div>
@@ -336,7 +352,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">공급 확대·상품 조정·CRM 캠페인·신규 기능 등 본부 액션의 순효과 측정</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">실험군 대비 대조군 증분(%p)과 평시 기준선 대비 판정으로 자연 증분·외부 요인을 제외한 순효과 산출</span></div></div>
   </div>
 </article>
-<article class="card" id="dc-moketer" data-sec="의사결정 체계" data-part="순효과 측정·분석 지원" data-title="대화형 슬랙봇 &#x27;모케터&#x27;">
+<article class="card" id="dc-moketer" data-sec="데이터 분석" data-part="캠페인 효과 측정" data-title="대화형 슬랙봇 &#x27;모케터&#x27;" data-year="2026">
   <div class="thumb" data-srcs="portfolio_images/full/notion_2026_moketer_chat.jpg|portfolio_images/full/notion_2026_moketer_system.jpg|portfolio_images/full/notion_2026_moketer_arch.jpg|portfolio_images/full/notion_2026_slackbots.jpg" data-caps="모케터 대화 예시: 주간 캠페인 성과 조회와 기획 배경 질의|모케터 시스템 정리: 슬랙 질의응답 4종·운영 대시보드 4종·자동 실행 4종|아키텍처: Cloud Run 한 서비스에 질의응답·운영 화면·자동 실행|슬랙봇 통합관리: 봇별 역할·실행 형태·주기" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_moketer_chat.jpg" alt="대화형 슬랙봇 &#x27;모케터&#x27;" loading="lazy"><span class="thumb-count">4장</span><div class="thumb-cap">모케터 대화 예시: 주간 캠페인 성과 조회와 기획 배경 질의</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Claude API · Slack · Cloud Run</span></div>
@@ -344,7 +360,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">마케팅 데이터 추출·분석 요청의 대화형 처리와 캠페인 일정·성과 공유</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">슬랙 질의응답·운영 대시보드·자동화가 같은 GCS 저장소를 보는 구조로 마케팅 분석 요청 95% 감축</span></div></div><button class="demo-btn" data-demo="demos/moketer.html" data-title="모케터 슬랙봇" onclick="openDemo(this)"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l8 5-8 5z"/></svg>모케터 슬랙봇 체험하기</button>
   </div>
 </article>
-<article class="card" id="dc-dashboard" data-sec="의사결정 체계" data-part="순효과 측정·분석 지원" data-title="CRM 캠페인 대시보드 (마케팅 허브)">
+<article class="card" id="dc-dashboard" data-sec="데이터 분석" data-part="캠페인 효과 측정" data-title="CRM 캠페인 대시보드 (마케팅 허브)" data-year="2026">
   <div class="thumb" data-srcs="portfolio_images/full/notion_2026_hub_dashboard.jpg|portfolio_images/full/notion_2026_hub_banner.jpg|portfolio_images/full/notion_2026_hub_pm.jpg|portfolio_images/full/notion_2026_moketer_storage.jpg" data-caps="CRM 캠페인 대시보드: 이번 주 추천 · 다음 발송 · KPI · 주차 그리드 (체험판 화면)|앱 배너 운영: 라이브 슬롯 · 지면별 노출 현황 (체험판 화면)|퍼포먼스 마케팅: 전환 퍼널 · 일별 추이 · 채널별 성과 (체험판 화면)|저장소 구성: campaigns·knowledge·banners·approvals 경로별 용도" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_hub_dashboard.jpg" alt="CRM 캠페인 대시보드 (마케팅 허브)" loading="lazy"><span class="thumb-count">4장</span><div class="thumb-cap">CRM 캠페인 대시보드: 이번 주 추천 · 다음 발송 · KPI · 주차 그리드 (체험판 화면)</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Flask · GCS · Cloud Run</span></div>
@@ -352,8 +368,8 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">캠페인 기획·실행·분석 상태와 앱 배너 운영·퍼포먼스 마케팅 성과를 한 화면에서 운영</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">캠페인 폴더의 기획서·세팅 가이드·분석 보고를 자동 인식해 캘린더·KPI에 표시, 슬랙봇과 같은 저장소를 참조</span></div></div><button class="demo-btn" data-demo="demos/crm-dashboard.html" data-title="CRM 캠페인 대시보드" onclick="openDemo(this)"><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2 1l8 5-8 5z"/></svg>CRM 캠페인 대시보드 체험하기</button>
   </div>
 </article></div>
-<div class="part-head"><span class="part-title">미결제자 원인분석</span><span class="part-count">3</span></div>
-<div class="grid"><article class="card" id="project1a" data-sec="의사결정 체계" data-part="미결제자 원인분석" data-title="미결제/결제 유저군 간 접속횟수 비교분석">
+<div class="part-head"><span class="part-title">유저 행동 분석</span><span class="part-count">3</span></div>
+<div class="grid"><article class="card" id="project1a" data-sec="데이터 분석" data-part="유저 행동 분석" data-title="미결제/결제 유저군 간 접속횟수 비교분석" data-year="2025">
   <div class="thumb" data-srcs="portfolio_images/full/notion_01.jpg" data-caps="결제 여부에 따른 접속횟수별 유저비중" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_01.jpg" alt="미결제/결제 유저군 간 접속횟수 비교분석" loading="lazy"><div class="thumb-cap">결제 여부에 따른 접속횟수별 유저비중</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery</span></div>
@@ -361,7 +377,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">결제전환율 상승을 위한 우선순위 미결제 세그먼트 도출</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">전체 미결제 유저의 80%가 접속 1~2회 신규유저, 저회차 접속자 결제유도 타겟 선정</span></div></div>
   </div>
 </article>
-<article class="card" id="project1b" data-sec="의사결정 체계" data-part="미결제자 원인분석" data-title="미결제/결제 유저군 간 행동 데이터 비교분석">
+<article class="card" id="project1b" data-sec="데이터 분석" data-part="유저 행동 분석" data-title="미결제/결제 유저군 간 행동 데이터 비교분석" data-year="2025">
   <div class="thumb" data-srcs="portfolio_images/full/notion_02.jpg" data-caps="미결제/결제 유저군 간 행동 데이터 비교분석" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_02.jpg" alt="미결제/결제 유저군 간 행동 데이터 비교분석" loading="lazy"><div class="thumb-cap">미결제/결제 유저군 간 행동 데이터 비교분석</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery</span></div>
@@ -369,7 +385,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">미결제유저의 탐색기능 인지·활용 부족이 결제전환 저해 요인인지 검증</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">미결제유저는 탐색은 활발하나 결제퍼널에서 급격히 이탈 (주차권선택 단계 40.5%p Gap)</span></div></div>
   </div>
 </article>
-<article class="card" id="project1c" data-sec="의사결정 체계" data-part="미결제자 원인분석" data-title="검색장소 인근 구매가능 주차장 분석">
+<article class="card" id="project1c" data-sec="데이터 분석" data-part="유저 행동 분석" data-title="검색장소 인근 구매가능 주차장 분석" data-year="2025">
   <div class="thumb" data-srcs="portfolio_images/full/notion_03.jpg" data-caps="결제 vs 미결제 유저군 도넛차트 / 카이제곱 검정 결과" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_03.jpg" alt="검색장소 인근 구매가능 주차장 분석" loading="lazy"><div class="thumb-cap">결제 vs 미결제 유저군 도넛차트 / 카이제곱 검정 결과</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery · 카이제곱 검정</span></div>
@@ -377,8 +393,8 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">검색위치 대비 인근 구매가능 주차장 수 차이 검증 (카이제곱 검정)</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">미결제유저의 구매가능 주차장 0~1개 비율이 약 1.8배, 공급부족이 결제전환 저해 요인</span></div></div>
   </div>
 </article></div>
-<div class="part-head"><span class="part-title">데이터기반 영업관리 프로세스</span><span class="part-count">5</span></div>
-<div class="grid"><article class="card" id="project2a" data-sec="의사결정 체계" data-part="데이터기반 영업관리 프로세스" data-title="영업관리 프로세스 구축">
+<div class="part-head"><span class="part-title">영업 관리 분석</span><span class="part-count">5</span></div>
+<div class="grid"><article class="card" id="project2a" data-sec="데이터 분석" data-part="영업 관리 분석" data-title="영업관리 프로세스 구축" data-year="2025">
   <div class="thumb" data-srcs="portfolio_images/full/notion_05.jpg" data-caps="Sales Process 영업관리 프로세스" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_05.jpg" alt="영업관리 프로세스 구축" loading="lazy"><div class="thumb-cap">Sales Process 영업관리 프로세스</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery</span></div>
@@ -386,7 +402,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">데이터기반 체계적이고 효율적인 영업관리 프로세스 구축</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">영업단 자율적 판단 및 리서치를 위한 데이터 기반 프로세스 체계 완성</span></div></div>
   </div>
 </article>
-<article class="card" id="project2b" data-sec="의사결정 체계" data-part="데이터기반 영업관리 프로세스" data-title="통합 데이터셋 구축 및 액션 매트릭스 수립">
+<article class="card" id="project2b" data-sec="데이터 분석" data-part="영업 관리 분석" data-title="통합 데이터셋 구축 및 액션 매트릭스 수립" data-year="2025">
   <div class="thumb" data-srcs="portfolio_images/full/notion_06.jpg|portfolio_images/full/notion_07.jpg|portfolio_images/full/notion_08.jpg" data-caps="통합 데이터셋|액션 매트릭스|수량·가격 인상 현황: 매진추이 Weekly 모니터링" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_06.jpg" alt="통합 데이터셋 구축 및 액션 매트릭스 수립" loading="lazy"><span class="thumb-count">3장</span><div class="thumb-cap">통합 데이터셋</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery · Looker Studio</span></div>
@@ -394,7 +410,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">영업관리와 자동화 추적 대시보드 제작을 위한 기반 마련</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">클릭/거래/매진 데이터 통합 및 수요·공급 지표 기반 영업액션 자동화 체계 수립</span></div></div>
   </div>
 </article>
-<article class="card" id="project2c" data-sec="의사결정 체계" data-part="데이터기반 영업관리 프로세스" data-title="액션제안 및 모니터링 대시보드 제작">
+<article class="card" id="project2c" data-sec="데이터 분석" data-part="영업 관리 분석" data-title="액션제안 및 모니터링 대시보드 제작" data-year="2025">
   <div class="thumb dark" data-srcs="portfolio_images/full/notion_09.jpg" data-caps="주차권수량 변경 전후 거래건수·거래액 추이 / 상품가격 변경 전후 거래액 추이" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_09.jpg" alt="액션제안 및 모니터링 대시보드 제작" loading="lazy"><div class="thumb-cap">주차권수량 변경 전후 거래건수·거래액 추이 / 상품가격 변경 전후 거래액 추이</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
@@ -402,7 +418,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">영업 액션(수량·가격 변경)의 효과를 추적하고 신규 액션을 제안하는 대시보드 제작</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">주차권 수량·가격 변경 전후 거래건수·거래액 변화를 실시간 모니터링하는 체계 구축</span></div></div>
   </div>
 </article>
-<article class="card" id="project2d" data-sec="의사결정 체계" data-part="데이터기반 영업관리 프로세스" data-title="액션제안 대시보드 1차 고도화">
+<article class="card" id="project2d" data-sec="데이터 분석" data-part="영업 관리 분석" data-title="액션제안 대시보드 1차 고도화" data-year="2025">
   <div class="thumb dark" data-srcs="portfolio_images/full/notion_10.jpg" data-caps="가격인상 주차권: Weekday / Weekend 분석" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_10.jpg" alt="액션제안 대시보드 1차 고도화" loading="lazy"><div class="thumb-cap">가격인상 주차권: Weekday / Weekend 분석</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
@@ -410,7 +426,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">인근대비 상대우위 지표 추가로 제안 수용률 증대</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">Weekday/Weekend 분리 분석으로 구체적 가격인상 근거 제공</span></div></div>
   </div>
 </article>
-<article class="card" id="project2e" data-sec="의사결정 체계" data-part="데이터기반 영업관리 프로세스" data-title="액션제안 대시보드 2차 고도화">
+<article class="card" id="project2e" data-sec="데이터 분석" data-part="영업 관리 분석" data-title="액션제안 대시보드 2차 고도화" data-year="2025">
   <div class="thumb dark" data-srcs="portfolio_images/full/notion_11.jpg" data-caps="Sales Analysis: 상권 종합 분석 대시보드" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_11.jpg" alt="액션제안 대시보드 2차 고도화" loading="lazy"><div class="thumb-cap">Sales Analysis: 상권 종합 분석 대시보드</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
@@ -418,8 +434,8 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">상품제안 대상 주차장 포함 상권의 종합적 분석자료 제공으로 제안 수용률 극대화</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">상권·주차장·유저행동·매출 현황을 한 화면에서 확인 가능한 종합 분석 대시보드 완성</span></div></div>
   </div>
 </article></div>
-<div class="part-head"><span class="part-title">사업·마케팅 분석</span><span class="part-count">3</span></div>
-<div class="grid"><article class="card" id="project3a" data-sec="의사결정 체계" data-part="사업·마케팅 분석" data-title="첫결제 프로모션 쿠폰 최적 지급조건 설계">
+<div class="part-head"><span class="part-title">사업 기획 분석</span><span class="part-count">3</span></div>
+<div class="grid"><article class="card" id="project3a" data-sec="데이터 분석" data-part="사업 기획 분석" data-title="첫결제 프로모션 쿠폰 최적 지급조건 설계" data-year="2025">
   <div class="thumb" data-srcs="portfolio_images/full/notion_12.jpg" data-caps="첫결제분석: 가입후시간 Simulation" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_12.jpg" alt="첫결제 프로모션 쿠폰 최적 지급조건 설계" loading="lazy"><div class="thumb-cap">첫결제분석: 가입후시간 Simulation</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery · Simulation</span></div>
@@ -427,7 +443,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">첫결제 전환 극대화 및 Organic 유저 쿠폰사용 최소화 지급조건 도출</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">약 1,500만원 잠재 GP Loss 방지에 기여</span></div></div>
   </div>
 </article>
-<article class="card" id="project3b" data-sec="의사결정 체계" data-part="사업·마케팅 분석" data-title="신규주차장 사업계획 달성 시나리오 도출">
+<article class="card" id="project3b" data-sec="데이터 분석" data-part="사업 기획 분석" data-title="신규주차장 사업계획 달성 시나리오 도출" data-year="2025">
   <div class="thumb" data-srcs="portfolio_images/full/notion_13.jpg" data-caps="사업계획 달성 Simulation" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_13.jpg" alt="신규주차장 사업계획 달성 시나리오 도출" loading="lazy"><div class="thumb-cap">사업계획 달성 Simulation</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery · Simulation</span></div>
@@ -435,7 +451,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">사업계획 달성을 위한 주요 레버별 달성 목표치 도출</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">25년 상반기 사업계획 미달분 보완을 위한 구체적 목표와 수단 시나리오 수립</span></div></div>
   </div>
 </article>
-<article class="card" id="project3c" data-sec="의사결정 체계" data-part="사업·마케팅 분석" data-title="통계 기반 클릭/거래 이상치 탐지 및 원인 분석">
+<article class="card" id="project3c" data-sec="데이터 분석" data-part="사업 기획 분석" data-title="통계 기반 클릭/거래 이상치 탐지 및 원인 분석" data-year="2025">
   <div class="thumb" data-srcs="portfolio_images/full/notion_14.jpg|portfolio_images/full/notion_15.jpg" data-caps="Z-score ≥ 7 조건 고수요 탐지 / Z-score &lt; -3 조건 이슈 발견|클릭/거래 이상치 상세: 실적 그래프 및 Z-score" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_14.jpg" alt="통계 기반 클릭/거래 이상치 탐지 및 원인 분석" loading="lazy"><span class="thumb-count">2장</span><div class="thumb-cap">Z-score ≥ 7 조건 고수요 탐지 / Z-score &lt; -3 조건 이슈 발견</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Z-score</span></div>
@@ -445,10 +461,10 @@
 </article></div>
 </section>
 
-<section class="sec" id="infra">
-<div class="sec-head"><div class="sec-label" style="color:#0f9d58">지표·인프라</div><h2 class="sec-title">지표 체계 설계 및 분석 인프라 구축</h2><ul class="sec-intro"><li>비즈니스 질문·가설 수립에서 출발하는 이벤트 로그 설계 프레임워크 구축</li><li>BigQuery 데이터마트·Git 기반 지표 SSOT 구축으로 지표 정의 단일화</li><li>분석 결과·의사결정 맥락 통합 저장소 구축으로 AI 분석 컨텍스트 고도화</li></ul></div>
-<div class="part-head"><span class="part-title">지표 체계·분석 인프라</span><span class="part-count">3</span></div>
-<div class="grid"><article class="card" id="if-eventlog" data-sec="지표·인프라" data-part="지표 체계·분석 인프라" data-title="이벤트 로그 설계 프레임워크">
+<section class="sec" id="infra" data-sec="infra">
+<div class="sec-head"><div class="sec-label" style="color:#0f9d58">데이터 인프라</div><h2 class="sec-title">지표 체계 설계 및 분석 인프라 구축</h2><ul class="sec-intro"><li>비즈니스 질문·가설 수립에서 출발하는 이벤트 로그 설계 프레임워크 구축</li><li>BigQuery 데이터마트·Git 기반 지표 SSOT 구축으로 지표 정의 단일화</li><li>분석 결과·의사결정 맥락 통합 저장소 구축으로 AI 분석 컨텍스트 고도화</li></ul></div>
+<div class="part-head"><span class="part-title">지표 정의·데이터 인프라</span><span class="part-count">3</span></div>
+<div class="grid"><article class="card" id="if-eventlog" data-sec="데이터 인프라" data-part="지표 정의·데이터 인프라" data-title="이벤트 로그 설계 프레임워크" data-year="2026">
   <div class="thumb" data-srcs="portfolio_images/full/notion_2026_ga_request.jpg|portfolio_images/full/notion_2026_draw_taxonomy.jpg" data-caps="GA 설계 요청서: 자료 링크만으로 설계안 생성, 알 수 없는 것만 확인 필요로 회신|드로우이벤트 GA 텍소노미 설계안: KPI·비즈니스 질문·측정 방식 체계" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_ga_request.jpg" alt="이벤트 로그 설계 프레임워크" loading="lazy"><span class="thumb-count">2장</span><div class="thumb-cap">GA 설계 요청서: 자료 링크만으로 설계안 생성, 알 수 없는 것만 확인 필요로 회신</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">GA4 · Claude Code</span></div>
@@ -456,7 +472,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">비즈니스 질문·가설 수립에서 출발하는 이벤트 로그 설계 표준 수립</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">정책서·피그마 유저플로우 입력으로 KPI·비즈니스 질문·화면×이벤트·등록안을 표준 양식으로 산출하고 확인 필요 항목만 회신</span></div></div>
   </div>
 </article>
-<article class="card" id="if-ssot" data-sec="지표·인프라" data-part="지표 체계·분석 인프라" data-title="데이터마트·Git 기반 지표 SSOT">
+<article class="card" id="if-ssot" data-sec="데이터 인프라" data-part="지표 정의·데이터 인프라" data-title="데이터마트·Git 기반 지표 SSOT" data-year="2026">
   <div class="thumb" data-srcs="portfolio_images/full/notion_2026_atlas.jpg|portfolio_images/full/notion_2026_atlas_ssot.jpg" data-caps="modu-data-AX 관리 지도: 데이터 기반·실행·운영 규칙 3층 구조|이벤트 SSOT: 마스터 YAML 134건·값 체계·자동 lint·등록 흐름" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_atlas.jpg" alt="데이터마트·Git 기반 지표 SSOT" loading="lazy"><span class="thumb-count">2장</span><div class="thumb-cap">modu-data-AX 관리 지도: 데이터 기반·실행·운영 규칙 3층 구조</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">BigQuery · GitHub</span></div>
@@ -464,7 +480,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">부서·리포트마다 달랐던 지표·이벤트 정의의 단일화</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">BigQuery 데이터마트와 Git 저장소(이벤트 마스터 YAML·값 체계·lint)로 정의 등록부터 배포까지 한 경로로 통일</span></div></div>
   </div>
 </article>
-<article class="card" id="if-gcs" data-sec="지표·인프라" data-part="지표 체계·분석 인프라" data-title="CRM 분석·의사결정 통합 저장소">
+<article class="card" id="if-gcs" data-sec="데이터 인프라" data-part="지표 정의·데이터 인프라" data-title="CRM 분석·의사결정 통합 저장소" data-year="2026">
   <div class="thumb" data-srcs="portfolio_images/full/notion_2026_moketer_storage.jpg|portfolio_images/full/notion_2026_atlas_buckets.jpg" data-caps="CRM 저장소 구성: campaigns·knowledge·banners·approvals 경로별 용도|GCS 버킷 지도: 상태가 사는 곳과 자동 게이트·감시망" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_moketer_storage.jpg" alt="CRM 분석·의사결정 통합 저장소" loading="lazy"><span class="thumb-count">2장</span><div class="thumb-cap">CRM 저장소 구성: campaigns·knowledge·banners·approvals 경로별 용도</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">GCS · Claude Code</span></div>
@@ -474,10 +490,10 @@
 </article></div>
 </section>
 
-<section class="sec" id="viz">
-<div class="sec-head"><div class="sec-label" style="color:#7c3aed">Visualization</div><h2 class="sec-title">Visualization</h2><ul class="sec-intro"><li>Looker Studio · Google Sheets · Tableau · Kepler.gl 기반 대시보드 및 분석 리포트</li></ul></div>
+<section class="sec" id="viz" data-sec="viz">
+<div class="sec-head"><div class="sec-label" style="color:#7c3aed">대시보드</div><h2 class="sec-title">Visualization</h2><ul class="sec-intro"><li>Looker Studio · Google Sheets · Tableau · Kepler.gl 기반 대시보드 및 분석 리포트</li></ul></div>
 <div class="part-head"><span class="part-title">성과 추적</span><span class="part-count">3</span></div>
-<div class="grid"><article class="card" id="viz-v1a" data-sec="Visualization" data-part="성과 추적" data-title="W-1(저번주) 성과예측 대시보드">
+<div class="grid"><article class="card" id="viz-v1a" data-sec="대시보드" data-part="성과 추적" data-title="W-1(저번주) 성과예측 대시보드" data-year="2025">
   <div class="thumb dark" data-srcs="portfolio_images/full/notion_17.jpg" data-caps="ParkingZone Demand Dashboard: 지도 기반 수요 시각화" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_17.jpg" alt="W-1(저번주) 성과예측 대시보드" loading="lazy"><div class="thumb-cap">ParkingZone Demand Dashboard: 지도 기반 수요 시각화</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
@@ -485,7 +501,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">전체 주차장의 심층적 일정별 성과를 지표로 수치 확인</span></div><div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">주차장별 기여치를 매주 자동 집계하여 반복 리포팅 업무 대체</span></div></div>
   </div>
 </article>
-<article class="card" id="viz-v1b" data-sec="Visualization" data-part="성과 추적" data-title="마케팅 실적 리포트">
+<article class="card" id="viz-v1b" data-sec="대시보드" data-part="성과 추적" data-title="마케팅 실적 리포트" data-year="2025">
   <div class="thumb dark" data-srcs="portfolio_images/full/notion_18.jpg" data-caps="모두의주차장 운영현황: Weekly 리포트" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_18.jpg" alt="마케팅 실적 리포트" loading="lazy"><div class="thumb-cap">모두의주차장 운영현황: Weekly 리포트</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
@@ -493,7 +509,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">마케팅 부서의 실시간 실적 리포팅 자동화</span></div><div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">마케팅 부서에서 Weekly 운영현황을 실시간 조회하여 의사결정에 활용</span></div></div>
   </div>
 </article>
-<article class="card" id="viz-v1c" data-sec="Visualization" data-part="성과 추적" data-title="공유주차 서비스 자치구별 실적 대시보드">
+<article class="card" id="viz-v1c" data-sec="대시보드" data-part="성과 추적" data-title="공유주차 서비스 자치구별 실적 대시보드" data-year="2025">
   <div class="thumb dark" data-srcs="portfolio_images/full/notion_19.jpg" data-caps="공유 자치구별 실적 대시보드" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_19.jpg" alt="공유주차 서비스 자치구별 실적 대시보드" loading="lazy"><div class="thumb-cap">공유 자치구별 실적 대시보드</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
@@ -502,7 +518,7 @@
   </div>
 </article></div>
 <div class="part-head"><span class="part-title">공급 관리</span><span class="part-count">3</span></div>
-<div class="grid"><article class="card" id="viz-v2a" data-sec="Visualization" data-part="공급 관리" data-title="제휴일반 대시보드">
+<div class="grid"><article class="card" id="viz-v2a" data-sec="대시보드" data-part="공급 관리" data-title="제휴일반 대시보드" data-year="2025">
   <div class="thumb dark" data-srcs="portfolio_images/full/notion_20.jpg" data-caps="제휴일반: Key Index / SoldOut Trend / Heatmap &amp; SoldOutRank" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_20.jpg" alt="제휴일반 대시보드" loading="lazy"><div class="thumb-cap">제휴일반: Key Index / SoldOut Trend / Heatmap &amp; SoldOutRank</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
@@ -510,7 +526,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">제휴 주차장의 공급 현황 및 시간대별 마감 추이를 한 곳에서 파악</span></div><div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">공급/구매가능/미가동 현황과 SoldOut 추이를 확인하여 재고·가격 관리에 활용</span></div></div>
   </div>
 </article>
-<article class="card" id="viz-v2b" data-sec="Visualization" data-part="공급 관리" data-title="판매중단 시설관리 대시보드">
+<article class="card" id="viz-v2b" data-sec="대시보드" data-part="공급 관리" data-title="판매중단 시설관리 대시보드" data-year="2025">
   <div class="thumb dark" data-srcs="portfolio_images/full/notion_21.jpg" data-caps="Sales Off Partner: Long Term / Short Term 관리" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_21.jpg" alt="판매중단 시설관리 대시보드" loading="lazy"><div class="thumb-cap">Sales Off Partner: Long Term / Short Term 관리</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
@@ -518,7 +534,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">판매중단 시설의 복구·관리 프로세스 자동화</span></div><div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">Long/Short Term 유형별로 판매중단 시설을 분류하여 복구 우선순위 관리에 활용</span></div></div>
   </div>
 </article>
-<article class="card" id="viz-v2c" data-sec="Visualization" data-part="공급 관리" data-title="장기권 슬롯관리 대시보드">
+<article class="card" id="viz-v2c" data-sec="대시보드" data-part="공급 관리" data-title="장기권 슬롯관리 대시보드" data-year="2025">
   <div class="thumb dark" data-srcs="portfolio_images/full/notion_22.jpg" data-caps="정기권 주차가능 현황: 주차가능현장 1,494 / 주차가능수량 26,333" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_22.jpg" alt="장기권 슬롯관리 대시보드" loading="lazy"><div class="thumb-cap">정기권 주차가능 현황: 주차가능현장 1,494 / 주차가능수량 26,333</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
@@ -526,8 +542,8 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">제한된 정기권 슬롯 활용 극대화</span></div><div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">잔여슬롯을 파악하여 쏘카존 배치, 비연장기관 판매제안 등 자산 운용에 활용</span></div></div>
   </div>
 </article></div>
-<div class="part-head"><span class="part-title">유저 상세</span><span class="part-count">4</span></div>
-<div class="grid"><article class="card" id="viz-v3a" data-sec="Visualization" data-part="유저 상세" data-title="퍼널 대시보드">
+<div class="part-head"><span class="part-title">유저 분석</span><span class="part-count">4</span></div>
+<div class="grid"><article class="card" id="viz-v3a" data-sec="대시보드" data-part="유저 분석" data-title="퍼널 대시보드" data-year="2025">
   <div class="thumb dark" data-srcs="portfolio_images/full/notion_23.jpg|portfolio_images/full/notion_24.jpg" data-caps="풀 퍼널: Total / iOS / AOS|주요 퍼널 by BM" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_23.jpg" alt="퍼널 대시보드" loading="lazy"><span class="thumb-count">2장</span><div class="thumb-cap">풀 퍼널: Total / iOS / AOS</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
@@ -535,7 +551,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">주요 퍼널별 전환율 시각화를 통한 제품개선 인사이트 도출</span></div><div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">Total/iOS/AOS별 풀 퍼널 및 BM별 주요 퍼널을 실시간 모니터링하여 제품개선에 활용</span></div></div>
   </div>
 </article>
-<article class="card" id="viz-v3b" data-sec="Visualization" data-part="유저 상세" data-title="신규가입유저 코호트 분석 리포트">
+<article class="card" id="viz-v3b" data-sec="대시보드" data-part="유저 분석" data-title="신규가입유저 코호트 분석 리포트" data-year="2025">
   <div class="thumb" data-srcs="portfolio_images/full/notion_25.jpg" data-caps="전환율 / 기여도 / 잔존율 / 관측값: 신규가입유저 코호트 분석" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_25.jpg" alt="신규가입유저 코호트 분석 리포트" loading="lazy"><div class="thumb-cap">전환율 / 기여도 / 잔존율 / 관측값: 신규가입유저 코호트 분석</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Google Sheets</span></div>
@@ -543,7 +559,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">신규가입유저의 코호트별 주요 금액자료 확인을 통한 잔존 이해도 향상</span></div><div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">코호트별 전환율/기여도/잔존율을 비교하여 유저 잔존 전략 수립에 활용</span></div></div>
   </div>
 </article>
-<article class="card" id="viz-v3c-tab" data-sec="Visualization" data-part="유저 상세" data-title="미결제 유저 검색수요 지리공간 분석">
+<article class="card" id="viz-v3c-tab" data-sec="대시보드" data-part="유저 분석" data-title="미결제 유저 검색수요 지리공간 분석" data-year="2025">
   <div class="thumb" data-srcs="portfolio_images/full/notion_04.jpg" data-caps="지역별 검색장소 데이터 / 검색 키워드 순위" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_04.jpg" alt="미결제 유저 검색수요 지리공간 분석" loading="lazy"><div class="thumb-cap">지역별 검색장소 데이터 / 검색 키워드 순위</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Tableau · Kakao Map API</span></div>
@@ -551,7 +567,7 @@
     <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">카카오맵 API 역지오코딩으로 검색위치 주소 변환 (검색 이벤트 로깅 시 주소 미수집)</span></div><div class="sum-row"><span class="sum-label">활용</span><span class="sum-value">미결제 유저 검색 집중 지역을 파악하여 영업(주차장 확보) 및 마케팅(유저 넛지)에 활용</span></div></div>
   </div>
 </article>
-<article class="card" id="viz-v3c" data-sec="Visualization" data-part="유저 상세" data-title="여의도 불꽃축제 동적 수요지도">
+<article class="card" id="viz-v3c" data-sec="대시보드" data-part="유저 분석" data-title="여의도 불꽃축제 동적 수요지도" data-year="2025">
   <div class="thumb" data-srcs="portfolio_images/full/notion_26.jpg|portfolio_images/full/notion_27.jpg" data-caps="오전 수요지도: 여의도 내 수요 집중 지점|오후 수요지도: 인근 동작·용산·노량진 수요 분산" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_26.jpg" alt="여의도 불꽃축제 동적 수요지도" loading="lazy"><span class="thumb-count">2장</span><div class="thumb-cap">오전 수요지도: 여의도 내 수요 집중 지점</div></div>
   <div class="card-body">
     <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Kepler.gl</span></div>
@@ -588,6 +604,28 @@ function closeDemo(){
 document.getElementById('demoModal').addEventListener('click',function(e){if(e.target===this)closeDemo()});
 window.addEventListener('message',e=>{if(e.data==='close-demo')closeDemo()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('demoModal').classList.contains('open'))closeDemo()});
+
+// Year bars (연도별 카드 수 막대 · 클릭하면 그 연도 카드만 표시 · 기본 올해)
+(function(){
+  const cards=[...document.querySelectorAll('.card')];
+  const counts={};cards.forEach(c=>{counts[c.dataset.year]=(counts[c.dataset.year]||0)+1});
+  const years=Object.keys(counts).sort();const max=Math.max(...Object.values(counts));
+  const host=document.getElementById('yearBars'),note=document.getElementById('yearNote');
+  let current=String(new Date().getFullYear());if(!counts[current])current=years[years.length-1];
+  host.innerHTML=['all',...years].map(y=>`<button class="yb" data-y="${y}"><span class="bar"><b>${y==='all'?cards.length:counts[y]}</b><i data-h="${y==='all'?100:Math.round(counts[y]/max*100)}"></i></span><span class="lab">${y==='all'?'전체':y}</span></button>`).join('');
+  function apply(y){
+    current=y;host.querySelectorAll('.yb').forEach(b=>b.classList.toggle('active',b.dataset.y===y));
+    cards.forEach(c=>c.classList.toggle('yr-hide',y!=='all'&&c.dataset.year!==y));
+    document.querySelectorAll('.grid').forEach(g=>{const vis=[...g.querySelectorAll('.card')].some(c=>!c.classList.contains('yr-hide'));g.classList.toggle('yr-hide',!vis);const ph=g.previousElementSibling;if(ph&&ph.classList.contains('part-head')){ph.classList.toggle('yr-hide',!vis);const n=[...g.querySelectorAll('.card')].filter(c=>!c.classList.contains('yr-hide')).length;const cnt=ph.querySelector('.part-count');if(cnt)cnt.textContent=n}});
+    document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('yr-hide',![...s.querySelectorAll('.card')].some(c=>!c.classList.contains('yr-hide'))));
+    const n=cards.filter(c=>!c.classList.contains('yr-hide')).length;
+    note.textContent=y==='all'?`전체 ${n}건`:`${y}년 작업 ${n}건 · 다른 연도는 막대를 눌러 보세요`;
+  }
+  host.querySelectorAll('.yb').forEach(b=>b.addEventListener('click',()=>apply(b.dataset.y)));
+  apply(current);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>host.querySelectorAll('.bar i').forEach(i=>i.style.height=i.dataset.h+'%')));
+  window.showAllYears=()=>{if(current!=='all')apply('all')};
+})();
 
 // Lightbox (카드별 여러 장 넘김)
 let lbSrcs=[],lbCaps=[],lbIdx=0;
@@ -645,6 +683,7 @@ document.addEventListener('keydown',e=>{
     dd.addEventListener('click',e=>e.stopPropagation());
     dd.querySelectorAll('.vd-item').forEach(item=>item.addEventListener('click',()=>{
       const el=document.getElementById(item.dataset.target);
+      if(el&&el.classList.contains('yr-hide'))window.showAllYears();
       if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.remove('search-found');void el.offsetWidth;el.classList.add('search-found')}
       dd.classList.remove('open');
     }));
@@ -685,7 +724,7 @@ function openSearch(){document.getElementById('searchToggle').click()}
       const pv=preview(item,q),div=document.createElement('div');
       div.className='sr-item';
       div.innerHTML=`<div class="sr-text"><div class="sr-title">${hl(item.title,query)}</div><div class="sr-breadcrumb">${esc(item.group)} · ${esc(item.part)}</div>${pv?'<div class="sr-preview">'+hl(pv,query)+'</div>':''}</div><div class="sr-arrow">&rsaquo;</div>`;
-      div.addEventListener('click',()=>{close();const sec=document.getElementById(item.id);if(sec){sec.scrollIntoView({behavior:'smooth',block:'center'});sec.classList.remove('search-found');void sec.offsetWidth;sec.classList.add('search-found')}});
+      div.addEventListener('click',()=>{close();const sec=document.getElementById(item.id);if(sec&&sec.classList.contains('yr-hide'))window.showAllYears();if(sec){sec.scrollIntoView({behavior:'smooth',block:'center'});sec.classList.remove('search-found');void sec.offsetWidth;sec.classList.add('search-found')}});
       res.appendChild(div);ci.push(div);
     });
   }

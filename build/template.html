@@ -82,6 +82,20 @@
   .cover-desc{font-size:13px;color:var(--sub);line-height:1.8;margin-bottom:4px}
   .cover-desc.small{font-size:12px;margin-top:10px}
   .cover-bottom{text-align:center;margin-top:28px}
+  /* ── Year bars ── */
+  .year-bars{display:flex;justify-content:center;align-items:flex-end;gap:10px;margin:0 auto 18px;max-width:400px}
+  .yb{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:none;border:none;font-family:inherit;padding:0}
+  .yb .bar{width:100%;height:56px;display:flex;align-items:flex-end;justify-content:center;border-radius:6px;background:var(--alt);overflow:hidden;position:relative}
+  .yb .bar i{display:block;width:100%;background:#d4d4d8;border-radius:6px 6px 0 0;transition:height .5s cubic-bezier(.2,.7,.2,1),background .2s;height:0}
+  .yb .bar b{position:absolute;top:6px;left:0;right:0;font-size:11px;font-weight:700;color:var(--sub)}
+  .yb .lab{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.3px}
+  .yb.active .bar i{background:var(--blue)}
+  .yb.active .lab{color:var(--text)}
+  .yb.active .bar b{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+  .yb:hover .bar i{background:#a1a1aa}
+  .yb.active:hover .bar i{background:var(--blue)}
+  .year-note{font-size:11px;color:var(--muted);margin:-10px 0 14px}
+  .card.yr-hide,.part-head.yr-hide,.grid.yr-hide,.sec.yr-hide{display:none}
   .cover-search{max-width:400px;margin:0 auto 12px}
   .cover-search button{display:flex;align-items:center;gap:6px;width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--alt);cursor:pointer;font-family:inherit;font-size:12px;color:var(--muted);transition:all .2s}
   .cover-search button:hover{border-color:#bbb}
@@ -199,13 +213,13 @@
   <div class="search-suggest" id="searchSuggest">
     <div class="search-suggest-title">추천 키워드</div>
     <div class="search-suggest-tags">
-      <span class="search-suggest-tag" data-kw="CRM">CRM</span>
-      <span class="search-suggest-tag" data-kw="인과추론">인과추론</span>
-      <span class="search-suggest-tag" data-kw="슬랙봇">슬랙봇</span>
-      <span class="search-suggest-tag" data-kw="전환율">전환율</span>
+      <span class="search-suggest-tag" data-kw="대시보드">대시보드</span>
+      <span class="search-suggest-tag" data-kw="A/B">A/B 테스트</span>
       <span class="search-suggest-tag" data-kw="퍼널">퍼널</span>
-      <span class="search-suggest-tag" data-kw="지표">지표</span>
-      <span class="search-suggest-tag" data-kw="Claude">Claude</span>
+      <span class="search-suggest-tag" data-kw="자동화">자동화</span>
+      <span class="search-suggest-tag" data-kw="지도">지도</span>
+      <span class="search-suggest-tag" data-kw="전환율">전환율</span>
+      <span class="search-suggest-tag" data-kw="AI">AI</span>
     </div>
   </div>
 </div>
@@ -244,6 +258,8 @@
     </div>
   </div>
   <div class="cover-bottom">
+    <div class="year-bars" id="yearBars"></div>
+    <div class="year-note" id="yearNote"></div>
     <div class="cover-search">
       <button onclick="openSearch()">
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><line x1="8.5" y1="8.5" x2="12" y2="12"/></svg>
@@ -286,6 +302,28 @@ function closeDemo(){
 document.getElementById('demoModal').addEventListener('click',function(e){if(e.target===this)closeDemo()});
 window.addEventListener('message',e=>{if(e.data==='close-demo')closeDemo()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('demoModal').classList.contains('open'))closeDemo()});
+
+// Year bars (연도별 카드 수 막대 · 클릭하면 그 연도 카드만 표시 · 기본 올해)
+(function(){
+  const cards=[...document.querySelectorAll('.card')];
+  const counts={};cards.forEach(c=>{counts[c.dataset.year]=(counts[c.dataset.year]||0)+1});
+  const years=Object.keys(counts).sort();const max=Math.max(...Object.values(counts));
+  const host=document.getElementById('yearBars'),note=document.getElementById('yearNote');
+  let current=String(new Date().getFullYear());if(!counts[current])current=years[years.length-1];
+  host.innerHTML=['all',...years].map(y=>`<button class="yb" data-y="${y}"><span class="bar"><b>${y==='all'?cards.length:counts[y]}</b><i data-h="${y==='all'?100:Math.round(counts[y]/max*100)}"></i></span><span class="lab">${y==='all'?'전체':y}</span></button>`).join('');
+  function apply(y){
+    current=y;host.querySelectorAll('.yb').forEach(b=>b.classList.toggle('active',b.dataset.y===y));
+    cards.forEach(c=>c.classList.toggle('yr-hide',y!=='all'&&c.dataset.year!==y));
+    document.querySelectorAll('.grid').forEach(g=>{const vis=[...g.querySelectorAll('.card')].some(c=>!c.classList.contains('yr-hide'));g.classList.toggle('yr-hide',!vis);const ph=g.previousElementSibling;if(ph&&ph.classList.contains('part-head')){ph.classList.toggle('yr-hide',!vis);const n=[...g.querySelectorAll('.card')].filter(c=>!c.classList.contains('yr-hide')).length;const cnt=ph.querySelector('.part-count');if(cnt)cnt.textContent=n}});
+    document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('yr-hide',![...s.querySelectorAll('.card')].some(c=>!c.classList.contains('yr-hide'))));
+    const n=cards.filter(c=>!c.classList.contains('yr-hide')).length;
+    note.textContent=y==='all'?`전체 ${n}건`:`${y}년 작업 ${n}건 · 다른 연도는 막대를 눌러 보세요`;
+  }
+  host.querySelectorAll('.yb').forEach(b=>b.addEventListener('click',()=>apply(b.dataset.y)));
+  apply(current);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>host.querySelectorAll('.bar i').forEach(i=>i.style.height=i.dataset.h+'%')));
+  window.showAllYears=()=>{if(current!=='all')apply('all')};
+})();
 
 // Lightbox (카드별 여러 장 넘김)
 let lbSrcs=[],lbCaps=[],lbIdx=0;
@@ -343,6 +381,7 @@ document.addEventListener('keydown',e=>{
     dd.addEventListener('click',e=>e.stopPropagation());
     dd.querySelectorAll('.vd-item').forEach(item=>item.addEventListener('click',()=>{
       const el=document.getElementById(item.dataset.target);
+      if(el&&el.classList.contains('yr-hide'))window.showAllYears();
       if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.remove('search-found');void el.offsetWidth;el.classList.add('search-found')}
       dd.classList.remove('open');
     }));
@@ -383,7 +422,7 @@ function openSearch(){document.getElementById('searchToggle').click()}
       const pv=preview(item,q),div=document.createElement('div');
       div.className='sr-item';
       div.innerHTML=`<div class="sr-text"><div class="sr-title">${hl(item.title,query)}</div><div class="sr-breadcrumb">${esc(item.group)} · ${esc(item.part)}</div>${pv?'<div class="sr-preview">'+hl(pv,query)+'</div>':''}</div><div class="sr-arrow">&rsaquo;</div>`;
-      div.addEventListener('click',()=>{close();const sec=document.getElementById(item.id);if(sec){sec.scrollIntoView({behavior:'smooth',block:'center'});sec.classList.remove('search-found');void sec.offsetWidth;sec.classList.add('search-found')}});
+      div.addEventListener('click',()=>{close();const sec=document.getElementById(item.id);if(sec&&sec.classList.contains('yr-hide'))window.showAllYears();if(sec){sec.scrollIntoView({behavior:'smooth',block:'center'});sec.classList.remove('search-found');void sec.offsetWidth;sec.classList.add('search-found')}});
       res.appendChild(div);ci.push(div);
     });
   }
