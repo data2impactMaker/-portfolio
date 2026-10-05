@@ -82,15 +82,18 @@
   .cover-desc{font-size:13px;color:var(--sub);line-height:1.8;margin-bottom:4px}
   .cover-desc.small{font-size:12px;margin-top:10px}
   .cover-bottom{text-align:center;margin-top:28px}
-  /* ── Filter tabs (연도 · 영역) ── */
-  .fbar{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin:4px auto 6px}
-  .ftabs{position:relative;display:inline-flex;align-items:center;gap:2px;padding-bottom:8px}
-  .ftabs button{font-family:inherit;font-size:13px;font-weight:500;color:var(--muted);background:none;border:none;padding:4px 10px;cursor:pointer;letter-spacing:-.1px;transition:color .18s;white-space:nowrap}
-  .ftabs button:hover{color:var(--sub)}
-  .ftabs button.on{color:var(--text);font-weight:700}
-  .ftabs .ind{position:absolute;bottom:0;height:2px;border-radius:2px;background:var(--text);transition:left .25s cubic-bezier(.2,.7,.2,1),width .25s cubic-bezier(.2,.7,.2,1)}
-  .fsep{width:1px;height:14px;background:var(--border);margin:0 14px 8px}
-  @media(max-width:700px){.fsep{display:none}.fbar{flex-direction:column;gap:2px}}
+  /* ── Filter control (연도 · 영역) ── */
+  .fbar{display:flex;justify-content:center;margin:2px auto 8px}
+  .fctl{display:inline-flex;align-items:center;background:#fff;border:1px solid #ebebee;border-radius:999px;padding:4px;box-shadow:0 1px 2px rgba(0,0,0,.03),0 10px 30px rgba(17,17,17,.05);max-width:100%}
+  .fgrp{position:relative;display:inline-flex;align-items:center}
+  .fgrp .pill{position:absolute;top:0;bottom:0;border-radius:999px;background:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.18);transition:left .32s cubic-bezier(.3,.9,.25,1),width .32s cubic-bezier(.3,.9,.25,1);z-index:0}
+  .fgrp button{position:relative;z-index:1;font-family:inherit;font-size:12.5px;font-weight:600;color:#6b6b73;background:none;border:none;border-radius:999px;padding:7px 14px;cursor:pointer;letter-spacing:-.1px;white-space:nowrap;display:inline-flex;align-items:center;gap:7px;transition:color .25s}
+  .fgrp button:hover{color:var(--text)}
+  .fgrp button.on{color:#fff}
+  .fgrp button .dot{width:6px;height:6px;border-radius:50%;background:var(--c,#a1a1aa);transition:background .25s,box-shadow .25s}
+  .fgrp button.on .dot{background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.18)}
+  .fdiv{width:1px;height:18px;background:#e6e6ea;margin:0 6px}
+  @media(max-width:700px){.fctl{flex-direction:column;border-radius:20px;padding:6px;gap:4px}.fdiv{width:60%;height:1px;margin:2px 0}.fgrp{flex-wrap:wrap;justify-content:center}.fgrp .pill{display:none}.fgrp button.on{background:var(--text)}}
   .card.yr-hide,.part-head.yr-hide,.grid.yr-hide,.sec.yr-hide{display:none}
   .card.yr-hide,.part-head.yr-hide,.grid.yr-hide,.sec.yr-hide{display:none}
   .cover-search{max-width:400px;margin:0 auto 12px}
@@ -590,27 +593,26 @@ document.getElementById('demoModal').addEventListener('click',function(e){if(e.t
 window.addEventListener('message',e=>{if(e.data==='close-demo')closeDemo()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('demoModal').classList.contains('open'))closeDemo()});
 
-// Filter tabs (연도 × 영역 · 기본 올해 · 전체)
+// Filter control (연도 × 영역 · 기본 올해 · 전체)
 (function(){
   const cards=[...document.querySelectorAll('.card')];
-  const secs=[...document.querySelectorAll('.sec')].map(s=>({id:s.dataset.sec,label:s.querySelector('.sec-label').textContent.trim()}));
+  const secs=[...document.querySelectorAll('.sec')].map(s=>({id:s.dataset.sec,label:s.querySelector('.sec-label').textContent.trim(),color:s.querySelector('.sec-label').style.color}));
   const years=[...new Set(cards.map(c=>c.dataset.year))].sort();
   let year=String(new Date().getFullYear());if(!years.includes(year))year=years[years.length-1];
   let sec='all';
   const host=document.getElementById('filterBar');
-  host.innerHTML=`<div class="ftabs" data-k="year"><button data-v="all">전체</button>${years.map(y=>`<button data-v="${y}">${y}</button>`).join('')}<i class="ind"></i></div><span class="fsep"></span>`+
-    `<div class="ftabs" data-k="sec"><button data-v="all">전체</button>${secs.map(s=>`<button data-v="${s.id}">${s.label}</button>`).join('')}<i class="ind"></i></div>`;
-  function moveInd(g){const on=g.querySelector('button.on'),ind=g.querySelector('.ind');if(!on)return;ind.style.left=on.offsetLeft+'px';ind.style.width=on.offsetWidth+'px'}
+  host.innerHTML=`<div class="fctl"><div class="fgrp" data-k="year"><i class="pill"></i><button data-v="all">전체</button>${years.map(y=>`<button data-v="${y}">${y}</button>`).join('')}</div><span class="fdiv"></span><div class="fgrp" data-k="sec"><i class="pill"></i><button data-v="all">전체</button>${secs.map(s=>`<button data-v="${s.id}"><span class="dot" style="--c:${s.color}"></span>${s.label}</button>`).join('')}</div></div>`;
+  function movePill(g){const on=g.querySelector('button.on'),p=g.querySelector('.pill');if(!on)return;p.style.left=on.offsetLeft+'px';p.style.width=on.offsetWidth+'px'}
   function apply(){
-    host.querySelectorAll('.ftabs').forEach(g=>{const v=g.dataset.k==='year'?year:sec;g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));moveInd(g)});
+    host.querySelectorAll('.fgrp').forEach(g=>{const v=g.dataset.k==='year'?year:sec;g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));movePill(g)});
     cards.forEach(c=>{const s=c.closest('.sec').dataset.sec;c.classList.toggle('yr-hide',(year!=='all'&&c.dataset.year!==year)||(sec!=='all'&&s!==sec))});
     document.querySelectorAll('.grid').forEach(g=>{const vis=[...g.querySelectorAll('.card')].filter(c=>!c.classList.contains('yr-hide'));g.classList.toggle('yr-hide',!vis.length);const ph=g.previousElementSibling;if(ph&&ph.classList.contains('part-head')){ph.classList.toggle('yr-hide',!vis.length);const cnt=ph.querySelector('.part-count');if(cnt)cnt.textContent=vis.length}});
     document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('yr-hide',![...s.querySelectorAll('.card')].some(c=>!c.classList.contains('yr-hide'))));
   }
-  host.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.parentElement.dataset.k==='year')year=b.dataset.v;else sec=b.dataset.v;apply()});
+  host.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.closest('.fgrp').dataset.k==='year')year=b.dataset.v;else sec=b.dataset.v;apply()});
   apply();
-  window.addEventListener('resize',()=>host.querySelectorAll('.ftabs').forEach(moveInd));
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>host.querySelectorAll('.ftabs').forEach(moveInd));
+  const re=()=>host.querySelectorAll('.fgrp').forEach(movePill);
+  window.addEventListener('resize',re);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(re);setTimeout(re,300);
   window.showAllYears=()=>{if(year!=='all'||sec!=='all'){year='all';sec='all';apply()}};
 })();
 
