@@ -1,117 +1,121 @@
 <!DOCTYPE html>
 <html lang="ko"><head><meta charset="UTF-8"><title>CRM 에이전틱 워크플로우 스윔레인</title>
 <style>
-  html,body{overflow-x:hidden}
+  html,body{overflow-x:hidden;margin:0;background:#fff}
   td{white-space:nowrap}
-  body{margin:0;background:#fff;font-family:'Pretendard Variable','Noto Sans KR',-apple-system,sans-serif}
+  body{font-family:'Pretendard Variable','Noto Sans KR',-apple-system,sans-serif}
   svg{display:block}
-  .lane-label{font-size:14px;font-weight:800;fill:#18181b}
-  .lane-sub{font-size:11px;fill:#71717a}
-  .phase{font-size:12px;font-weight:700;fill:#52525b;letter-spacing:.5px}
-  .box{fill:#fff;stroke:#d4d4d8;stroke-width:1.5}
-  .box.agent{fill:#eff6ff;stroke:#93c5fd}
-  .box.tool{fill:#f4f4f5;stroke:#d4d4d8}
-  .gate{fill:#fffbeb;stroke:#f59e0b;stroke-width:1.5}
-  .t{font-size:12.5px;font-weight:700;fill:#18181b}
-  .s{font-size:10.5px;fill:#52525b}
-  .arrow{stroke:#a1a1aa;stroke-width:1.5;fill:none;marker-end:url(#ah)}
-  .arrow.strong{stroke:#2563eb}
-  .num{font-size:11px;font-weight:800;fill:#b45309}
-  .title{font-size:17px;font-weight:800;fill:#18181b}
-  .sub{font-size:11.5px;fill:#71717a}
+  .bt{font-size:20px;font-weight:800;fill:#18181b}
+  .bs{font-size:13.5px;font-style:italic;fill:#4b5563}
+  .banner{fill:#fff;stroke:#9ca3af;stroke-width:1.6;stroke-dasharray:7 5;rx:16}
+  .ph{stroke-width:1.6;rx:12}
+  .ph.y{fill:#fdf9e6;stroke:#e9d77a}.ph.g{fill:#eef8ee;stroke:#8fcf93}.ph.b{fill:#eaf1fc;stroke:#8fb3ec}.ph.p{fill:#f3effb;stroke:#b9a3e6}
+  .pht{font-size:15px;font-weight:800}
+  .pht.y{fill:#8a6d00}.pht.g{fill:#1f6b2a}.pht.b{fill:#1d4f9c}.pht.p{fill:#5b3fa6}
+  .lane{fill:#fbfbfc;stroke:#d9dce2;stroke-width:1.4}
+  .lane.alt{fill:#fff}
+  .lt{font-size:15px;font-weight:800;fill:#18181b}
+  .ls{font-size:11.5px;fill:#6b7280}
+  .node{fill:#fff;stroke:#c9ccd3;stroke-width:1.4;rx:11}
+  .node.gate{fill:#fff7e0;stroke:#e0a73a;stroke-width:1.8}
+  .node.tool{fill:#f7f7f8;stroke:#c9ccd3}
+  .nt{font-size:12.5px;font-weight:700;fill:#18181b}
+  .ns{font-size:10.5px;fill:#5b6470}
+  .gn{font-size:10px;font-weight:800;fill:#9a6a10;letter-spacing:.08em}
+  .arrow{fill:none;stroke:#64748b;stroke-width:1.8;marker-end:url(#tri)}
+  .arrow.main{stroke:#1d4f9c;stroke-width:2.2;marker-end:url(#tri-b)}
+  .arrow.up{stroke:#e0a73a;stroke-width:1.8;marker-end:url(#tri-y)}
+  .ic{fill:none;stroke:#334155;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .ic.y{stroke:#9a6a10}.ic.b{stroke:#1d4f9c}.ic.gr{stroke:#5b6470}
+  .leg{font-size:11.5px;fill:#334155}
+  .sep{stroke:#e3e6ea;stroke-width:1;stroke-dasharray:4 4}
 </style></head>
 <body>
-<svg width="1400" height="760" viewBox="0 0 1400 760" xmlns="http://www.w3.org/2000/svg">
-  <defs><marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#a1a1aa"/></marker></defs>
-  <text x="40" y="38" class="title">CRM 캠페인 에이전틱 워크플로우</text>
-  <text x="40" y="58" class="sub">기획부터 발송 · 성과분석까지의 처리 흐름. 사람은 게이트 4곳에서 결정, 나머지는 에이전트가 도구 호출로 처리</text>
+<svg width="1400" height="800" viewBox="0 0 1400 800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="tri" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#64748b"/></marker>
+    <marker id="tri-b" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#1d4f9c"/></marker>
+    <marker id="tri-y" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#e0a73a"/></marker>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 17l.8 2.2L22 20l-2.2.8L19 23l-.8-2.2L16 20l2.2-.8z"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H8l-5 3 1.5-5A8 8 0 1 1 21 12z"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4 20a1 1 0 0 0 .9 1.5h14.2A1 1 0 0 0 20 20l-6-11V3"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1-1 9z"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-figma" viewBox="0 0 24 24"><rect x="5" y="2" width="7" height="7" rx="3.5"/><rect x="12" y="2" width="7" height="7" rx="3.5"/><rect x="5" y="9" width="7" height="7" rx="3.5"/><circle cx="15.5" cy="12.5" r="3.5"/><rect x="5" y="16" width="7" height="7" rx="3.5"/></symbol>
+  </defs>
 
-  <!-- phase header -->
-  <g class="phase">
-    <rect x="200" y="80" width="1160" height="26" rx="6" fill="#fafafa" stroke="#e4e4e7"/>
-    <text x="330" y="98" text-anchor="middle">1 · 실험 설계</text>
-    <text x="620" y="98" text-anchor="middle">2 · 제작</text>
-    <text x="910" y="98" text-anchor="middle">3 · 발송</text>
-    <text x="1200" y="98" text-anchor="middle">4 · 저장 · 분석</text>
-    <line x1="490" y1="80" x2="490" y2="740" stroke="#e4e4e7" stroke-dasharray="4 4"/>
-    <line x1="780" y1="80" x2="780" y2="740" stroke="#e4e4e7" stroke-dasharray="4 4"/>
-    <line x1="1070" y1="80" x2="1070" y2="740" stroke="#e4e4e7" stroke-dasharray="4 4"/>
-  </g>
+  <rect x="30" y="22" width="1340" height="66" class="banner"/>
+  <text x="700" y="50" text-anchor="middle" class="bt">CRM 캠페인 에이전틱 워크플로우</text>
+  <text x="700" y="74" text-anchor="middle" class="bs">기획부터 발송 · 성과분석까지의 처리 흐름. 사람은 게이트 4곳에서 결정, 나머지는 에이전트가 도구 호출로 처리</text>
 
-  <!-- lanes -->
-  <g>
-    <rect x="40" y="120" width="1320" height="170" fill="#fffdf5" stroke="#e4e4e7"/>
-    <rect x="40" y="290" width="1320" height="240" fill="#fff" stroke="#e4e4e7"/>
-    <rect x="40" y="530" width="1320" height="210" fill="#fafafa" stroke="#e4e4e7"/>
-    <text x="58" y="150" class="lane-label">마케터</text><text x="58" y="168" class="lane-sub">결정 담당</text>
-    <text x="58" y="320" class="lane-label">CRM 에이전트</text><text x="58" y="338" class="lane-sub">Claude Code 스킬 기반</text>
-    <text x="58" y="560" class="lane-label">데이터 · 도구</text><text x="58" y="578" class="lane-sub">MCP 호출</text>
-  </g>
+  <rect x="200" y="104" width="280" height="36" class="ph y"/><text x="340" y="128" text-anchor="middle" class="pht y">1 · 실험 설계</text>
+  <rect x="492" y="104" width="280" height="36" class="ph g"/><text x="632" y="128" text-anchor="middle" class="pht g">2 · 제작</text>
+  <rect x="784" y="104" width="280" height="36" class="ph b"/><text x="924" y="128" text-anchor="middle" class="pht b">3 · 발송</text>
+  <rect x="1076" y="104" width="294" height="36" class="ph p"/><text x="1223" y="128" text-anchor="middle" class="pht p">4 · 저장 · 분석</text>
 
-  <!-- Phase 1 -->
-  <g>
-    <rect x="215" y="170" width="120" height="48" rx="10" class="gate"/><text x="275" y="190" text-anchor="middle" class="t">게이트 ① 방향</text><text x="275" y="206" text-anchor="middle" class="s">목표·타겟·혜택 확정</text>
-    <rect x="360" y="170" width="120" height="48" rx="10" class="gate"/><text x="420" y="190" text-anchor="middle" class="t">게이트 ② 기획안</text><text x="420" y="206" text-anchor="middle" class="s">실험 설계·팀장 승인</text>
-    <rect x="215" y="330" width="120" height="52" rx="8" class="box agent"/><text x="275" y="352" text-anchor="middle" class="t">실험 설계</text><text x="275" y="368" text-anchor="middle" class="s">실험안 2~3개 · 대조군 비율</text>
-    <rect x="360" y="330" width="120" height="52" rx="8" class="box agent"/><text x="420" y="352" text-anchor="middle" class="t">기획서 작성</text><text x="420" y="368" text-anchor="middle" class="s">목적·KPI·타겟 조건</text>
-    <rect x="215" y="430" width="120" height="52" rx="8" class="box agent"/><text x="275" y="452" text-anchor="middle" class="t">모수 확인</text><text x="275" y="468" text-anchor="middle" class="s">발송 대상 규모 산정</text>
-    <rect x="215" y="600" width="120" height="52" rx="8" class="box tool"/><text x="275" y="622" text-anchor="middle" class="t">BigQuery</text><text x="275" y="638" text-anchor="middle" class="s">세그먼트 쿼리 실행</text>
-  </g>
-  <!-- Phase 2 -->
-  <g>
-    <rect x="505" y="330" width="120" height="52" rx="8" class="box agent"/><text x="565" y="352" text-anchor="middle" class="t">세그먼트 추출</text><text x="565" y="368" text-anchor="middle" class="s">CSV · 그룹 필드</text>
-    <rect x="650" y="330" width="120" height="52" rx="8" class="box agent"/><text x="710" y="352" text-anchor="middle" class="t">카피 · 미리보기</text><text x="710" y="368" text-anchor="middle" class="s">iOS · AOS 잠금화면</text>
-    <rect x="505" y="430" width="120" height="52" rx="8" class="box agent"/><text x="565" y="452" text-anchor="middle" class="t">딥링크 · 세팅 가이드</text><text x="565" y="468" text-anchor="middle" class="s">클릭 단위 Braze 안내</text>
-    <rect x="505" y="600" width="120" height="52" rx="8" class="box tool"/><text x="565" y="622" text-anchor="middle" class="t">Playwright · Figma</text><text x="565" y="638" text-anchor="middle" class="s">미리보기 PNG · 랜딩 화면</text>
-    <rect x="650" y="600" width="120" height="52" rx="8" class="box tool"/><text x="710" y="622" text-anchor="middle" class="t">Braze</text><text x="710" y="638" text-anchor="middle" class="s">캔버스 세팅 (사람 실행)</text>
-  </g>
-  <!-- Phase 3 -->
-  <g>
-    <rect x="795" y="170" width="120" height="48" rx="10" class="gate"/><text x="855" y="190" text-anchor="middle" class="t">게이트 ③ 공지글</text><text x="855" y="206" text-anchor="middle" class="s">DM 미리보기 확인</text>
-    <rect x="940" y="170" width="120" height="48" rx="10" class="gate"/><text x="1000" y="190" text-anchor="middle" class="t">게이트 ④ 발송</text><text x="1000" y="206" text-anchor="middle" class="s">발송 승인</text>
-    <rect x="795" y="330" width="120" height="52" rx="8" class="box agent"/><text x="855" y="352" text-anchor="middle" class="t">공지 초안</text><text x="855" y="368" text-anchor="middle" class="s">전사 · CS 채널용</text>
-    <rect x="940" y="330" width="120" height="52" rx="8" class="box agent"/><text x="1000" y="352" text-anchor="middle" class="t">예약 발송</text><text x="1000" y="368" text-anchor="middle" class="s">지정 시각 예약 발송</text>
-    <rect x="795" y="600" width="120" height="52" rx="8" class="box tool"/><text x="855" y="622" text-anchor="middle" class="t">Slack</text><text x="855" y="638" text-anchor="middle" class="s">공지 게시 · 이미지 첨부</text>
-    <rect x="940" y="600" width="120" height="52" rx="8" class="box tool"/><text x="1000" y="622" text-anchor="middle" class="t">Cloud Run</text><text x="1000" y="638" text-anchor="middle" class="s">예약 발송 · 상태 갱신</text>
-  </g>
-  <!-- Phase 4 -->
-  <g>
-    <rect x="1085" y="330" width="120" height="52" rx="8" class="box agent"/><text x="1145" y="352" text-anchor="middle" class="t">자산 저장 · 등록</text><text x="1145" y="368" text-anchor="middle" class="s">기획서·가이드·미리보기</text>
-    <rect x="1230" y="330" width="120" height="52" rx="8" class="box agent"/><text x="1290" y="352" text-anchor="middle" class="t">성과 분석</text><text x="1290" y="368" text-anchor="middle" class="s">실험군 − 대조군 (%p)</text>
-    <rect x="1230" y="430" width="120" height="52" rx="8" class="box agent"/><text x="1290" y="452" text-anchor="middle" class="t">주간 종합 리포트</text><text x="1290" y="468" text-anchor="middle" class="s">매일 08:00 자동 집계</text>
-    <rect x="1085" y="600" width="120" height="52" rx="8" class="box tool"/><text x="1145" y="622" text-anchor="middle" class="t">GCS 저장소</text><text x="1145" y="638" text-anchor="middle" class="s">캠페인 폴더 · meta.json</text>
-    <rect x="1230" y="600" width="120" height="52" rx="8" class="box tool"/><text x="1290" y="622" text-anchor="middle" class="t">대시보드 · 슬랙봇</text><text x="1290" y="638" text-anchor="middle" class="s">자동 등록 · 질의응답</text>
-  </g>
+  <rect x="30" y="150" width="1340" height="150" rx="14" class="lane"/>
+  <rect x="30" y="310" width="1340" height="230" rx="14" class="lane alt"/>
+  <rect x="30" y="550" width="1340" height="150" rx="14" class="lane"/>
+  <line x1="486" y1="150" x2="486" y2="700" class="sep"/><line x1="778" y1="150" x2="778" y2="700" class="sep"/><line x1="1070" y1="150" x2="1070" y2="700" class="sep"/>
+  <use href="#i-user" x="52" y="176" width="26" height="26" class="ic gr"/><text x="88" y="194" class="lt">마케터</text><text x="52" y="222" class="ls">결정 담당 · 게이트 4곳</text>
+  <use href="#i-spark" x="52" y="336" width="26" height="26" class="ic b"/><text x="88" y="354" class="lt">CRM 에이전트</text><text x="52" y="382" class="ls">Claude Code 스킬 기반</text><text x="52" y="400" class="ls">기획 · 제작 · 발송 · 분석 자동 처리</text>
+  <use href="#i-db" x="52" y="576" width="26" height="26" class="ic gr"/><text x="88" y="594" class="lt">데이터 · 도구</text><text x="52" y="622" class="ls">MCP 호출 · 외부 서비스</text>
 
-  <!-- arrows -->
+  <rect x="212" y="186" width="124" height="60" class="node gate"/><use href="#i-check" x="222" y="196" width="18" height="18" class="ic y"/><text x="246" y="208" class="gn">GATE 1</text><text x="222" y="226" class="nt">기획 방향 확정</text><text x="222" y="240" class="ns">목표 · 타겟 · 혜택</text>
+  <rect x="348" y="186" width="124" height="60" class="node gate"/><use href="#i-check" x="358" y="196" width="18" height="18" class="ic y"/><text x="382" y="208" class="gn">GATE 2</text><text x="358" y="226" class="nt">기획안 승인</text><text x="358" y="240" class="ns">실험 설계 · 팀장 검토</text>
+  <rect x="212" y="334" width="124" height="66" class="node"/><use href="#i-flask" x="222" y="344" width="20" height="20" class="ic b"/><text x="248" y="358" class="nt">실험 설계</text><text x="222" y="378" class="ns">실험안 2~3개</text><text x="222" y="392" class="ns">대조군 비율 설정</text>
+  <rect x="348" y="334" width="124" height="66" class="node"/><use href="#i-doc" x="358" y="344" width="20" height="20" class="ic b"/><text x="384" y="358" class="nt">기획서 작성</text><text x="358" y="378" class="ns">목적 · KPI · 타겟 조건</text><text x="358" y="392" class="ns">실험군 · 대조군 정의</text>
+  <rect x="212" y="440" width="124" height="60" class="node"/><use href="#i-chart" x="222" y="450" width="20" height="20" class="ic b"/><text x="248" y="464" class="nt">모수 산정</text><text x="222" y="484" class="ns">발송 대상 규모 확인</text>
+  <rect x="212" y="586" width="124" height="60" class="node tool"/><use href="#i-db" x="222" y="596" width="20" height="20" class="ic gr"/><text x="248" y="610" class="nt">BigQuery</text><text x="222" y="630" class="ns">세그먼트 쿼리 실행</text>
+
+  <rect x="504" y="334" width="124" height="66" class="node"/><use href="#i-db" x="514" y="344" width="20" height="20" class="ic b"/><text x="540" y="358" class="nt">세그먼트 추출</text><text x="514" y="378" class="ns">CSV · 그룹 필드</text><text x="514" y="392" class="ns">external_id 기준</text>
+  <rect x="640" y="334" width="124" height="66" class="node"/><use href="#i-phone" x="650" y="344" width="20" height="20" class="ic b"/><text x="676" y="358" class="nt">카피 · 미리보기</text><text x="650" y="378" class="ns">iOS · AOS 잠금화면</text><text x="650" y="392" class="ns">광고 표기 점검</text>
+  <rect x="504" y="440" width="124" height="60" class="node"/><use href="#i-link" x="514" y="450" width="20" height="20" class="ic b"/><text x="540" y="464" class="nt">딥링크 · 세팅 가이드</text><text x="514" y="484" class="ns">클릭 단위 Braze 안내</text>
+  <rect x="504" y="586" width="124" height="60" class="node tool"/><use href="#i-figma" x="514" y="596" width="20" height="20" class="ic gr"/><text x="540" y="610" class="nt">Playwright</text><text x="514" y="630" class="ns">Figma 랜딩 · 미리보기 PNG</text>
+  <rect x="640" y="586" width="124" height="60" class="node tool"/><use href="#i-image" x="650" y="596" width="20" height="20" class="ic gr"/><text x="676" y="610" class="nt">Braze</text><text x="650" y="630" class="ns">캔버스 세팅 (사람 실행)</text>
+
+  <rect x="796" y="186" width="124" height="60" class="node gate"/><use href="#i-check" x="806" y="196" width="18" height="18" class="ic y"/><text x="830" y="208" class="gn">GATE 3</text><text x="806" y="226" class="nt">공지글 확인</text><text x="806" y="240" class="ns">DM 미리보기 검토</text>
+  <rect x="932" y="186" width="124" height="60" class="node gate"/><use href="#i-check" x="942" y="196" width="18" height="18" class="ic y"/><text x="966" y="208" class="gn">GATE 4</text><text x="942" y="226" class="nt">발송 승인</text><text x="942" y="240" class="ns">모수 · 시각 최종 확인</text>
+  <rect x="796" y="334" width="124" height="66" class="node"/><use href="#i-chat" x="806" y="344" width="20" height="20" class="ic b"/><text x="832" y="358" class="nt">공지 초안</text><text x="806" y="378" class="ns">전사 · CS 채널용</text><text x="806" y="392" class="ns">모수 · 근거 포함</text>
+  <rect x="932" y="334" width="124" height="66" class="node"/><use href="#i-clock" x="942" y="344" width="20" height="20" class="ic b"/><text x="968" y="358" class="nt">예약 발송</text><text x="942" y="378" class="ns">지정 시각 예약 발송</text><text x="942" y="392" class="ns">상태값 자동 갱신</text>
+  <rect x="796" y="586" width="124" height="60" class="node tool"/><use href="#i-send" x="806" y="596" width="20" height="20" class="ic gr"/><text x="832" y="610" class="nt">Slack</text><text x="806" y="630" class="ns">공지 게시 · 이미지 첨부</text>
+  <rect x="932" y="586" width="124" height="60" class="node tool"/><use href="#i-cloud" x="942" y="596" width="20" height="20" class="ic gr"/><text x="968" y="610" class="nt">Cloud Run</text><text x="942" y="630" class="ns">예약 실행 · 상태 갱신</text>
+
+  <rect x="1088" y="334" width="130" height="66" class="node"/><use href="#i-folder" x="1098" y="344" width="20" height="20" class="ic b"/><text x="1124" y="358" class="nt">자산 저장 · 등록</text><text x="1098" y="378" class="ns">기획서 · 가이드 · 미리보기</text><text x="1098" y="392" class="ns">대시보드 카드 자동 등록</text>
+  <rect x="1230" y="334" width="130" height="66" class="node"/><use href="#i-chart" x="1240" y="344" width="20" height="20" class="ic b"/><text x="1266" y="358" class="nt">성과 분석</text><text x="1240" y="378" class="ns">실험군 대비 대조군 증분</text><text x="1240" y="392" class="ns">세션 · 핀클릭 · 구매</text>
+  <rect x="1230" y="440" width="130" height="60" class="node"/><use href="#i-doc" x="1240" y="450" width="20" height="20" class="ic b"/><text x="1266" y="464" class="nt">주간 종합 리포트</text><text x="1240" y="484" class="ns">매일 08:00 자동 집계</text>
+  <rect x="1088" y="586" width="130" height="60" class="node tool"/><use href="#i-folder" x="1098" y="596" width="20" height="20" class="ic gr"/><text x="1124" y="610" class="nt">GCS 저장소</text><text x="1098" y="630" class="ns">캠페인 폴더 · 카드</text>
+  <rect x="1230" y="586" width="130" height="60" class="node tool"/><use href="#i-chat" x="1240" y="596" width="20" height="20" class="ic gr"/><text x="1266" y="610" class="nt">대시보드 · 슬랙봇</text><text x="1240" y="630" class="ns">자동 등록 · 질의응답</text>
+
+  <g class="arrow main">
+    <path d="M336,367 L348,367"/><path d="M472,367 L504,367"/><path d="M628,367 L640,367"/><path d="M764,367 L796,367"/><path d="M920,367 L932,367"/><path d="M1056,367 L1088,367"/><path d="M1218,367 L1230,367"/>
+  </g>
+  <g class="arrow up">
+    <path d="M274,334 L274,246"/><path d="M410,334 L410,246"/><path d="M858,334 L858,246"/><path d="M994,334 L994,246"/>
+  </g>
   <g class="arrow">
-    <path d="M275,218 L275,330"/>
-    <path d="M275,382 L275,430"/>
-    <path d="M275,482 L275,600"/>
-    <path d="M335,356 L360,356"/>
-    <path d="M420,330 L420,218"/>
-    <path d="M480,356 L505,356"/>
-    <path d="M625,356 L650,356"/>
-    <path d="M565,382 L565,430"/>
-    <path d="M565,482 L565,600"/>
-    <path d="M710,382 L710,600"/>
-    <path d="M770,356 L795,356"/>
-    <path d="M855,330 L855,218"/>
-    <path d="M855,382 L855,600"/>
-    <path d="M915,356 L940,356"/>
-    <path d="M1000,330 L1000,218"/>
-    <path d="M1000,382 L1000,600"/>
-    <path d="M1060,356 L1085,356"/>
-    <path d="M1145,382 L1145,600"/>
-    <path d="M1205,356 L1230,356"/>
-    <path d="M1290,382 L1290,430"/>
-    <path d="M1290,482 L1290,600"/>
+    <path d="M274,400 L274,440"/><path d="M274,500 L274,586"/>
+    <path d="M566,400 L566,440"/><path d="M566,500 L566,586"/><path d="M702,400 L702,586"/>
+    <path d="M858,400 L858,586"/><path d="M994,400 L994,586"/>
+    <path d="M1153,400 L1153,586"/><path d="M1295,400 L1295,440"/><path d="M1295,500 L1295,586"/>
   </g>
-  <!-- legend -->
-  <g transform="translate(40,700)">
-    <rect x="0" y="12" width="14" height="14" rx="3" class="gate"/><text x="20" y="24" class="s">사람 컨펌 게이트 (4곳)</text>
-    <rect x="170" y="12" width="14" height="14" rx="3" class="box agent"/><text x="190" y="24" class="s">에이전트 자동 처리</text>
-    <rect x="320" y="12" width="14" height="14" rx="3" class="box tool"/><text x="340" y="24" class="s">MCP · 외부 도구</text>
-  </g>
+
+  <rect x="30" y="722" width="1340" height="52" rx="12" fill="#fafafa" stroke="#e3e6ea"/>
+  <rect x="52" y="738" width="18" height="18" rx="5" class="node gate"/><text x="78" y="752" class="leg">사람 컨펌 게이트 (4곳)</text>
+  <rect x="236" y="738" width="18" height="18" rx="5" class="node"/><text x="262" y="752" class="leg">에이전트 자동 처리</text>
+  <rect x="400" y="738" width="18" height="18" rx="5" class="node tool"/><text x="426" y="752" class="leg">MCP · 외부 도구 호출</text>
+  <line x1="590" y1="747" x2="640" y2="747" class="arrow main"/><text x="652" y="752" class="leg">주 처리 흐름</text>
+  <line x1="760" y1="747" x2="810" y2="747" class="arrow up"/><text x="822" y="752" class="leg">사람 결정 요청</text>
+  <text x="1348" y="752" text-anchor="end" class="leg">산출물: 기획서 · 세팅 가이드 · 카피 · 공지 · 분석 리포트 (캠페인마다 자동 저장)</text>
 </svg>
 </body></html>
