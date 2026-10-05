@@ -82,27 +82,16 @@
   .cover-desc{font-size:13px;color:var(--sub);line-height:1.8;margin-bottom:4px}
   .cover-desc.small{font-size:12px;margin-top:10px}
   .cover-bottom{text-align:center;margin-top:28px}
-  .cover-bottom .yr{text-align:left}
-  /* ── Year slider (모수 막대 양식) ── */
-  .yr{position:relative;margin:4px auto 20px;padding-top:34px;max-width:100%}
-  .yr-r{position:relative;height:28px}
-  .yr-trk{position:absolute;left:12px;right:12px;top:9px;height:10px;border-radius:5px;background:#e9e9ec;overflow:hidden}
-  .yr-fill{position:absolute;left:0;top:0;bottom:0;width:calc(100% * var(--f));border-radius:5px;background:linear-gradient(90deg,#9ab8f8,var(--blue));transition:width .25s ease}
-  .yr-trk i{position:absolute;top:2px;bottom:2px;width:2px;margin-left:-1px;border-radius:1px;background:rgba(255,255,255,.95)}
-  .yr-th{position:absolute;top:2px;left:calc(12px + (100% - 24px) * var(--f));width:24px;height:24px;margin-left:-12px;border-radius:50%;background:#fff;box-shadow:0 0 0 2px var(--blue),0 3px 8px rgba(17,20,24,.18);transition:left .25s ease;pointer-events:none}
-  .yr-bub{position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);background:var(--text);color:#fff;font-size:12.5px;font-weight:800;border-radius:8px;padding:4px 9px;white-space:nowrap}
-  .yr-bub::after{content:'';position:absolute;top:100%;left:50%;margin-left:-5px;border:5px solid transparent;border-top-color:var(--text)}
-  .yr input[type=range]{-webkit-appearance:none;appearance:none;position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;z-index:3}
-  .yr input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px}
-  .yr input[type=range]::-moz-range-thumb{width:24px;height:24px;border:0}
-  .yr-stops{display:flex;justify-content:space-between;margin:8px 12px 0}
-  .yr-stops button{width:0;border:0;background:none;padding:0;display:flex;justify-content:center;cursor:pointer;overflow:visible;font-family:inherit}
-  .yr-stops button:first-child{justify-content:flex-start}.yr-stops button:last-child{justify-content:flex-end}
-  .yr-stops button span{white-space:nowrap;font-size:12px;color:var(--sub);font-weight:600}
-  .yr-stops button.on span{color:var(--blue);font-weight:800}
-  .yr-all{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin:10px 12px 0;font-size:12.5px;color:var(--sub);cursor:pointer;user-select:none}
-  .yr-all input{width:15px;height:15px;margin:0;accent-color:var(--blue)}
-  .yr.all .yr-th,.yr.all .yr-bub{display:none}.yr.all .yr-fill{opacity:.35}
+  /* ── Filter bar (연도 + 영역 통합) ── */
+  .fbar{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin:0 auto 14px}
+  .fseg{display:inline-flex;align-items:center;background:var(--alt);border:1px solid var(--border);border-radius:10px;padding:3px}
+  .fseg .flab{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;padding:0 8px 0 6px}
+  .fseg button{font-family:inherit;font-size:12px;font-weight:600;color:var(--sub);background:none;border:none;border-radius:7px;padding:5px 11px;cursor:pointer;transition:all .15s;white-space:nowrap}
+  .fseg button:hover{color:var(--text)}
+  .fseg button.on{background:var(--text);color:#fff}
+  .fseg button small{font-weight:500;opacity:.6;margin-left:3px}
+  .fnote{font-size:11px;color:var(--muted);margin:-4px 0 16px}
+  .card.yr-hide,.part-head.yr-hide,.grid.yr-hide,.sec.yr-hide{display:none}
   .card.yr-hide,.part-head.yr-hide,.grid.yr-hide,.sec.yr-hide{display:none}
   .cover-search{max-width:400px;margin:0 auto 12px}
   .cover-search button{display:flex;align-items:center;gap:6px;width:100%;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--alt);cursor:pointer;font-family:inherit;font-size:12px;color:var(--muted);transition:all .2s}
@@ -149,7 +138,13 @@
   /* ── Lightbox ── */
   .lightbox{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;padding:24px;gap:10px}
   .lightbox.open{opacity:1;pointer-events:auto}
-  .lightbox img{max-width:95vw;max-height:86vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 32px rgba(0,0,0,.4);background:#fff}
+  .lb-stage{position:relative;width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none}
+  .lightbox img{max-width:95vw;max-height:82vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 32px rgba(0,0,0,.4);background:#fff;transform-origin:center center;transition:transform .08s linear;cursor:grab;user-select:none;-webkit-user-drag:none}
+  .lightbox img.dragging{cursor:grabbing;transition:none}
+  .lb-tools{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:2001;display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.12);border-radius:100px;padding:4px}
+  .lb-tools button{border:none;background:transparent;color:#fff;font-size:15px;width:32px;height:32px;border-radius:50%;cursor:pointer;font-family:inherit}
+  .lb-tools button:hover{background:rgba(255,255,255,.2)}
+  .lb-tools span{color:#ddd;font-size:11px;min-width:44px;text-align:center}
   .lb-cap{color:#ddd;font-size:12px;text-align:center;max-width:90vw}
   .lb-btn{position:fixed;z-index:2001;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
   .lb-btn:hover{background:rgba(255,255,255,.3)}
@@ -237,7 +232,8 @@
   <button class="lb-btn lb-close" onclick="closeLightbox()" title="닫기">&times;</button>
   <button class="lb-btn lb-prev" id="lbPrev" onclick="stepLightbox(-1)" title="이전">&lsaquo;</button>
   <button class="lb-btn lb-next" id="lbNext" onclick="stepLightbox(1)" title="다음">&rsaquo;</button>
-  <img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()">
+  <div class="lb-tools" onclick="event.stopPropagation()"><button onclick="lbZoom(-0.25)" title="축소">−</button><span id="lbZoomLabel">맞춤</span><button onclick="lbZoom(0.25)" title="확대">＋</button><button onclick="lbReset()" title="원래대로" style="font-size:11px;width:auto;padding:0 10px">맞춤</button></div>
+  <div class="lb-stage" id="lbStage"><img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()"></div>
   <div class="lb-cap" id="lightboxCap"></div>
 </div>
 
@@ -266,7 +262,6 @@
     </div>
   </div>
   <div class="cover-bottom">
-    <div class="yr" id="yearSlider"></div>
     <div class="cover-search">
       <button onclick="openSearch()">
         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><line x1="8.5" y1="8.5" x2="12" y2="12"/></svg>
@@ -274,9 +269,8 @@
         <span class="kbd">Ctrl+K</span>
       </button>
     </div>
-    <div class="cover-nav">
-{{COVER_NAV}}
-    </div>
+    <div class="fbar" id="filterBar"></div>
+    <div class="fnote" id="filterNote"></div>
   </div>
 </header>
 
@@ -310,38 +304,52 @@ document.getElementById('demoModal').addEventListener('click',function(e){if(e.t
 window.addEventListener('message',e=>{if(e.data==='close-demo')closeDemo()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('demoModal').classList.contains('open'))closeDemo()});
 
-// Year slider (연도 선택 · 모수 막대 양식 · 기본 올해)
+// Filter bar (연도 × 영역 · 기본 올해 · 전체)
 (function(){
   const cards=[...document.querySelectorAll('.card')];
+  const secs=[...document.querySelectorAll('.sec')].map(s=>({id:s.dataset.sec,label:s.querySelector('.sec-label').textContent.trim()}));
   const counts={};cards.forEach(c=>{counts[c.dataset.year]=(counts[c.dataset.year]||0)+1});
-  const years=Object.keys(counts).sort();const last=Math.max(years.length-1,1);
-  const host=document.getElementById('yearSlider');
-  let current=String(new Date().getFullYear());if(!counts[current])current=years[years.length-1];
-  let all=false;
-  let notch='';for(let k=1;k<last;k++)notch+=`<i style="left:${k/last*100}%"></i>`;
-  host.innerHTML=`<div class="yr-r"><div class="yr-trk"><div class="yr-fill"></div>${notch}</div><div class="yr-th"><span class="yr-bub" id="yrBub"></span></div><input type="range" min="0" max="${last}" step="1" value="0" id="yrRange" aria-label="연도 선택"></div><div class="yr-stops">${years.map((y,i)=>`<button type="button" data-y="${y}"><span>${y} · ${counts[y]}건</span></button>`).join('')}</div><label class="yr-all"><input type="checkbox" id="yrAll"><span>전체 연도 보기 (${cards.length}건)</span></label>`;
-  const range=document.getElementById('yrRange'),bub=document.getElementById('yrBub');
+  const years=Object.keys(counts).sort();
+  let year=String(new Date().getFullYear());if(!counts[year])year=years[years.length-1];
+  let sec='all';
+  const host=document.getElementById('filterBar'),note=document.getElementById('filterNote');
+  host.innerHTML=`<div class="fseg" data-k="year"><span class="flab">연도</span><button data-v="all">전체<small>${cards.length}</small></button>${years.map(y=>`<button data-v="${y}">${y}<small>${counts[y]}</small></button>`).join('')}</div>`+
+    `<div class="fseg" data-k="sec"><span class="flab">영역</span><button data-v="all">전체</button>${secs.map(s=>`<button data-v="${s.id}">${s.label}</button>`).join('')}</div>`;
   function apply(){
-    const y=all?'all':current;
-    host.classList.toggle('all',all);
-    host.style.setProperty('--f',all?1:(years.indexOf(current)/last));
-    range.value=years.indexOf(current);
-    bub.textContent=`${current} · ${counts[current]}건`;
-    host.querySelectorAll('.yr-stops button').forEach(b=>b.classList.toggle('on',!all&&b.dataset.y===current));
-    cards.forEach(c=>c.classList.toggle('yr-hide',y!=='all'&&c.dataset.year!==y));
+    host.querySelectorAll('[data-k="year"] button').forEach(b=>b.classList.toggle('on',b.dataset.v===year));
+    host.querySelectorAll('[data-k="sec"] button').forEach(b=>b.classList.toggle('on',b.dataset.v===sec));
+    cards.forEach(c=>{const s=c.closest('.sec').dataset.sec;c.classList.toggle('yr-hide',(year!=='all'&&c.dataset.year!==year)||(sec!=='all'&&s!==sec))});
     document.querySelectorAll('.grid').forEach(g=>{const vis=[...g.querySelectorAll('.card')].filter(c=>!c.classList.contains('yr-hide'));g.classList.toggle('yr-hide',!vis.length);const ph=g.previousElementSibling;if(ph&&ph.classList.contains('part-head')){ph.classList.toggle('yr-hide',!vis.length);const cnt=ph.querySelector('.part-count');if(cnt)cnt.textContent=vis.length}});
     document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('yr-hide',![...s.querySelectorAll('.card')].some(c=>!c.classList.contains('yr-hide'))));
+    const n=cards.filter(c=>!c.classList.contains('yr-hide')).length;
+    note.textContent=`${year==='all'?'전체 연도':year+'년'} · ${sec==='all'?'모든 영역':secs.find(s=>s.id===sec).label} · ${n}건`;
   }
-  range.addEventListener('input',()=>{current=years[+range.value];all=false;document.getElementById('yrAll').checked=false;apply()});
-  host.querySelectorAll('.yr-stops button').forEach(b=>b.addEventListener('click',()=>{current=b.dataset.y;all=false;document.getElementById('yrAll').checked=false;apply()}));
-  document.getElementById('yrAll').addEventListener('change',e=>{all=e.target.checked;apply()});
+  host.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const k=b.parentElement.dataset.k;if(k==='year')year=b.dataset.v;else sec=b.dataset.v;apply()});
   apply();
-  window.showAllYears=()=>{if(!all){all=true;document.getElementById('yrAll').checked=true;apply()}};
+  window.showAllYears=()=>{if(year!=='all'||sec!=='all'){year='all';sec='all';apply()}};
 })();
 
 // Lightbox (카드별 여러 장 넘김)
 let lbSrcs=[],lbCaps=[],lbIdx=0;
-function showLightbox(){
+// 라이트박스 확대·이동 (버튼 · 휠 · 드래그 · 더블클릭 · 핀치)
+let lbScale=1,lbX=0,lbY=0;
+function lbApply(){const im=document.getElementById('lightboxImg');im.style.transform=`translate(${lbX}px,${lbY}px) scale(${lbScale})`;document.getElementById('lbZoomLabel').textContent=lbScale===1?'맞춤':Math.round(lbScale*100)+'%'}
+function lbZoom(d){lbScale=Math.min(6,Math.max(0.5,+(lbScale+d).toFixed(2)));if(lbScale===1){lbX=0;lbY=0}lbApply()}
+function lbReset(){lbScale=1;lbX=0;lbY=0;lbApply()}
+(function(){
+  const st=document.getElementById('lbStage'),im=document.getElementById('lightboxImg');
+  st.addEventListener('wheel',e=>{e.preventDefault();lbZoom(e.deltaY<0?0.15:-0.15)},{passive:false});
+  let drag=null,pinch=null;
+  st.addEventListener('pointerdown',e=>{if(e.target!==im)return;e.preventDefault();im.setPointerCapture(e.pointerId);drag={x:e.clientX-lbX,y:e.clientY-lbY};im.classList.add('dragging')});
+  st.addEventListener('pointermove',e=>{if(!drag)return;lbX=e.clientX-drag.x;lbY=e.clientY-drag.y;lbApply()});
+  ['pointerup','pointercancel'].forEach(t=>st.addEventListener(t,()=>{drag=null;im.classList.remove('dragging')}));
+  im.addEventListener('dblclick',e=>{e.stopPropagation();if(lbScale===1)lbZoom(1);else lbReset()});
+  st.addEventListener('touchstart',e=>{if(e.touches.length===2){pinch={d:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),s:lbScale}}},{passive:true});
+  st.addEventListener('touchmove',e=>{if(pinch&&e.touches.length===2){e.preventDefault();const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);lbScale=Math.min(6,Math.max(0.5,pinch.s*d/pinch.d));lbApply()}},{passive:false});
+  st.addEventListener('touchend',()=>{pinch=null});
+  st.addEventListener('click',e=>{if(e.target===st)closeLightbox()});
+})();
+function showLightbox(){lbReset();
   document.getElementById('lightboxImg').src=lbSrcs[lbIdx];
   document.getElementById('lightboxCap').textContent=(lbSrcs.length>1?`${lbIdx+1} / ${lbSrcs.length}  `:'')+(lbCaps[lbIdx]||'');
   const multi=lbSrcs.length>1;
@@ -358,6 +366,7 @@ function openLightbox(box){
 function stepLightbox(d){if(!lbSrcs.length)return;lbIdx=(lbIdx+d+lbSrcs.length)%lbSrcs.length;showLightbox()}
 function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow=''}
 document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLightbox()});
+document.addEventListener('keydown',e=>{if(!document.getElementById('lightbox').classList.contains('open'))return;if(e.key==='+'||e.key==='=')lbZoom(0.25);if(e.key==='-')lbZoom(-0.25);if(e.key==='0')lbReset()});
 document.addEventListener('keydown',e=>{
   const lb=document.getElementById('lightbox');if(!lb.classList.contains('open'))return;
   if(e.key==='Escape')closeLightbox();
