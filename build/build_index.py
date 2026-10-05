@@ -16,7 +16,7 @@ FULL = "portfolio_images/full"
 # 썸네일 규칙. 기본(auto): 원본이 세로로 길지 않으면(높이/폭 1.6 이하) 전체를 축소해 담고,
 # 세로로 길면 폭 전체의 16:10 창을 상단(또는 y 지정 위치)에서 자른다. mode로 강제할 수 있다.
 THUMB_CROP = {
-    "notion_25": {"y": 0.03}, "notion_17": {"y": 0.02},
+    "notion_25": {"y": 0.205, "w": 3200}, "notion_17": {"y": 0.02},
 }
 
 # ── 섹션 정의 ─────────────────────────────────────────────
@@ -26,44 +26,42 @@ SECTIONS = [
         "label": "AI 자동화",
         "title": "AI 기반 CRM 업무 자동화",
         "color": "#e67e22",
-        "intro": [
-            "에이전틱 워크플로우 개발로 CRM 전 과정 자동화",
-            "CRM 캠페인별 성과지표 정의 및 A/B 테스트 분석 자동화 포함",
-            "시니어 마케터 1인 채용 없이 운영, 연 약 5,000만원 절감 효과",
+        "parts": [
+            ("CRM 마케팅 자동화", "캠페인 기획·세팅·발송·성과분석을 에이전트가 수행하고 사람은 게이트에서만 결정하는 자동화 체계"),
+            ("AI 활용 프로젝트", "Claude Code로 API·데이터·웹을 오케스트레이션해 만든 분석과 서비스"),
         ],
-        "parts": ["CRM 마케팅 자동화", "AI 활용 프로젝트"],
     },
     {
         "id": "decision",
         "label": "데이터 분석",
         "title": "데이터 기반 의사결정 체계 고도화",
         "color": "#1a56db",
-        "intro": [
-            "인과추론(DID·CUPED·회귀) 기반 본부 액션별 순효과 측정",
-            "CRM 대시보드·대화형 슬랙봇 개발로 마케팅 분석 요청 95% 감축",
-            "Action Item까지 도출하는 분석 리포팅 표준화로 본부 의사결정 가속화",
+        "parts": [
+            ("캠페인 효과 측정", "실험군 대비 대조군 증분과 평시 기준선으로 캠페인·이벤트 대응의 순효과를 재는 분석, 그 결과를 묻고 보는 슬랙봇과 대시보드"),
+            ("유저 행동 분석", "미결제·결제 유저군의 접속·행동·주변 공급을 비교해 결제전환 저해 요인을 찾은 분석"),
+            ("영업 관리 분석", "클릭·거래·매진 데이터로 영업 액션을 제안하고 변경 효과를 추적하는 프로세스와 대시보드"),
+            ("사업 기획 분석", "쿠폰 지급 조건 설계, 사업계획 달성 시나리오, 이상치 탐지 등 의사결정용 시뮬레이션과 통계 분석"),
         ],
-        "parts": ["캠페인 효과 측정", "유저 행동 분석", "영업 관리 분석", "사업 기획 분석"],
     },
     {
         "id": "infra",
         "label": "데이터 인프라",
         "title": "지표 체계 설계 및 분석 인프라 구축",
         "color": "#0f9d58",
-        "intro": [
-            "비즈니스 질문·가설 수립에서 출발하는 이벤트 로그 설계 프레임워크 구축",
-            "BigQuery 데이터마트·Git 기반 지표 SSOT 구축으로 지표 정의 단일화",
-            "분석 결과·의사결정 맥락 통합 저장소 구축으로 AI 분석 컨텍스트 고도화",
+        "parts": [
+            ("지표 정의·데이터 인프라", "이벤트 로그 설계 표준, 지표 SSOT, 분석 결과·의사결정 맥락 저장소 등 분석이 서는 기반"),
         ],
-        "parts": ["지표 정의·데이터 인프라"],
     },
     {
         "id": "viz",
         "label": "대시보드",
         "title": "Visualization",
         "color": "#7c3aed",
-        "intro": ["Looker Studio · Google Sheets · Tableau · Kepler.gl 기반 대시보드 및 분석 리포트"],
-        "parts": ["성과 추적", "공급 관리", "유저 분석"],
+        "parts": [
+            ("성과 추적", "주차장·마케팅·자치구 실적을 자동 집계해 매주 보는 Looker Studio 대시보드"),
+            ("공급 관리", "제휴 주차장 공급, 판매중단 시설, 정기권 슬롯을 관리하는 대시보드"),
+            ("유저 분석", "퍼널·코호트·검색 수요 지리공간 분석으로 유저 행동을 보는 리포트와 지도"),
+        ],
     },
 ]
 
@@ -305,16 +303,16 @@ def render_card(c):
 
 def render_section(s):
     cards = [c for c in CARDS if c["sec"] == s["id"]]
-    intro = "".join(f"<li>{E(t)}</li>" for t in s["intro"])
-    out = [f'<section class="sec" id="{s["id"]}" data-sec="{s["id"]}">',
+    out = [f'<section class="sec" id="{s["id"]}" data-sec="{s["id"]}" style="--sc:{s["color"]}">',
            f'<div class="sec-head"><div class="sec-label" style="color:{s["color"]}">{E(s["label"])}</div>'
-           f'<h2 class="sec-title">{E(s["title"])}</h2><ul class="sec-intro">{intro}</ul></div>']
-    for p in s["parts"]:
+           f'<h2 class="sec-title">{E(s["title"])}</h2></div>']
+    for p, desc in s["parts"]:
         pc = [c for c in cards if c["part"] == p]
         if not pc:
             continue
-        out.append(f'<div class="part-head"><span class="part-title">{E(p)}</span><span class="part-count">{len(pc)}</span></div>')
-        out.append('<div class="grid">' + "\n".join(render_card(c) for c in pc) + "</div>")
+        out.append(f'<div class="part"><div class="part-head"><h3 class="part-title">{E(p)}</h3><span class="part-count">{len(pc)}</span></div>'
+                   f'<p class="part-desc">{E(desc)}</p>')
+        out.append('<div class="grid">' + "\n".join(render_card(c) for c in pc) + "</div></div>")
     out.append("</section>")
     return "\n".join(out)
 
@@ -323,7 +321,7 @@ def render_nav(prefix):
     btns = []
     for s in SECTIONS:
         items = []
-        for p in s["parts"]:
+        for p, _ in s["parts"]:
             pc = [c for c in CARDS if c["sec"] == s["id"] and c["part"] == p]
             if not pc:
                 continue

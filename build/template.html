@@ -83,7 +83,7 @@
   .cover-desc.small{font-size:12px;margin-top:10px}
   .cover-bottom{text-align:center;margin-top:28px}
   /* ── Filter control (연도 · 영역) ── */
-  .fbar{display:flex;justify-content:center;margin:2px auto 8px}
+  .fbar{display:flex;flex-direction:column;align-items:center;gap:8px;margin:2px auto 8px}
   .fctl{display:inline-flex;align-items:center;background:#fff;border:1px solid #ebebee;border-radius:999px;padding:4px;box-shadow:0 1px 2px rgba(0,0,0,.03),0 10px 30px rgba(17,17,17,.05);max-width:100%}
   .fgrp{position:relative;display:inline-flex;align-items:center}
   .fgrp .pill{position:absolute;top:0;bottom:0;border-radius:999px;background:var(--text);box-shadow:0 2px 8px rgba(0,0,0,.18);transition:left .32s cubic-bezier(.3,.9,.25,1),width .32s cubic-bezier(.3,.9,.25,1);z-index:0}
@@ -93,7 +93,7 @@
   .fgrp button .dot{width:6px;height:6px;border-radius:50%;background:var(--c,#a1a1aa);transition:background .25s,box-shadow .25s}
   .fgrp button.on .dot{background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.18)}
   .fdiv{width:1px;height:18px;background:#e6e6ea;margin:0 6px}
-  @media(max-width:700px){.fctl{flex-direction:column;border-radius:20px;padding:6px;gap:4px}.fdiv{width:60%;height:1px;margin:2px 0}.fgrp{flex-wrap:wrap;justify-content:center}.fgrp .pill{display:none}.fgrp button.on{background:var(--text)}}
+  @media(max-width:700px){.fctl{border-radius:20px;padding:5px}.fgrp{flex-wrap:wrap;justify-content:center}.fgrp .pill{display:none}.fgrp button.on{background:var(--text)}}
   .card.yr-hide,.part-head.yr-hide,.grid.yr-hide,.sec.yr-hide{display:none}
   .card.yr-hide,.part-head.yr-hide,.grid.yr-hide,.sec.yr-hide{display:none}
   .cover-search{max-width:400px;margin:0 auto 12px}
@@ -110,9 +110,13 @@
   .sec-intro{list-style:none;display:flex;flex-direction:column;gap:2px}
   .sec-intro li{font-size:12px;color:var(--sub);padding-left:12px;position:relative}
   .sec-intro li::before{content:'';position:absolute;left:0;top:9px;width:4px;height:4px;border-radius:50%;background:var(--muted)}
-  .part-head{display:flex;align-items:center;gap:8px;margin:26px 0 10px}
-  .part-title{font-size:13px;font-weight:700;color:var(--text)}
+  .part{border:1px solid var(--border);border-left:3px solid var(--sc,var(--text));border-radius:14px;padding:16px 16px 16px 18px;margin-top:18px;background:#fff}
+  .part-head{display:flex;align-items:center;gap:8px;margin:0 0 4px}
+  .part-title{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.2px}
   .part-count{font-size:10px;font-weight:700;color:var(--muted);background:var(--alt);border:1px solid var(--border);border-radius:100px;padding:0 7px;line-height:16px}
+  .part-desc{font-size:12.5px;color:var(--sub);line-height:1.6;margin:0 0 14px;max-width:70ch}
+  .sec-head{border-bottom:none;padding-bottom:0;margin-bottom:6px}
+  .sec-intro{display:none}
 
   /* ── Grid Card ── */
   .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
@@ -142,7 +146,7 @@
   .lightbox{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;padding:24px;gap:10px}
   .lightbox.open{opacity:1;pointer-events:auto}
   .lb-stage{position:relative;width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none}
-  .lightbox img{max-width:95vw;max-height:82vh;object-fit:contain;border-radius:6px;box-shadow:0 4px 32px rgba(0,0,0,.4);background:#fff;transform-origin:center center;transition:transform .08s linear;cursor:grab;user-select:none;-webkit-user-drag:none}
+  .lightbox img{max-width:95vw;max-height:82vh;object-fit:contain;opacity:0;border-radius:6px;box-shadow:0 4px 32px rgba(0,0,0,.4);background:#fff;transform-origin:center center;transition:transform .08s linear;cursor:grab;user-select:none;-webkit-user-drag:none}
   .lightbox img.dragging{cursor:grabbing;transition:none}
   .lb-tools{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:2001;display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.12);border-radius:100px;padding:4px}
   .lb-tools button{border:none;background:transparent;color:#fff;font-size:15px;width:32px;height:32px;border-radius:50%;cursor:pointer;font-family:inherit}
@@ -310,11 +314,11 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElement
 (function(){
   const cards=[...document.querySelectorAll('.card')];
   const secs=[...document.querySelectorAll('.sec')].map(s=>({id:s.dataset.sec,label:s.querySelector('.sec-label').textContent.trim(),color:s.querySelector('.sec-label').style.color}));
-  const years=[...new Set(cards.map(c=>c.dataset.year))].sort();
+  const years=[...new Set(cards.map(c=>c.dataset.year))].sort().reverse();
   let year=String(new Date().getFullYear());if(!years.includes(year))year=years[years.length-1];
   let sec='all';
   const host=document.getElementById('filterBar');
-  host.innerHTML=`<div class="fctl"><div class="fgrp" data-k="year"><i class="pill"></i><button data-v="all">전체</button>${years.map(y=>`<button data-v="${y}">${y}</button>`).join('')}</div><span class="fdiv"></span><div class="fgrp" data-k="sec"><i class="pill"></i><button data-v="all">전체</button>${secs.map(s=>`<button data-v="${s.id}"><span class="dot" style="--c:${s.color}"></span>${s.label}</button>`).join('')}</div></div>`;
+  host.innerHTML=`<div class="fctl"><div class="fgrp" data-k="year"><i class="pill"></i>${years.map(y=>`<button data-v="${y}">${y}</button>`).join('')}<button data-v="all">전체</button></div></div><div class="fctl"><div class="fgrp" data-k="sec"><i class="pill"></i><button data-v="all">전체</button>${secs.map(s=>`<button data-v="${s.id}"><span class="dot" style="--c:${s.color}"></span>${s.label}</button>`).join('')}</div></div>`;
   function movePill(g){const on=g.querySelector('button.on'),p=g.querySelector('.pill');if(!on)return;p.style.left=on.offsetLeft+'px';p.style.width=on.offsetWidth+'px'}
   function apply(){
     host.querySelectorAll('.fgrp').forEach(g=>{const v=g.dataset.k==='year'?year:sec;g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));movePill(g)});
@@ -350,7 +354,11 @@ function lbReset(){lbScale=1;lbX=0;lbY=0;lbApply()}
   st.addEventListener('click',e=>{if(e.target===st)closeLightbox()});
 })();
 function showLightbox(){lbReset();
-  document.getElementById('lightboxImg').src=lbSrcs[lbIdx];
+  const im=document.getElementById('lightboxImg');
+  // 이전 이미지가 남아 보이지 않게 비우고 새 이미지를 올린다
+  im.removeAttribute('src');im.style.opacity='0';
+  const next=new Image();next.onload=()=>{if(next.src===im.dataset.want){im.src=next.src;im.style.opacity='1'}};
+  im.dataset.want=next.src=lbSrcs[lbIdx];
   document.getElementById('lightboxCap').textContent=(lbSrcs.length>1?`${lbIdx+1} / ${lbSrcs.length}  `:'')+(lbCaps[lbIdx]||'');
   const multi=lbSrcs.length>1;
   document.getElementById('lbPrev').classList.toggle('hidden',!multi);
@@ -364,7 +372,7 @@ function openLightbox(box){
   document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';
 }
 function stepLightbox(d){if(!lbSrcs.length)return;lbIdx=(lbIdx+d+lbSrcs.length)%lbSrcs.length;showLightbox()}
-function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow=''}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';const im=document.getElementById('lightboxImg');im.removeAttribute('src');im.dataset.want='';im.style.opacity='0';lbReset()}
 document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLightbox()});
 document.addEventListener('keydown',e=>{if(!document.getElementById('lightbox').classList.contains('open'))return;if(e.key==='+'||e.key==='=')lbZoom(0.25);if(e.key==='-')lbZoom(-0.25);if(e.key==='0')lbReset()});
 document.addEventListener('keydown',e=>{
