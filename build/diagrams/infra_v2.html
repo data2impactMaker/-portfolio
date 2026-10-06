@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>지표·인프라 썸네일 3종</title>
+<link rel="stylesheet" href="file:///Users/darnell/.claude/design-system/report-tokens.css">
+<style>
+  html,body{overflow-x:hidden;background:#fff}
+  td{white-space:nowrap}
+  body{font-family:var(--sans);color:var(--ink);line-height:1.6}
+  .page{width:1400px;padding:44px 56px 48px;box-sizing:border-box;background:#fff}
+  .eyebrow{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:10px}
+  h1{font-size:30px;margin:0 0 8px;letter-spacing:-.03em}
+  p.sub{font-size:15px;color:var(--ink2);margin:0 0 26px;max-width:960px}
+  /* As-Is / To-Be 스테이지카드 */
+  .stage{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card{border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;background:#fff}
+  .card h3{margin:0 0 12px;font-size:16px;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+  .card h3 .n{font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:.1em}
+  .face{border-radius:9px;padding:12px 14px;margin-top:8px}
+  .face.asis{background:var(--line2)} .face.tobe{background:var(--co-l)}
+  .face .lab{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+  .face.asis .lab{color:var(--ink3)} .face.tobe .lab{color:var(--co)}
+  .face .row{font-size:13px;line-height:1.55;color:var(--ink2);padding:3px 0}
+  .face .row b{color:var(--ink);font-weight:700;margin-right:2px}
+  .face.tobe .row{color:var(--ink)}
+  /* 한 줄 흐름 스테퍼 */
+  .flow{display:flex;align-items:stretch;gap:10px;margin:8px 0 26px}
+  .step{flex:1;border:1px solid var(--line);border-radius:12px;padding:16px 16px 14px;background:#fff;position:relative}
+  .step.core{border-color:var(--co);box-shadow:0 0 0 3px var(--co-l)}
+  .step .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);font-weight:700;margin-bottom:6px}
+  .step .t{font-size:17px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+  .step .d{font-size:13px;color:var(--ink2);line-height:1.55}
+  .step .d .mono{font-family:var(--mono);font-size:12px;color:var(--ink2)}
+  .step::after{content:'';position:absolute;right:-9px;top:50%;width:8px;height:8px;border-top:1.5px solid var(--ink4);border-right:1.5px solid var(--ink4);transform:translateY(-50%) rotate(45deg)}
+  .step:last-child::after{display:none}
+  .tldr{font-size:15.5px;margin:0 0 22px}
+  table.spec{font-size:13px;margin:0}
+  table.spec th{font-size:12px}
+  .two{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:start}
+  /* 큰 타일 */
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px}
+  .tile{border:1px solid var(--line);border-radius:12px;padding:20px 20px 18px;background:#fff}
+  .tile.co{background:var(--co);border-color:var(--co);color:#fff}
+  .tile .ic{font-size:30px;line-height:1;margin-bottom:12px}
+  .tile .t{font-size:17px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+  .tile .d{font-size:13px;line-height:1.55;color:var(--ink2)}
+  .tile.co .d{color:rgba(255,255,255,.85)}
+  .tree{font-family:var(--mono);font-size:13px;line-height:1.85;color:var(--ink2);border:1px solid var(--line);border-radius:12px;padding:16px 20px;background:#fff}
+  .tree b{color:var(--ink);font-weight:700}
+  .tree .c{color:var(--ink3);margin-left:14px;font-family:var(--sans);font-size:12.5px}
+  .next{margin-top:22px;border-top:2px solid var(--ink);padding-top:12px}
+  .next h2{border:none;margin:0 0 6px;padding:0;font-size:15px}
+  .next ul.kp li{white-space:normal;font-size:13.5px}
+</style></head>
+<body>
+
+<!-- 1. 이벤트 로그 설계: 현행 / 프레임워크 적용 후 -->
+<section class="page" id="eventlog">
+  <div class="eyebrow">이벤트 로그 설계 프레임워크</div>
+  <h1>이벤트 로그 설계 프레임워크 적용 전후 비교</h1>
+  <p class="sub">요구사항 정의서 · 유저플로우 입력으로 KPI 체계와 화면×이벤트 설계안을 표준 양식으로 산출, 미확인 항목은 확인 요청으로 회신</p>
+  <div class="stage">
+    <div class="card"><h3><span class="n">01</span>설계 출발점</h3>
+      <div class="face asis"><div class="lab">현행</div>
+        <div class="row"><b>출발:</b> 화면 요소 목록</div>
+        <div class="row"><b>수집 범위:</b> 요소별 전수 수집</div>
+        <div class="row"><b>KPI 연결:</b> 수집 후 사후 연결</div></div>
+      <div class="face tobe"><div class="lab">프레임워크 적용 후</div>
+        <div class="row"><b>출발:</b> 비즈니스 질문과 가설</div>
+        <div class="row"><b>수집 범위:</b> KPI에 직결되는 이벤트만</div>
+        <div class="row"><b>KPI 연결:</b> 질문당 KPI 1개, 본부 지표에 연결</div></div></div>
+    <div class="card"><h3><span class="n">02</span>설계 과정</h3>
+      <div class="face asis"><div class="lab">현행</div>
+        <div class="row"><b>이름 규칙:</b> 담당자마다 제각각</div>
+        <div class="row"><b>기존 이벤트:</b> 기존 이벤트 미확인 상태로 신규 생성</div>
+        <div class="row"><b>검증:</b> 적재 후 수기 검증</div></div>
+      <div class="face tobe"><div class="lab">프레임워크 적용 후</div>
+        <div class="row"><b>이름 규칙:</b> view·click 2종, 의미는 파라미터</div>
+        <div class="row"><b>기존 이벤트:</b> 정본 조회 후 재사용 우선</div>
+        <div class="row"><b>검증:</b> 등록 전 lint 검증 · 실제 수집 여부 조회</div></div></div>
+    <div class="card"><h3><span class="n">03</span>산출물과 소통</h3>
+      <div class="face asis"><div class="lab">현행</div>
+        <div class="row"><b>산출물:</b> 엑셀 표 · 문서별 양식 상이</div>
+        <div class="row"><b>빈칸 처리:</b> 추정값으로 작성</div>
+        <div class="row"><b>소요:</b> 설계 회의 다회</div></div>
+      <div class="face tobe"><div class="lab">프레임워크 적용 후</div>
+        <div class="row"><b>산출물:</b> 표준 양식(KPI 체계·화면×이벤트·등록안)</div>
+        <div class="row"><b>빈칸 처리:</b> 확인 필요 목록으로 회신</div>
+        <div class="row"><b>소요:</b> 자료 링크 입력 후 설계안 즉시 생성</div></div></div>
+  </div>
+</section>
+
+
+</body></html>

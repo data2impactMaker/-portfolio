@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모케터 체험 데모</title>
+<style>
+  :root{--bg:#f8f8f8;--side:#3f0e40;--side2:#350d36;--text:#1d1c1d;--sub:#616061;--muted:#9a9a9a;--border:#dddddd;--blue:#1264a3;--green:#2bac76;--yellow:#fff3c4;--radius:8px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow-x:hidden}
+  body{font-family:'Noto Sans KR','Inter',-apple-system,sans-serif;font-size:14px;color:var(--text);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+  td{white-space:nowrap}
+  .app{display:flex;height:100%;min-height:520px}
+  .side{width:220px;flex-shrink:0;background:var(--side);color:#fff;display:flex;flex-direction:column}
+  .ws{padding:14px 16px;font-weight:800;font-size:15px;border-bottom:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:space-between}
+  .ws small{font-weight:500;font-size:10px;opacity:.7;display:block}
+  .side-sec{padding:12px 12px 4px;font-size:11px;letter-spacing:.5px;text-transform:uppercase;opacity:.7}
+  .ch{padding:5px 16px;font-size:13px;opacity:.85;cursor:default;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ch.active{background:#1164a3;opacity:1;border-radius:6px;margin:0 8px;padding:5px 8px}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px}
+  .main{flex:1;display:flex;flex-direction:column;min-width:0;background:#fff}
+  .head{padding:10px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+  .head .av{width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,#e67e22,#f5b041);color:#fff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .head b{font-size:15px}
+  .head .demo-tag{margin-left:auto;font-size:10px;color:var(--sub);background:var(--yellow);border:1px solid #f1e3a0;padding:2px 8px;border-radius:100px;white-space:nowrap}
+  .log{flex:1;overflow-y:auto;padding:14px 18px;display:flex;flex-direction:column;gap:14px}
+  .msg{display:flex;gap:10px;align-items:flex-start}
+  .msg .av{width:36px;height:36px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:13px}
+  .msg.user .av{background:#4a154b}
+  .msg.bot .av{background:linear-gradient(135deg,#e67e22,#f5b041)}
+  .msg .body{min-width:0;flex:1}
+  .msg .name{font-weight:700;font-size:14px}
+  .msg .name span{font-weight:400;font-size:11px;color:var(--muted);margin-left:6px}
+  .msg .name .app-tag{font-size:9px;background:#e8e8e8;color:#555;padding:0 4px;border-radius:3px;margin-left:4px}
+  .msg .txt{font-size:14px;white-space:pre-wrap;word-break:break-word}
+  .msg .txt b{font-weight:700}
+  .react{display:inline-flex;gap:4px;margin-top:4px}
+  .react span{font-size:11px;border:1px solid var(--border);border-radius:100px;padding:0 7px;background:#f6f6f6}
+  .typing{display:inline-flex;gap:3px;padding:6px 0}
+  .typing i{width:6px;height:6px;border-radius:50%;background:#bbb;animation:b 1s infinite}
+  .typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+  @keyframes b{0%,100%{opacity:.3}50%{opacity:1}}
+  table.bk{border-collapse:collapse;margin:8px 0;font-size:12px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+  table.bk th{background:#f4f4f4;text-align:left;padding:5px 10px;font-weight:700;border-bottom:1px solid var(--border)}
+  table.bk td{padding:5px 10px;border-bottom:1px solid #eee}
+  table.bk tr:last-child td{border-bottom:none}
+  table.bk td.num{text-align:right;font-variant-numeric:tabular-nums}
+  table.bk td.pos{color:#1a7f37;font-weight:700}
+  .tbl-wrap{overflow-x:auto;max-width:100%}
+  .btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .btns button{font-family:inherit;font-size:12px;padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;font-weight:600}
+  .btns button.primary{background:#007a5a;color:#fff;border-color:#007a5a}
+  .btns button:hover{filter:brightness(.95)}
+  .quote{border-left:4px solid #ddd;padding:4px 10px;color:var(--sub);margin-top:6px;font-size:13px}
+  .notice{background:#f6f6f6;border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-top:6px;font-size:13px}
+  .src{font-size:11px;color:var(--muted);margin-top:6px}
+  .compose{border-top:1px solid var(--border);padding:10px 18px 12px;background:#fff}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+  .chips button{font-family:inherit;font-size:11px;padding:4px 10px;border-radius:100px;border:1px solid var(--border);background:#fff;cursor:pointer;color:var(--sub)}
+  .chips button:hover{border-color:var(--text);color:var(--text)}
+  .box{display:flex;border:1px solid #888;border-radius:8px;overflow:hidden}
+  .box input{flex:1;border:none;outline:none;padding:10px 12px;font-family:inherit;font-size:14px;min-width:0}
+  .box button{border:none;background:#007a5a;color:#fff;padding:0 14px;cursor:pointer;font-family:inherit;font-weight:700}
+  .box button:disabled{background:#bbb}
+  @media(max-width:640px){.side{display:none}.log{padding:12px}.compose{padding:8px 12px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="ws">모두의주차장<small>워크스페이스 (데모)</small></div>
+    <div class="side-sec">채널</div>
+    <div class="ch"># 기획분석팀</div>
+    <div class="ch"># 모두의주차장_all</div>
+    <div class="ch"># 마케팅</div>
+    <div class="side-sec">다이렉트 메시지</div>
+    <div class="ch active"><span class="dot"></span>모케터</div>
+    <div class="ch"><span class="dot"></span>나</div>
+  </aside>
+  <section class="main">
+    <div class="head"><div class="av">M</div><b>모케터</b><span style="font-size:11px;color:var(--sub)">마케팅 Q&amp;A 에이전트</span><span class="demo-tag">예시 데이터 · 실제 서비스 아님</span></div>
+    <div class="log" id="log"></div>
+    <div class="compose">
+      <div class="chips" id="chips"></div>
+      <div class="box"><input id="inp" placeholder="모케터에게 메시지 보내기" autocomplete="off"><button id="send">보내기</button></div>
+    </div>
+  </section>
+</div>
+<script>
+// 예시 데이터. 실제 캠페인·수치가 아니다.
+const CAMPAIGNS=[
+  {name:'9월 1차 라이트 쿠폰 드로우',date:'09-04',type:'앱푸시',size:'71만',session:'+3,075',pin:'+219',buy:'+72',bg:'9월 미접속 회원 재접속 확보. 8월 1차의 쿠폰 지급 설정 오류를 바로잡은 라이트 버전',target:'9월 미접속 · 광고 푸시 수신 가능 회원',benefit:'10%·30%·50% 할인쿠폰 추첨(최대 5,000원)'},
+  {name:'여수세계섬박람회 개막 안내',date:'08-31',type:'앱푸시',size:'106만',session:'+1,120',pin:'+48',buy:'0',bg:'조직위 제휴 개막 인지 확대. 상시 캔버스 재사용',target:'전체 · 푸시 수신동의 회원',benefit:'없음'},
+  {name:'위클리특가 주말 사용자',date:'08-29',type:'인앱',size:'18만',session:'+640',pin:'+95',buy:'+31',bg:'주말 이용 빈도가 높은 유저에게 특가 노출로 반복 구매 유도',target:'최근 4주 주말 결제 2회 이상',benefit:'주말 특가 상품 노출'},
+];
+const COUPONS=[
+  {name:'드로우 10% 쿠폰',issued:'12,400',used:'2,310',rate:'18.6%',left:'잔여 한도 37%'},
+  {name:'드로우 30% 쿠폰',issued:'3,200',used:'1,180',rate:'36.9%',left:'잔여 한도 12%'},
+  {name:'드로우 50% 쿠폰',issued:'400',used:'268',rate:'67.0%',left:'한도 소진 임박'},
+];
+const log=document.getElementById('log'),inp=document.getElementById('inp'),send=document.getElementById('send'),chips=document.getElementById('chips');
+const now=()=>new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+function el(h){const d=document.createElement('div');d.innerHTML=h;return d.firstElementChild}
+function scroll(){log.scrollTop=log.scrollHeight}
+function userMsg(t){const m=el(`<div class="msg user"><div class="av">나</div><div class="body"><div class="name">나<span>${now()}</span></div><div class="txt"></div><div class="react" hidden><span>👀</span></div></div></div>`);m.querySelector('.txt').textContent=t;log.appendChild(m);scroll();return m}
+function botMsg(html){const m=el(`<div class="msg bot"><div class="av">M</div><div class="body"><div class="name">모케터<span class="app-tag">APP</span><span>${now()}</span></div><div class="txt">${html}</div></div></div>`);log.appendChild(m);scroll();return m}
+function typing(){const m=el(`<div class="msg bot"><div class="av">M</div><div class="body"><div class="typing"><i></i><i></i><i></i></div></div></div>`);log.appendChild(m);scroll();return m}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function tbl(head,rows){return `<div class="tbl-wrap"><table class="bk"><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map((c,i)=>`<td class="${i>0?'num':''} ${String(c).startsWith('+')?'pos':''}">${c}</td>`).join('')}</tr>`).join('')}</table></div>`}
+
+// 의도 분류. 실제 서비스는 규칙 관문 4개를 지난 뒤 LLM 두 번 호출로 답한다.
+function route(q){
+  const s=q.toLowerCase();
+  if(/공지|써줘|작성/.test(s))return 'announce';
+  if(/쿠폰/.test(s))return 'coupon';
+  if(/배경|왜|목적|기획/.test(s))return 'background';
+  if(/성과|실적|이번 주|주간|캠페인/.test(s))return 'perf';
+  if(/영업|재무|연봉|인사|주가/.test(s))return 'oos';
+  if(/안녕|고마|감사|수고/.test(s))return 'chat';
+  return 'fallback';
+}
+const ANSWERS={
+  perf:()=>`<b>이번 주 발송·종료 캠페인 3건</b>의 순증입니다. 순증은 실험군 인원 × (실험군 비율 − 대조군 비율)로 계산했고, 단발 푸시는 발송 후 3시간, 인앱은 24시간 기준입니다.`+tbl(['캠페인','규모','세션 순증','핀클릭 순증','구매 순증'],CAMPAIGNS.map(c=>[c.name,c.size,c.session,c.pin,c.buy]))+`유의한 구매 순증이 있는 캠페인은 <b>2건</b>입니다. 캠페인 이름을 말씀하시면 기획 배경과 소재를 이어서 보여드립니다.<div class="src">출처: 캠페인 저장소 분석 보고 3건 · 예시 데이터</div>`,
+  background:(q)=>{const c=CAMPAIGNS.find(c=>q.includes(c.name.slice(0,4)))||CAMPAIGNS[0];return `<b>${c.name}</b> (${c.date} · ${c.type})<div class="quote">${c.bg}</div>`+tbl(['항목','내용'],[['대상',c.target],['혜택',c.benefit],['발송 규모',c.size]])+`<div class="src">출처: 캠페인 기획서 · 세팅 가이드 · 예시 데이터</div>`},
+  coupon:()=>`쿠폰 현황은 LLM을 거치지 않고 데이터베이스 조회 결과를 그대로 조립합니다.`+tbl(['쿠폰','발급','사용','사용률','진단'],COUPONS.map(c=>[c.name,c.issued,c.used,c.rate,c.left]))+`50% 쿠폰은 한도 소진이 임박해 <b>다음 회차 발급 전 한도 상향</b>이 필요합니다.<div class="src">출처: 쿠폰 · 결제 데이터베이스 · 예시 데이터</div>`,
+  announce:()=>`공지 모드입니다. 렌즈 문서와 이벤트 페이지에서 일정 · 혜택 · 노출 지면을 가져왔어요.<div class="notice"><b>@here [공유] 토스페이 프로모션 8/27(목) 11시 오픈</b>\n결제수단은 오늘 배포, 프로모션은 내일 11시 시작\n1. 혜택 · 2. 노출 지면 · 3. 이벤트 페이지 · 이미지는 스레드에</div><div class="btns"><button class="primary" data-act="send">📤 그대로 발송</button><button data-act="edit">✍️ 대화로 다듬기</button><button data-act="cancel">발송 취소</button></div>`,
+  oos:()=>`이 질문은 마케팅 범위 밖이라 제가 답하지 않습니다. 영업전략 · 재무 · 인사 관련 질문은 담당 채널로 문의해 주세요.`,
+  chat:()=>`네, 언제든 불러주세요. 캠페인 성과 · 기획 배경 · 쿠폰 현황 · 공지 작성을 도와드립니다.`,
+  fallback:()=>`이렇게 물어보실 수 있어요.\n· 이번 주 캠페인 성과 알려줘\n· 9월 1차 라이트 쿠폰 드로우 기획 배경\n· 드로우 쿠폰 현황 진단해줘\n· 토스페이 오픈 공지 써줘`
+};
+async function ask(q){
+  if(!q.trim())return;
+  send.disabled=true;inp.value='';
+  const u=userMsg(q);
+  await wait(400);u.querySelector('.react').hidden=false; // 접수 표시: 3초 안에 반응을 남기고 답변은 백그라운드에서 만든다
+  const t=typing();await wait(900+Math.random()*600);t.remove();
+  const kind=route(q);
+  const m=botMsg(ANSWERS[kind](q));
+  m.querySelectorAll('[data-act]').forEach(b=>b.addEventListener('click',()=>{
+    const a=b.dataset.act;m.querySelector('.btns').remove();
+    if(a==='send')botMsg(`전사 채널에 게시했습니다. 본글 1 · 스레드 2 · 이미지 2장. <span style="color:var(--blue)">게시글 링크 (데모)</span>`);
+    else if(a==='edit')botMsg(`어느 부분을 고칠까요? 예: "혜택 섹션을 두 줄로 줄여줘", "오픈 시각을 12시로 바꿔줘"`);
+    else botMsg(`발송을 취소했습니다.`);
+  }));
+  send.disabled=false;inp.focus();
+}
+['이번 주 캠페인 성과 알려줘','9월 1차 라이트 쿠폰 드로우 기획 배경','드로우 쿠폰 현황 진단해줘','토스페이 오픈 공지 써줘','영업전략 알려줘'].forEach(t=>{const b=document.createElement('button');b.textContent=t;b.addEventListener('click',()=>ask(t));chips.appendChild(b)});
+send.addEventListener('click',()=>ask(inp.value));
+inp.addEventListener('keydown',e=>{if(e.key==='Enter')ask(inp.value)});
+// 썸네일용 샘플 대화. #sample = 모케터, #sample-databot = 데이터업무 슬랙봇
+const SAMPLE=location.hash.replace('#','');
+if(SAMPLE==='sample'||SAMPLE==='sample-databot'){
+  document.querySelector('.compose .chips').hidden=true;
+  if(SAMPLE==='sample-databot'){
+    document.querySelector('.head b').textContent='데이터봇';document.querySelector('.head span').textContent='데이터업무 요청 접수';document.querySelector('.ch.active').innerHTML='<span class="dot"></span>데이터봇';document.querySelector('.head .av').textContent='D';document.querySelector('.head .av').style.background='linear-gradient(135deg,#1264a3,#36c5f0)';
+    const u=userMsg('지난주 신규가입자 중 첫 결제까지 걸린 시간 분포 뽑아줘. 지역별로도 나눠서.');u.querySelector('.react').hidden=false;
+    const m=botMsg(`요청을 <b>데이터 추출</b>로 분류했습니다. 아래 내용으로 티켓을 만들었어요.`+tbl(['항목','내용'],[['요청 유형','데이터 추출 · 분포 분석'],['기간','지난주 (09-15 ~ 09-21) 가입자'],['지표','가입 → 첫 결제 소요 시간 (중앙값·분위)'],['분할','서울 자치구 · 경기 시군'],['담당','기획분석팀 · 예상 1일']])+`<div class="notice">🎫 Jira 티켓 <b>DATA-412</b> 생성 · 진행 상황은 스레드로 알려드립니다.</div><div class="src">출처: 요청 분류 규칙 · 예시 데이터</div>`);
+    m.querySelector('.av').textContent='D';m.querySelector('.av').style.background='linear-gradient(135deg,#1264a3,#36c5f0)';m.querySelector('.name').firstChild.textContent='데이터봇';
+  }else{
+    const u=userMsg('이번 주 캠페인 성과 알려줘');u.querySelector('.react').hidden=false;
+    botMsg(ANSWERS.perf());
+    const u2=userMsg('9월 1차 라이트 쿠폰 드로우 배경은?');u2.querySelector('.react').hidden=false;
+    botMsg(ANSWERS.background('9월 1차 라이트 쿠폰 드로우'));
+  }
+  log.scrollTop=0;
+}else botMsg(`안녕하세요, 모케터입니다. 캠페인 성과 · 기획 배경 · 쿠폰 현황을 답하고 공지 초안을 씁니다. 아래 예시를 눌러 보세요.<div class="src">이 화면은 포트폴리오용 데모입니다. 응답은 미리 준비한 예시 데이터로 만들어지며 실제 사내 데이터에 연결되지 않습니다.</div>`);
+// 모달 안에서 ESC로 닫기
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&window.parent!==window)window.parent.postMessage('close-demo','*')});
+</script>
+</body>
+</html>
