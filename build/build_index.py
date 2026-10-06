@@ -16,10 +16,10 @@ FULL = "portfolio_images/full"
 # 썸네일 규칙. 기본(auto): 원본이 세로로 길지 않으면(높이/폭 1.6 이하) 전체를 축소해 담고,
 # 세로로 길면 폭 전체의 16:10 창을 상단(또는 y 지정 위치)에서 자른다. mode로 강제할 수 있다.
 THUMB_CROP = {
-    "notion_2026_forecast_risk": {"mode": "cover", "x": 0.05, "y": 0.40, "w": 1050},
-    "notion_2026_impact_coupang": {"mode": "cover", "x": 0.06, "y": 0.26, "w": 1050},
-    "notion_2026_tosspay_report": {"mode": "cover", "x": 0.10, "y": 0.07, "w": 1120},
-    "notion_2026_draw_dashboard": {"mode": "cover", "x": 0.10, "y": 0.0, "w": 1120},
+    "notion_2026_forecast_risk": {"mode": "cover", "x": 0.178, "y": 0.40, "w": 900},
+    "notion_2026_impact_coupang": {"mode": "cover", "x": 0.17, "y": 0.26, "w": 920},
+    "notion_2026_tosspay_monitor": {"mode": "cover", "x": 0.157, "y": 0.0, "w": 960},
+    "notion_2026_draw_dashboard": {"mode": "cover", "x": 0.157, "y": 0.0, "w": 960},
     "notion_25": {"y": 0.205, "w": 3200}, "notion_17": {"y": 0.02},
 }
 
@@ -221,12 +221,6 @@ CARDS = [
          imgs=[("notion_2026_forecast_risk.png", "9·10월 연휴 실적 하락 리스크와 대응: 추석 연휴 3개년 손실률 비교"),
                ("notion_2026_forecast_model.png", "캘린더 회귀모델 검증: 명절·요일·강우 계수 재현과 백테스트"),
                ("notion_2026_forecast_actual.png", "추석 연휴 예측 대비 실적 검증: 거래액·MAU 예측과 실제 차이")]),
-    dict(id="dc-tosspay", sec="decision", part="사업 기획 분석", year="2026", tool="BigQuery · Vega-Lite",
-         title="토스페이 도입 성과 측정과 결제 모니터링",
-         rows=[("목적", "간편결제 수단 추가에 따른 PG 수수료 절감 효과 측정과 결제수단 전환 추이 상시 관찰"),
-               ("결과", "대체 결제수단 요율 비교로 도입 36일 절감액을 추정하고 전체 가중 요율 변화로 교차 검증, 일별 자동 갱신 모니터링 대시보드 운영")],
-         imgs=[("notion_2026_tosspay_report.png", "토스페이 도입 성과 리포트: 36일 누적 절감액과 월 절감 페이스"),
-               ("notion_2026_tosspay_monitor.png", "토스페이 결제 모니터링: 결제수단별 거래건수와 토스페이 비중 추이")]),
 
     # Visualization ────────────────────────────
     dict(id="viz-draw", sec="viz", part="성과 추적", year="2026", tool="GA4 · Vega-Lite · Cloud Run",
@@ -236,6 +230,11 @@ CARDS = [
          imgs=[("notion_2026_draw_dashboard.png", "럭키드로우 이벤트 대시보드: 방문·참여·응모 유저수와 유입 경로"),
                ("notion_2026_draw_logging.png", "드로우 이벤트 GA 로깅 검증: 이벤트 9종 설계값 대조"),
                ("notion_2026_draw_taxonomy.png", "드로우 이벤트 GA 텍소노미 설계안")]),
+    dict(id="viz-tosspay", sec="viz", part="성과 추적", year="2026", tool="BigQuery · Vega-Lite · Cloud Run",
+         title="토스페이 결제 모니터링 대시보드",
+         rows=[("목적", "토스페이 도입 후 결제수단 전환 추이와 간편결제 내 비중 목표 달성의 상시 관찰"),
+               ("결과", "결제수단별 거래건수·토스페이 비중·결제자 구성·직전 결제수단을 일별 자동 갱신 대시보드로 제공")],
+         imgs=[("notion_2026_tosspay_monitor.png", "토스페이 결제 모니터링: 결제수단별 거래건수와 토스페이 비중 추이")]),
     dict(id="viz-v1a", sec="viz", part="성과 추적", year="2025", tool="Looker Studio",
          title="W-1(저번주) 성과예측 대시보드",
          rows=[("목적", "전체 주차장의 심층적 일정별 성과를 지표로 수치 확인"),

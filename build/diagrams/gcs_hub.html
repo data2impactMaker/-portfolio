@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>통합 저장소 허브 구성도</title>
+<style>
+  html,body{overflow-x:hidden;margin:0;background:#fff}
+  td{white-space:nowrap}
+  body{font-family:'Pretendard Variable','Noto Sans KR',-apple-system,sans-serif}
+  svg{display:block}
+  .bt{font-size:21px;font-weight:800;fill:#18181b}
+  .bs{font-size:13.5px;fill:#4b5563}
+  .canvas{fill:#f8f9fb;stroke:#e3e6ea;stroke-width:1.2;rx:22}
+  .hub{fill:#fff;stroke:#1d4f9c;stroke-width:2.4;rx:16}
+  .hubhead{fill:#1d4f9c;rx:16}
+  .hubt{font-size:16px;font-weight:800;fill:#fff}
+  .hubs{font-size:11.5px;fill:#dbe7fb}
+  .tree{font-family:'SF Mono',Menlo,monospace;font-size:12px;fill:#334155}
+  .tree.k{fill:#1d4f9c;font-weight:700}
+  .node{fill:#fff;stroke:#c9ccd3;stroke-width:1.4;rx:12}
+  .nt{font-size:13.5px;font-weight:700;fill:#18181b}
+  .ns{font-size:11px;fill:#5b6470}
+  .side{font-size:11.5px;font-weight:800;letter-spacing:.12em;fill:#6b7280}
+  .side.w{fill:#1f6b2a}.side.r{fill:#5b3fa6}
+  .curve{fill:none;stroke-width:2;stroke-linecap:round}
+  .curve.w{stroke:#8fcf93;marker-end:url(#tri-g)}
+  .curve.r{stroke:#b9a3e6;marker-end:url(#tri-p)}
+  .pill{fill:#fff7ea;stroke:#f3b56a;stroke-width:1.4;rx:20}
+  .pillt{font-size:12px;font-weight:700;fill:#9a5b06}
+  .ic{fill:none;stroke:#334155;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .ic.g{stroke:#1f6b2a}.ic.p{stroke:#5b3fa6}.ic.o{stroke:#9a5b06}.ic.w{stroke:#fff}
+  .tl{stroke:#f3b56a;stroke-width:2}
+  .dot{fill:#fff;stroke:#f3b56a;stroke-width:2.2}
+  .tlt{font-size:12.5px;font-weight:800;fill:#9a5b06}
+  .tlh{font-size:13.5px;font-weight:700;fill:#18181b}
+  .tls{font-size:11px;fill:#5b6470}
+</style></head>
+<body>
+<svg width="1400" height="860" viewBox="0 0 1400 860" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="tri-g" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#8fcf93"/></marker>
+    <marker id="tri-p" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,1 L9,5 L0,9 z" fill="#b9a3e6"/></marker>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 17l.8 2.2L22 20l-2.2.8L19 23l-.8-2.2L16 20l2.2-.8z"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-8 8H8l-5 3 1.5-5A8 8 0 1 1 21 12z"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-5 3 3 5-7"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h8"/></symbol>
+    <symbol id="i-bucket" viewBox="0 0 24 24"><path d="M4 6h16l-1.6 13a2 2 0 0 1-2 1.8H7.6a2 2 0 0 1-2-1.8z"/><ellipse cx="12" cy="6" rx="8" ry="2.5"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></symbol>
+  </defs>
+
+  <text x="700" y="46" text-anchor="middle" class="bt">CRM 분석 · 의사결정 통합 저장소</text>
+  <text x="700" y="70" text-anchor="middle" class="bs">산출물을 한 버킷에 동일 구조로 적재하고, 슬랙봇 · 대시보드 · 에이전트가 같은 파일을 읽어 수치와 맥락을 일치시키는 구조</text>
+
+  <rect x="30" y="92" width="1340" height="590" class="canvas"/>
+
+  <!-- 왼쪽: 쓰기 주체 -->
+  <text x="70" y="128" class="side w">쓰기 · 산출물 적재</text>
+  <rect x="70" y="150" width="300" height="74" class="node"/><use href="#i-spark" x="86" y="171" width="30" height="30" class="ic g"/><text x="128" y="180" class="nt">CRM 에이전트</text><text x="128" y="200" class="ns">기획서 · 세팅 가이드 · 공지 초안 작성</text>
+  <rect x="70" y="350" width="300" height="74" class="node"/><use href="#i-gear" x="86" y="371" width="30" height="30" class="ic g"/><text x="128" y="380" class="nt">분석 스윕 (매일 08:00)</text><text x="128" y="400" class="ns">실험군 대비 대조군 증분 · 퍼널 집계</text>
+  <rect x="70" y="550" width="300" height="74" class="node"/><use href="#i-check" x="86" y="571" width="30" height="30" class="ic g"/><text x="128" y="580" class="nt">검토 · 승인 기록</text><text x="128" y="600" class="ns">채택 여부와 사유를 파일로 기록</text>
+  <path d="M370,187 C440,187 450,300 510,330" class="curve w"/>
+  <path d="M370,387 L510,387" class="curve w"/>
+  <path d="M370,587 C440,587 450,470 510,444" class="curve w"/>
+
+  <!-- 중앙: 허브 -->
+  <rect x="510" y="236" width="380" height="302" class="hub"/>
+  <rect x="510" y="236" width="380" height="54" class="hubhead"/>
+  <rect x="510" y="272" width="380" height="18" fill="#1d4f9c"/>
+  <use href="#i-bucket" x="528" y="249" width="28" height="28" class="ic w"/>
+  <text x="568" y="261" class="hubt">통합 저장소 (GCS 버킷)</text><text x="568" y="279" class="hubs">작성 주체와 무관하게 동일 폴더 구조</text>
+  <text x="534" y="318" class="tree k">campaigns/</text><text x="640" y="318" class="tree">캠페인별 폴더</text>
+  <text x="552" y="340" class="tree">├ 기획서</text><text x="680" y="340" class="tree">목적 · 타겟 · 실험 설계</text>
+  <text x="552" y="362" class="tree">├ 세팅 가이드</text><text x="680" y="362" class="tree">카피 · 미리보기 · 조건</text>
+  <text x="552" y="384" class="tree">├ 분석 보고</text><text x="680" y="384" class="tree">증분 · 퍼널 · 리포트</text>
+  <text x="552" y="406" class="tree">├ 카드(meta)</text><text x="680" y="406" class="tree">상태 · KPI · 대조군</text>
+  <text x="552" y="428" class="tree">└ 승인 기록</text><text x="680" y="428" class="tree">담당 · 일시 · 사유</text>
+  <text x="534" y="458" class="tree k">knowledge/</text><text x="680" y="458" class="tree">정책 · 가이드 · 규칙</text>
+  <text x="534" y="480" class="tree k">recommendations/</text><text x="680" y="480" class="tree">주간 추천 · 채택 사유</text>
+  <text x="534" y="502" class="tree k">_meta/</text><text x="680" y="502" class="tree">폴더 순회 후 자동 재작성 색인</text>
+  <line x1="534" y1="516" x2="866" y2="516" stroke="#e3e6ea"/>
+  <text x="700" y="531" text-anchor="middle" class="ns">파일 자체가 운영 데이터 · 별도 등록 절차 없음</text>
+
+  <!-- 허브 아래: 저장 즉시 반영 -->
+  <path d="M700,538 L700,574" fill="none" stroke="#f3b56a" stroke-width="2"/>
+  <rect x="470" y="574" width="460" height="40" class="pill"/>
+  <use href="#i-bell" x="492" y="584" width="20" height="20" class="ic o"/>
+  <text x="522" y="599" class="pillt">저장 즉시 반영: 대시보드 카드 자동 등록 · 슬랙 공지 · 담당자 알림</text>
+
+  <!-- 오른쪽: 읽기 주체 -->
+  <text x="1330" y="128" text-anchor="end" class="side r">읽기 · 동일 원천 참조</text>
+  <rect x="1030" y="150" width="300" height="74" class="node"/><use href="#i-chat" x="1046" y="171" width="30" height="30" class="ic p"/><text x="1088" y="180" class="nt">슬랙봇 모케터</text><text x="1088" y="200" class="ns">성과 · 기획 배경 질의에 분석 보고 기준 응답</text>
+  <rect x="1030" y="350" width="300" height="74" class="node"/><use href="#i-chart" x="1046" y="371" width="30" height="30" class="ic p"/><text x="1088" y="380" class="nt">마케팅 대시보드</text><text x="1088" y="400" class="ns">카드 · 색인 참조로 캘린더 · KPI 구성</text>
+  <rect x="1030" y="550" width="300" height="74" class="node"/><use href="#i-spark" x="1046" y="571" width="30" height="30" class="ic p"/><text x="1088" y="580" class="nt">AI 에이전트</text><text x="1088" y="600" class="ns">과거 기획 · 결과를 읽어 차기 캠페인 설계</text>
+  <path d="M890,330 C950,300 960,187 1030,187" class="curve r"/>
+  <path d="M890,387 L1030,387" class="curve r"/>
+  <path d="M890,444 C950,470 960,587 1030,587" class="curve r"/>
+
+  <!-- 응답 품질 -->
+  <rect x="1030" y="640" width="300" height="30" rx="15" fill="#fff" stroke="#b9a3e6" stroke-width="1.4"/>
+  <text x="1180" y="660" text-anchor="middle" class="ns" font-weight="700">응답: 동일 수치 · 동일 맥락 · 출처 파일과 시각 병기</text>
+  <rect x="70" y="640" width="300" height="30" rx="15" fill="#fff" stroke="#8fcf93" stroke-width="1.4"/>
+  <text x="220" y="660" text-anchor="middle" class="ns" font-weight="700">적재: 캠페인마다 동일 양식 · 승인 이력 포함</text>
+
+  <!-- 하단: 향후 확장 타임라인 -->
+  <text x="54" y="724" class="tlt">향후 확장 과제</text>
+  <line x1="200" y1="760" x2="1340" y2="760" class="tl"/>
+  <circle cx="240" cy="760" r="7" class="dot"/><text x="262" y="765" class="tlh">추천 점수 보정</text><text x="262" y="786" class="tls">채택 여부 · 사유 · 성과 누적분을 차기 추천 점수에 반영</text>
+  <circle cx="640" cy="760" r="7" class="dot"/><text x="662" y="765" class="tlh">발송 전 성과 예측</text><text x="662" y="786" class="tls">동일 양식으로 누적된 기획 · 결과 기반 기대 순증 산출</text>
+  <circle cx="1040" cy="760" r="7" class="dot"/><text x="1062" y="765" class="tlh">기획안 자동 초안</text><text x="1062" y="786" class="tls">유사 캠페인 검색 후 목적 · 타겟 · 소재 초안 작성</text>
+</svg>
+</body></html>
