@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="robots" content="noindex, nofollow, noarchive, noimageindex">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정한얼 포트폴리오 | Data Analyst</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root{--bg:#fff;--surface:#fff;--alt:#f7f7f8;--text:#111;--sub:#555;--muted:#999;--border:#e0e0e0;--blue:#1a56db;--radius:8px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;overflow-x:hidden}
+  body{font-family:'Noto Sans KR','Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  td{white-space:nowrap}
+
+  /* ── Nav Common ── */
+  .nav-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:600;color:var(--sub);text-decoration:none;cursor:pointer;transition:all .2s;white-space:nowrap;border:1px solid var(--border);background:#fff;font-family:inherit}
+  .nav-btn .caret{font-size:9px}
+  .nav-btn:hover{background:var(--text);color:#fff;border-color:var(--text)}
+  .nav-btn.active{color:#fff;background:var(--text);border-color:var(--text)}
+
+  /* ── Float Nav ── */
+  .float-nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:999;display:flex;align-items:center;gap:4px;padding:5px 6px;border-radius:12px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(0,0,0,.06);box-shadow:0 2px 16px rgba(0,0,0,.06);opacity:0;pointer-events:none;transition:opacity .3s;max-width:calc(100vw - 24px)}
+  .float-nav.visible{opacity:1;pointer-events:auto}
+  .float-nav .nav-btn{border:none;background:transparent}
+  .float-nav .nav-btn:hover{background:rgba(26,86,219,.05);color:var(--blue)}
+  .float-nav .nav-btn.active{color:#fff;background:var(--text)}
+  .fn-sep{width:1px;height:16px;background:var(--border);flex-shrink:0}
+  .fn-search{width:28px;height:28px;border-radius:8px;border:none;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:all .2s;flex-shrink:0}
+  .fn-search:hover{background:var(--alt);color:var(--text)}
+
+  /* ── Dropdown ── */
+  .viz-wrap{position:relative;display:inline-block}
+  .viz-dropdown{position:fixed;top:62px;left:50%;transform:translateX(-50%);width:min(360px,calc(100vw - 24px));max-height:calc(100vh - 80px);background:#fff;border-radius:12px;border:1px solid rgba(0,0,0,.08);box-shadow:0 8px 32px rgba(0,0,0,.12);opacity:0;pointer-events:none;transition:all .2s;z-index:1000;overflow:hidden;text-align:left}
+  .viz-dropdown.open{opacity:1;pointer-events:auto}
+  .vd-panel{padding:4px 0 8px;max-height:calc(100vh - 100px);overflow-y:auto}
+  .vd-group{padding:9px 16px 5px;margin-top:6px;font-size:12px;font-weight:800;color:var(--text);background:var(--alt);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .vd-group:first-child{margin-top:0;border-top:none}
+  .vd-item{display:block;padding:6px 16px 6px 24px;font-size:12.5px;color:var(--sub);text-decoration:none;cursor:pointer;transition:all .15s;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+  .vd-item:hover{background:var(--alt);color:var(--blue)}
+
+  /* ── Search ── */
+  .search-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.25);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s}
+  .search-overlay.open{opacity:1;pointer-events:auto}
+  .search-modal{position:fixed;top:72px;left:50%;transform:translateX(-50%) translateY(-8px);z-index:1001;width:540px;max-width:calc(100vw - 32px);background:#fff;border-radius:14px;box-shadow:0 16px 48px rgba(0,0,0,.18);overflow:hidden;opacity:0;pointer-events:none;transition:all .2s}
+  .search-modal.open{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+  .si-wrap{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .si-wrap svg{flex-shrink:0;color:var(--muted)}
+  .si-wrap input{flex:1;border:none;outline:none;font-size:14px;font-family:inherit;background:transparent;color:var(--text)}
+  .si-wrap input::placeholder{color:#bbb}
+  .si-clear{display:none;width:20px;height:20px;border-radius:50%;border:none;background:var(--alt);color:var(--muted);font-size:14px;cursor:pointer;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;line-height:1;padding:0}
+  .si-clear.visible{display:flex}
+  .si-wrap .kbd{font-size:9px;color:var(--muted);background:var(--alt);border:1px solid var(--border);padding:1px 5px;border-radius:3px}
+  .search-results{max-height:380px;overflow-y:auto;padding:4px 0}
+  .search-results.has-query:empty::after{content:'일치하는 결과가 없습니다';display:block;padding:28px;text-align:center;font-size:12px;color:#bbb}
+  .search-suggest{padding:12px 16px}
+  .search-suggest-title{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:8px}
+  .search-suggest-tags{display:flex;gap:6px;flex-wrap:wrap}
+  .search-suggest-tag{font-size:11px;color:var(--sub);padding:4px 10px;border:1px solid var(--border);border-radius:100px;cursor:pointer;transition:all .15s;background:#fff}
+  .search-suggest-tag:hover{background:var(--text);color:#fff;border-color:var(--text)}
+  .sr-group{padding:4px 16px 2px;font-size:9px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase}
+  .sr-item{display:flex;align-items:center;gap:8px;padding:8px 16px;cursor:pointer;transition:background .1s}
+  .sr-item:hover,.sr-item.focused{background:var(--alt)}
+  .sr-item .sr-text{flex:1;min-width:0}
+  .sr-item .sr-title{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .sr-item mark{background:#fff3cd;border-radius:2px;padding:0 1px}
+  .sr-item .sr-breadcrumb{font-size:10px;color:var(--muted)}
+  .sr-item .sr-preview{font-size:10px;color:var(--sub);margin-top:1px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .sr-item .sr-arrow{color:#ccc;font-size:10px}
+  @keyframes sfound{0%,20%{box-shadow:0 0 0 3px rgba(26,86,219,.4)}100%{box-shadow:none}}
+  .search-found{animation:sfound 2.5s ease-out}
+
+  /* ── Page ── */
+  .page{max-width:980px;margin:0 auto;padding:0 32px}
+
+  /* ── Cover ── */
+  .cover{padding:64px 0 12px}
+  .cover-inner{display:flex;align-items:flex-end;gap:44px;max-width:760px;margin:0 auto;justify-content:center}
+  .cover-photo{flex-shrink:0}
+  .cover-photo img{width:168px;height:210px;object-fit:cover;border-radius:12px;border:1px solid var(--border)}
+  .cover-text{flex:0 1 480px;max-width:480px}
+  .cover-role{font-size:12px;font-weight:600;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px}
+  .cover-text h1{font-size:32px;font-weight:900;letter-spacing:-1px;margin-bottom:8px}
+  .cover-desc{font-size:13.5px;color:var(--sub);line-height:1.85;margin-bottom:10px;word-break:keep-all}
+  .cover-desc b{color:var(--text);font-weight:700}
+  .cover-text .cover-desc:last-child{margin-bottom:0}
+  .cover-desc.small{font-size:12px;margin-top:10px}
+  .cover-bottom{text-align:center;margin-top:4px}
+  /* ── Filter box (검색 + 연도 · 영역 토큰) ── */
+  .fbox{max-width:min(760px,100%);min-width:0;margin:22px auto 0;border:1px solid var(--border);border-radius:18px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.03),0 14px 40px rgba(17,17,17,.06);text-align:left;overflow:hidden}
+  .fbox-search{display:flex;align-items:center;gap:10px;width:100%;padding:13px 18px;border:none;border-bottom:1px solid var(--border);background:#fff;font-family:inherit;font-size:13px;color:var(--muted);cursor:pointer;text-align:left}
+  .fbox-search svg{color:var(--text)}
+  .fbox-search:hover{background:var(--alt)}
+  .fbox-search .kbd{margin-left:auto;font-size:10px;font-weight:600;background:var(--alt);border:1px solid var(--border);padding:2px 7px;border-radius:6px;color:var(--muted)}
+  .fbar{display:flex;flex-direction:column;gap:8px;padding:12px 14px 14px;margin:0}
+  .frow{display:flex;align-items:center;gap:10px;white-space:nowrap;min-width:0;max-width:100%;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .frow::-webkit-scrollbar{display:none}
+  .flab{font-size:11px;font-weight:700;color:var(--text);flex-shrink:0;width:28px;letter-spacing:.5px}
+  .fgrp{position:relative;display:inline-flex;align-items:center;gap:0;flex-shrink:0;background:var(--alt);border-radius:999px;padding:3px}
+  .fgrp .pill{position:absolute;top:3px;bottom:3px;left:0;width:0;background:var(--text);border-radius:999px;transition:left .28s cubic-bezier(.4,0,.2,1),width .28s cubic-bezier(.4,0,.2,1);z-index:0;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+  .fgrp button{position:relative;z-index:1;font-family:inherit;font-size:12px;font-weight:600;color:var(--sub);background:none;border:none;border-radius:999px;padding:5px 13px;cursor:pointer;white-space:nowrap;transition:color .2s}
+  .fgrp button:hover{color:var(--text)}
+  .fgrp button.on{color:#fff}
+  .fgrp button .dot{display:none}
+  @media(max-width:430px){.fgrp button{font-size:11px;padding:4px 9px}.flab{width:24px;font-size:10.5px}.fbar{padding:10px 10px 11px;gap:6px}.frow{gap:6px}}
+  .card.yr-hide,.part.yr-hide,.sec.yr-hide{display:none}
+  .card.yr-hide,.part.yr-hide,.sec.yr-hide{display:none}
+  .cover-nav{display:flex;justify-content:center;gap:6px;flex-wrap:wrap}
+
+  /* ── Section ── */
+  .sec{margin-top:40px}
+  .sec-head{border-bottom:2px solid var(--text);padding-bottom:14px;margin-bottom:22px}
+  .sec-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:2px}
+  .sec-title{font-size:21px;font-weight:800;letter-spacing:-.3px;margin-bottom:8px}
+  .sec-intro{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .sec-intro li{font-size:12px;color:var(--sub);padding-left:12px;position:relative}
+  .sec-intro li::before{content:'';position:absolute;left:0;top:9px;width:4px;height:4px;border-radius:50%;background:var(--muted)}
+  .part{border:1px solid var(--border);border-radius:14px;padding:18px 18px 18px;margin-top:16px;background:#fff}
+  .part-head{display:flex;align-items:center;gap:8px;margin:0 0 4px}
+  .part-title{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.2px}
+  .part-count{font-size:10px;font-weight:700;color:var(--muted);background:var(--alt);border:1px solid var(--border);border-radius:100px;padding:0 7px;line-height:16px}
+  .part-desc{font-size:12.5px;color:var(--sub);line-height:1.6;margin:0 0 14px;max-width:70ch}
+  .sec-head{border-bottom:none;padding-bottom:0;margin-bottom:6px}
+  .sec-intro{display:none}
+
+  /* ── Grid Card ── */
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .card{background:var(--alt);border-radius:12px;border:1px solid transparent;overflow:hidden;transition:border-color .2s,box-shadow .2s;display:flex;flex-direction:column}
+  .card:hover{border-color:var(--border);box-shadow:0 2px 14px rgba(0,0,0,.06)}
+  .thumb{position:relative;aspect-ratio:16/8;background:#fff;border-bottom:1px solid var(--border);overflow:hidden;cursor:zoom-in}
+  .thumb img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;transition:transform .3s}
+  .thumb:hover img{transform:scale(1.02)}
+  .thumb.dark{background:#1a1a2e}
+  .thumb-cap{position:absolute;left:0;right:0;bottom:0;padding:5px 10px;font-size:10px;color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.55));text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0;transition:opacity .2s}
+  .thumb:hover .thumb-cap{opacity:1}
+  .thumb-count{position:absolute;top:8px;right:8px;font-size:10px;font-weight:700;color:#fff;background:rgba(0,0,0,.55);padding:1px 7px;border-radius:100px}
+  .thumb-empty{display:flex;align-items:center;justify-content:center;cursor:default;background:repeating-linear-gradient(135deg,#fafafa 0 10px,#f2f2f3 10px 20px)}
+  .thumb-empty span{font-size:11px;color:var(--muted);background:#fff;border:1px dashed var(--border);padding:4px 12px;border-radius:100px}
+  .card-body{padding:12px 16px 14px;display:flex;flex-direction:column;gap:6px}
+  .card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .tag-year{font-size:10px;font-weight:700;color:var(--sub);background:#fff;border:1px solid var(--border);border-radius:4px;padding:0 6px;line-height:17px}
+  .tag-year.new{color:#fff;background:var(--text);border-color:var(--text)}
+  .tag-tool{font-size:10px;font-weight:600;color:var(--muted)}
+  .card-title{font-size:14px;font-weight:700;line-height:1.45;color:var(--text)}
+  .card-lead{font-size:12.5px;color:var(--sub);line-height:1.55;margin-top:-2px}
+  .card-summary{display:flex;flex-direction:column;gap:4px;background:#fff;border-radius:6px;padding:8px 10px;border:1px solid var(--border)}
+  .sum-row{display:flex;align-items:flex-start;gap:8px;font-size:12px}
+  .sum-label{font-weight:700;color:#fff;background:var(--blue);flex-shrink:0;font-size:10px;padding:0 7px;border-radius:4px;height:18px;line-height:18px;display:inline-flex;align-items:center}
+  .sum-value{color:var(--text);line-height:18px}
+
+  /* ── Lightbox ── */
+  .lightbox{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;padding:24px;gap:10px}
+  .lightbox.open{opacity:1;pointer-events:auto}
+  .lb-stage{position:relative;width:100%;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none}
+  .lightbox img{max-width:95vw;max-height:82vh;object-fit:contain;opacity:0;border-radius:6px;box-shadow:0 4px 32px rgba(0,0,0,.4);background:#fff;transform-origin:center center;transition:transform .08s linear;cursor:zoom-in;user-select:none;-webkit-user-drag:none}
+  .lightbox img.zoomed{cursor:zoom-out}
+  .lightbox img.dragging{cursor:grabbing;transition:none}
+  .lb-tools{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:2001;display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.12);border-radius:100px;padding:4px}
+  .lb-tools button{border:none;background:transparent;color:#fff;font-size:15px;width:32px;height:32px;border-radius:50%;cursor:pointer;font-family:inherit}
+  .lb-tools button:hover{background:rgba(255,255,255,.2)}
+  .lb-tools span{color:#ddd;font-size:11px;min-width:44px;text-align:center}
+  .lb-cap{color:#ddd;font-size:12px;text-align:center;max-width:90vw}
+  .lb-btn{position:fixed;z-index:2001;width:40px;height:40px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+  .lb-btn:hover{background:rgba(255,255,255,.3)}
+  .lb-close{top:16px;right:20px}
+  .lb-prev{left:16px;top:50%;transform:translateY(-50%)}
+  .lb-next{right:16px;top:50%;transform:translateY(-50%)}
+  .lb-btn.hidden{display:none}
+  .lb-strip{display:flex;gap:8px;padding:10px 16px 18px;max-width:100%;overflow-x:auto;overflow-y:visible;scrollbar-width:none;flex-shrink:0}
+  .lb-strip::-webkit-scrollbar{display:none}
+  .lb-strip.hidden{display:none}
+  .lb-th{position:relative;flex:0 0 auto;width:84px;height:53px;border-radius:6px;border:2px solid transparent;padding:0;background:#fff;cursor:pointer;opacity:.45;transition:opacity .15s,border-color .15s}
+  .lightbox .lb-th img{width:100%;height:100%;max-width:none;max-height:none;object-fit:cover;object-position:top;display:block;border-radius:4px;opacity:1;box-shadow:none;transform:none;transition:none}
+  .lb-th i{position:absolute;left:4px;bottom:3px;font-style:normal;font-size:10px;font-weight:700;color:#fff;background:rgba(17,17,17,.72);border-radius:3px;padding:0 4px;line-height:15px;font-variant-numeric:tabular-nums}
+  .lb-th,.lightbox .lb-th img{cursor:pointer}
+  .lb-th:hover{opacity:.9}
+  .lb-th.on{opacity:1;border-color:#fff}
+  .lb-tip{position:fixed;z-index:2003;pointer-events:none;background:#fff;color:#111;font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,.35);white-space:nowrap;opacity:0;transform:translate(-50%,-100%);transition:opacity .12s}
+  .lb-tip.show{opacity:1}
+  .lightbox.multi #lightboxImg{max-height:72vh}
+
+  /* ── Demo modal ── */
+  .card-meta .act{margin-left:auto}
+  .act{display:inline-flex;align-items:center;gap:6px;font-family:inherit;font-size:12px;font-weight:600;letter-spacing:-.01em;line-height:1;text-decoration:none;cursor:pointer;color:var(--text);background:none;border:none;padding:0;white-space:nowrap;flex-shrink:0}
+  .act span{background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;padding-bottom:2px;transition:background-size .2s}
+  .act:hover span{background-size:100% 1px}
+  .act .ic{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--text);color:#fff;transition:transform .2s}
+  .act .ic svg{width:10px;height:10px}
+  .act:hover .ic{transform:translateX(2px)}
+  .act-live .ic{background:#17a35a}
+  .act-live .dot{position:relative;width:6px;height:6px;border-radius:50%;background:#17a35a}
+  .act-live .dot::after{content:'';position:absolute;inset:0;border-radius:50%;background:#17a35a;animation:livePulse 1.6s ease-out infinite}
+  @keyframes livePulse{0%{transform:scale(1);opacity:.65}100%{transform:scale(3.2);opacity:0}}
+  @media(prefers-reduced-motion:reduce){.act-live .dot::after{animation:none}}
+  .demo-modal{position:fixed;inset:0;z-index:2100;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s}
+  .demo-modal.open{opacity:1;pointer-events:auto}
+  .demo-frame{width:100%;height:100%;max-width:1680px;background:#fff;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 12px 48px rgba(0,0,0,.4)}
+  .demo-bar{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border);background:var(--alt);font-size:12px}
+  .demo-bar b{font-size:13px}
+  .demo-bar .note{color:var(--muted);font-size:11px}
+  .demo-bar a{margin-left:auto;font-size:11px;color:var(--blue);text-decoration:none;white-space:nowrap}
+  .demo-bar button{border:none;background:#fff;border:1px solid var(--border);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:15px;line-height:1}
+  .demo-stage{flex:1;position:relative;overflow:hidden;background:#fff}
+  .demo-stage iframe{position:absolute;left:0;top:0;border:none;transform-origin:0 0}
+  @media(max-width:700px){.demo-modal{padding:0}.demo-frame{border-radius:0;height:100%}}
+
+  /* ── Footer ── */
+  .footer{text-align:center;padding:40px 20px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:56px}
+  .footer p{margin-top:4px}
+
+  /* ── Scroll top ── */
+  #sTop{position:fixed;bottom:20px;right:20px;width:36px;height:36px;border-radius:50%;border:1px solid var(--border);background:rgba(255,255,255,.9);backdrop-filter:blur(10px);cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:all .3s;z-index:998}
+  #sTop.visible{opacity:1;pointer-events:auto}
+  #sTop:hover{background:var(--text)}
+  #sTop:hover svg{stroke:#fff}
+
+  body{word-break:keep-all;overflow-wrap:break-word}
+
+  /* ── Responsive ── */
+  @media(max-width:700px){
+    .page{padding:0 16px}
+    .cover{padding:56px 0 36px}
+    .cover-inner{flex-direction:column;text-align:center}
+    .cover-text{flex:0 0 auto;max-width:none}
+    .frow{-webkit-mask-image:linear-gradient(90deg,#000 86%,transparent);mask-image:linear-gradient(90deg,#000 86%,transparent);padding-right:18px}
+    .cover-text h1{font-size:28px}
+    .grid{grid-template-columns:1fr}
+    .float-nav{padding:4px 5px;gap:2px}
+    .float-nav .nav-btn{padding:5px 8px;font-size:10px}
+    .sec-title{font-size:18px}
+  }
+</style>
+</head>
+<body>
+
+<!-- Float Nav -->
+<nav class="float-nav" id="floatNav">
+<div class="viz-wrap">
+  <button class="nav-btn" id="fn-aiToggle" data-section="ai">AI 자동화 <span class="caret">&#9662;</span></button>
+  <div class="viz-dropdown" id="fn-aiDropdown"><div class="vd-panel"><div class="vd-group">CRM 마케팅 자동화</div><a class="vd-item" data-target="ai-crm-agent">CRM AI 에이전트 시스템 구축</a><a class="vd-item" data-target="dc-moketer">마케팅 전담 AI 어시스턴트 슬랙봇 &#x27;모케터&#x27;</a><a class="vd-item" data-target="dc-dashboard">마케팅 허브: CRM 캠페인 대시보드와 요청 접수</a><a class="vd-item" data-target="viz-hub-ops">마케팅 허브: 앱 배너 운영과 퍼포먼스 마케팅</a><div class="vd-group">AI 활용 분석·서비스</div><a class="vd-item" data-target="ai-fireworks">여의도 불꽃축제 2026 수요 예측과 주차 안내 웹</a><a class="vd-item" data-target="ai-a1">BTS 광화문 콘서트 주차장 영향분석</a></div></div>
+</div>
+<div class="viz-wrap">
+  <button class="nav-btn" id="fn-decisionToggle" data-section="decision">데이터 분석 <span class="caret">&#9662;</span></button>
+  <div class="viz-dropdown" id="fn-decisionDropdown"><div class="vd-panel"><div class="vd-group">실험·효과 측정</div><a class="vd-item" data-target="dc-causal">인과추론 기반 본부 액션별 순효과 측정</a><a class="vd-item" data-target="dc-impact">고수요 외부이벤트 영향도 분석 포맷 표준화</a><div class="vd-group">유저 행동 분석</div><a class="vd-item" data-target="project1a">미결제/결제 유저군 간 접속횟수 비교분석</a><a class="vd-item" data-target="project1b">미결제/결제 유저군 간 행동 데이터 비교분석</a><a class="vd-item" data-target="project1c">검색장소 인근 구매가능 주차장 분석</a><a class="vd-item" data-target="viz-v3c-tab">미결제 유저 검색수요 지리공간 분석</a><div class="vd-group">영업 관리 분석</div><a class="vd-item" data-target="project2a">영업관리 프로세스 구축</a><a class="vd-item" data-target="project2b">통합 데이터셋 구축 및 액션 매트릭스 수립</a><a class="vd-item" data-target="project2c">액션제안 및 모니터링 대시보드 제작</a><a class="vd-item" data-target="project2d">액션제안 대시보드 1차 고도화</a><a class="vd-item" data-target="project2e">액션제안 대시보드 2차 고도화</a><div class="vd-group">사업 기획 분석</div><a class="vd-item" data-target="project3a">첫결제 프로모션 쿠폰 최적 지급조건 설계</a><a class="vd-item" data-target="project3b">신규주차장 사업계획 달성 시나리오 도출</a><a class="vd-item" data-target="project3c">통계 기반 클릭/거래 이상치 탐지 및 원인 분석</a><a class="vd-item" data-target="dc-forecast">연휴 실적 리스크 진단과 대응 액션</a></div></div>
+</div>
+<div class="viz-wrap">
+  <button class="nav-btn" id="fn-infraToggle" data-section="infra">데이터 인프라 <span class="caret">&#9662;</span></button>
+  <div class="viz-dropdown" id="fn-infraDropdown"><div class="vd-panel"><div class="vd-group">지표 정의·데이터 인프라</div><a class="vd-item" data-target="if-eventlog">이벤트 로그 설계 프레임워크</a><a class="vd-item" data-target="if-ssot">데이터마트·Git 기반 지표 SSOT</a></div></div>
+</div>
+<div class="viz-wrap">
+  <button class="nav-btn" id="fn-vizToggle" data-section="viz">대시보드 <span class="caret">&#9662;</span></button>
+  <div class="viz-dropdown" id="fn-vizDropdown"><div class="vd-panel"><div class="vd-group">성과 추적</div><a class="vd-item" data-target="viz-draw">럭키드로우 이벤트 대시보드</a><a class="vd-item" data-target="viz-tosspay">토스페이 결제 모니터링 대시보드</a><a class="vd-item" data-target="viz-v1a">W-1(저번주) 성과예측 대시보드</a><a class="vd-item" data-target="viz-v1b">마케팅 실적 리포트</a><a class="vd-item" data-target="viz-v1c">공유주차 서비스 자치구별 실적 대시보드</a><div class="vd-group">공급 관리</div><a class="vd-item" data-target="viz-v2a">제휴일반 대시보드</a><a class="vd-item" data-target="viz-v2b">판매중단 시설관리 대시보드</a><a class="vd-item" data-target="viz-v2c">장기권 슬롯관리 대시보드</a><div class="vd-group">유저 분석</div><a class="vd-item" data-target="viz-v3a">퍼널 대시보드</a><a class="vd-item" data-target="viz-v3b">신규가입유저 코호트 분석 리포트</a><a class="vd-item" data-target="viz-v3c">여의도 불꽃축제 동적 수요지도</a></div></div>
+</div>
+  <div class="fn-sep"></div>
+  <button class="fn-search" id="searchToggle" title="검색 (Ctrl+K)">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="6" cy="6" r="4.5"/><line x1="9.5" y1="9.5" x2="13" y2="13"/></svg>
+  </button>
+</nav>
+
+<!-- Search -->
+<div class="search-overlay" id="searchOverlay"></div>
+<div class="search-modal" id="searchModal">
+  <div class="si-wrap">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="7" cy="7" r="5"/><line x1="11" y1="11" x2="15" y2="15"/></svg>
+    <input type="text" id="searchInput" placeholder="프로젝트명, 목적, 결과, 도구로 검색" autocomplete="off">
+    <button class="si-clear" id="searchClear">&times;</button>
+    <span class="kbd">ESC</span>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+  <div class="search-suggest" id="searchSuggest">
+    <div class="search-suggest-title">추천 키워드</div>
+    <div class="search-suggest-tags">
+      <span class="search-suggest-tag" data-kw="A/B">A/B 테스트</span>
+      <span class="search-suggest-tag" data-kw="인과추론">인과추론</span>
+      <span class="search-suggest-tag" data-kw="실험">실험 설계</span>
+      <span class="search-suggest-tag" data-kw="지표">지표 설계</span>
+      <span class="search-suggest-tag" data-kw="퍼널">퍼널</span>
+      <span class="search-suggest-tag" data-kw="자동화">자동화</span>
+      <span class="search-suggest-tag" data-kw="AI">AI</span>
+      <span class="search-suggest-tag" data-kw="시각화">시각화</span>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-btn lb-close" onclick="closeLightbox()" title="닫기">&times;</button>
+  <button class="lb-btn lb-prev" id="lbPrev" onclick="stepLightbox(-1)" title="이전">&lsaquo;</button>
+  <button class="lb-btn lb-next" id="lbNext" onclick="stepLightbox(1)" title="다음">&rsaquo;</button>
+  <div class="lb-tools" onclick="event.stopPropagation()"><button onclick="lbZoom(-0.25)" title="축소">−</button><span id="lbZoomLabel">맞춤</span><button onclick="lbZoom(0.25)" title="확대">＋</button><button onclick="lbReset()" title="화면에 맞추기" style="font-size:11px;width:auto;padding:0 10px">원래대로</button></div>
+  <div class="lb-stage" id="lbStage"><img id="lightboxImg" src="" alt="" onclick="event.stopPropagation()"></div>
+  <div class="lb-cap" id="lightboxCap"></div>
+  <div class="lb-strip hidden" id="lbStrip" onclick="event.stopPropagation()"></div>
+  <div class="lb-tip" id="lbTip"></div>
+</div>
+
+<!-- Demo modal -->
+<div class="demo-modal" id="demoModal">
+  <div class="demo-frame">
+    <div class="demo-bar"><b id="demoTitle"></b><span class="note">예시 데이터 · 저장·발송 미동작</span><a id="demoOpen" href="#" target="_blank" rel="noopener">새 창에서 열기</a><button onclick="closeDemo()" title="닫기">&times;</button></div>
+    <div class="demo-stage" id="demoStage"><iframe id="demoFrame" src="about:blank" title="체험 데모"></iframe></div>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- Cover -->
+<header class="cover" id="hero">
+  <div class="cover-inner">
+    <div class="cover-photo">
+      <img src="portfolio_images/notion/notion_00.jpg" alt="정한얼">
+    </div>
+    <div class="cover-text">
+      <div class="cover-role">Data Analyst</div>
+      <h1>정한얼</h1>
+      <p class="cover-desc">안녕하세요. 쏘카에서 모두의주차장 서비스 데이터 분석을 맡고 있는 정한얼입니다.</p>
+      <p class="cover-desc">화려하고 복잡한 분석이 아닌 <b>직관적이고 실행을 이끄는 분석</b>으로 비즈니스 임팩트를 만드는 것을 가장 중요하게 생각합니다.</p>
+      <p class="cover-desc">현재는 <b>AI로 비가역적인 업무 자동화 시스템</b>을 구축하는 데 집중하고 있습니다. 절감한 시간은 비즈니스 성장과 고객 이해를 깊이 있게 다지는 데 다시 투입하고 있습니다.</p>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <div class="fbox">
+      <button class="fbox-search" onclick="openSearch()">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4"/><line x1="8.5" y1="8.5" x2="12" y2="12"/></svg>
+        원하는 내용을 검색하세요
+        <span class="kbd">Ctrl+K</span>
+      </button>
+      <div class="fbar" id="filterBar"></div>
+    </div>
+  </div>
+</header>
+
+<section class="sec" id="ai" data-sec="ai" style="--sc:#e67e22">
+<div class="sec-head"><div class="sec-label" style="color:#e67e22">AI 자동화</div><h2 class="sec-title">AI 기반 업무 자동화</h2></div>
+<div class="part"><div class="part-head"><h3 class="part-title">CRM 마케팅 자동화</h3><span class="part-count">4</span></div><p class="part-desc">캠페인 기획·세팅·발송·성과분석을 에이전트가 수행하고, 요청 접수·알림·질의응답은 슬랙봇과 허브 웹이 맡는 자동화 체계</p>
+<div class="grid"><article class="card" id="ai-crm-agent" data-sec="AI 자동화" data-part="CRM 마케팅 자동화" data-title="CRM AI 에이전트 시스템 구축" data-year="2026">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_2026_crm_swimlane.jpg|portfolio_images/full/notion_2026_crm_plan_doc.jpg|portfolio_images/full/notion_2026_crm_guide_doc.jpg|portfolio_images/full/notion_2026_crm_slack_share.jpg|portfolio_images/full/notion_2026_crm_w39_auto.jpg" data-caps="스윔레인: 마케터는 4개 게이트에서만 결정, 에이전트가 BigQuery·Braze·Slack·GCS를 호출해 처리|에이전트가 생성한 캠페인 기획서: 목적·KPI·타겟·실험 설계 표준 양식|에이전트가 생성한 Braze 세팅 가이드: 캔버스·세그먼트·카피·딥링크|발송 당일 전사 공유 메시지: 목적·타겟·시각·모수·혜택과 푸시 미리보기 (실제 슬랙 화면)|에이전트가 자동 작성한 W39 CRM 캠페인 종합 성과분석: MAU·DAU 기여와 캠페인별 성과" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_crm_swimlane.jpg" alt="CRM AI 에이전트 시스템 구축" loading="lazy"><span class="thumb-count">5장</span><div class="thumb-cap">스윔레인: 마케터는 4개 게이트에서만 결정, 에이전트가 BigQuery·Braze·Slack·GCS를 호출해 처리</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Claude Code · Braze</span></div>
+    <h3 class="card-title">CRM AI 에이전트 시스템 구축</h3><p class="card-lead">마케팅 담당자 부재에도 CRM 운영이 가능하도록 기획서·세팅 가이드·발송 공지·성과분석을 에이전트가 생성하고 사람은 게이트에서만 결정하는 체계</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">CRM 캠페인 기획·세팅·발송·성과분석 전 과정의 자동화</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">데이터 분석가 단독으로 CRM을 월 1건에서 주 6건까지 확대, 2026년 9월 MAU 102만으로 첫 100만 돌파(CRM 월평균 1.5만 명 기여)</span></div></div>
+  </div>
+</article>
+<article class="card" id="dc-moketer" data-sec="AI 자동화" data-part="CRM 마케팅 자동화" data-title="마케팅 전담 AI 어시스턴트 슬랙봇 &#x27;모케터&#x27;" data-year="2026">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_2026_moketer_coupon_search.jpg|portfolio_images/full/notion_2026_moketer_chat.jpg|portfolio_images/full/notion_2026_moketer_live.jpg|portfolio_images/full/notion_2026_moketer_analysis.jpg|portfolio_images/full/notion_2026_crm_slack_share.jpg|portfolio_images/full/notion_2026_moketer_request.jpg|portfolio_images/full/notion_2026_moketer_issue.jpg|portfolio_images/full/notion_2026_moketer_banner.jpg|portfolio_images/full/notion_2026_moketer_plan.jpg|portfolio_images/full/notion_2026_moketer_admail.jpg" data-caps="쿠폰현황 키워드 조회: 세차 쿠폰의 운영기간·발행·등록·사용 표 응답 (실제 화면)|대화형 질의응답: 채널에서 모케터를 불러 이번 주 라이브 예정 캠페인을 물으면 기간·채널·대상까지 정리해 답변 (실제 화면)|CRM 라이브 일정 안내: 매일 아침 이번주·다음주 라이브 캘린더와 예정 목록을 채널에 게시 (실제 화면)|CRM 분석 현황 보고: 라이브 뒤 캠페인을 자동 분석하고 진행 간트와 결과 링크를 게시 (실제 화면)|발송 당일 전사 공유: 목적·타겟·시각·모수와 iOS·AOS 푸시 미리보기를 봇이 게시 (실제 화면)|CRM 요청 인입 알림: 요청 폼 제출 즉시 담당자 태그와 발송 희망일 D-day를 채널에 통보 (실제 화면)|CRM 이슈 알림: 대조군 설정 오류 같은 미해결 수정사항을 담당자 태그와 함께 스레드 표로 조치 요청 (실제 화면)|배너 확인 요청: 계획된 배너가 어드민에 없으면 예정에서 내리고 빈 순위를 자동으로 당긴 뒤 담당자에게 확인 요청 (실제 화면)|기획안 검토 요청: 에이전트가 작성한 기획안을 승인 버튼으로 결정 (실제 화면)|광고 문의 메일 감지: 제안 메일을 요약해 알리고, ✅ 반응과 회신은 응답완료로, 🗑 반응은 드랍으로 메시지 상태를 바꿔 기록 (실제 화면)" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_moketer_coupon_search.jpg" alt="마케팅 전담 AI 어시스턴트 슬랙봇 &#x27;모케터&#x27;" loading="lazy"><span class="thumb-count">10장</span><div class="thumb-cap">쿠폰현황 키워드 조회: 세차 쿠폰의 운영기간·발행·등록·사용 표 응답 (실제 화면)</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Claude API · Slack · Cloud Run</span><button class="act act-demo" data-demo="demos/moketer.html" data-title="모케터 슬랙봇" onclick="openDemo(this)" title="모케터 슬랙봇 체험판 열기"><span>Try demo</span><i class="ic"><svg viewBox="0 0 12 12"><path d="M4.5 3.2v5.6L9 6z" fill="currentColor"/></svg></i></button></div>
+    <h3 class="card-title">마케팅 전담 AI 어시스턴트 슬랙봇 &#x27;모케터&#x27;</h3><p class="card-lead">CRM 요청 접수부터 일정·이슈 알림, 분석 보고, 데이터 질의응답까지 슬랙에서 수행하는 AI 어시스턴트</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">CRM 운영 전 과정의 알림·보고·질의응답을 봇이 수행해 담당자 의존 제거</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">데이터 추출·분석 요청 95% 감축, 일정·이슈·성과 확인 요청이 봇 알림으로 대체되어 담당자 간 커뮤니케이션 비용 대폭 절감</span></div></div>
+  </div>
+</article>
+<article class="card" id="dc-dashboard" data-sec="AI 자동화" data-part="CRM 마케팅 자동화" data-title="마케팅 허브: CRM 캠페인 대시보드와 요청 접수" data-year="2026">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_2026_hub_dashboard.jpg|portfolio_images/full/notion_2026_hub_tab_plan.jpg|portfolio_images/full/notion_2026_hub_tab_exec.jpg|portfolio_images/full/notion_2026_hub_tab_analysis.jpg|portfolio_images/full/notion_2026_hub_request.jpg|portfolio_images/full/notion_2026_hub_req_preview.jpg" data-caps="CRM 캠페인 대시보드: 이번 주 추천 채택·다음 발송·KPI·운영/예정/기획/완료 보드·주차 그리드 (실제 화면)|캠페인 상세 기획 탭: 유형·채널·발송 일정·담당과 목적·타겟 페르소나·예상 모수, 캠페인 키와 기획서 원본 링크|캠페인 상세 실행 탭: 실험군·대조군 배정, 카피, 랜딩·딥링크와 iOS·AOS 푸시 미리보기, 세팅 가이드 원본|캠페인 상세 분석 탭: 측정 기간 타임라인, 단계별 전환과 실험군 대비 대조군 증분(유의한 차이만 색 표시)|CRM 발송 요청: 요청자·메시지 유형·발송 희망일을 폼으로 받고 10월 발송 일정과 겹침을 즉시 확인 (실제 화면)|요청 폼 실시간 미리보기: 앱푸시는 잠금화면 알림, 인앱은 앱 화면, 노출 강도를 슬라이드업으로 바꾸면 검색바 아래 배너로 즉시 변경" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_hub_dashboard.jpg" alt="마케팅 허브: CRM 캠페인 대시보드와 요청 접수" loading="lazy"><span class="thumb-count">6장</span><div class="thumb-cap">CRM 캠페인 대시보드: 이번 주 추천 채택·다음 발송·KPI·운영/예정/기획/완료 보드·주차 그리드 (실제 화면)</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Flask · GCS · Cloud Run</span><button class="act act-demo" data-demo="demos/hub/index.html" data-title="마케팅 허브" onclick="openDemo(this)" title="마케팅 허브 체험판 열기"><span>Try demo</span><i class="ic"><svg viewBox="0 0 12 12"><path d="M4.5 3.2v5.6L9 6z" fill="currentColor"/></svg></i></button></div>
+    <h3 class="card-title">마케팅 허브: CRM 캠페인 대시보드와 요청 접수</h3><p class="card-lead">캠페인 하나를 기획·실행·분석 탭으로 끝까지 관리하고, 요청자는 세팅값을 고르면 실제 노출 모습을 미리 보며 요청하는 허브</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">캠페인 기획·실행·분석 상태의 통합 운영과 앱푸시·인앱 발송 요청의 접수 창구 일원화</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">추천 채택부터 기획서·세팅 가이드·성과분석까지 캠페인 카드 하나에 모여 별도 문서 관리 없이 운영</span></div></div>
+  </div>
+</article>
+<article class="card" id="viz-hub-ops" data-sec="AI 자동화" data-part="CRM 마케팅 자동화" data-title="마케팅 허브: 앱 배너 운영과 퍼포먼스 마케팅" data-year="2026">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_2026_hub_banner.jpg|portfolio_images/full/notion_2026_hub_pm.jpg" data-caps="앱 배너 운영: 실시간 메인 팝업 · 지면별 라이브 슬롯 · 등록 관리 (실제 화면)|퍼포먼스 마케팅: ROAS · 매체별 성과 · 캠페인별 성과 (실제 화면)" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_hub_banner.jpg" alt="마케팅 허브: 앱 배너 운영과 퍼포먼스 마케팅" loading="lazy"><span class="thumb-count">2장</span><div class="thumb-cap">앱 배너 운영: 실시간 메인 팝업 · 지면별 라이브 슬롯 · 등록 관리 (실제 화면)</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Flask · GCS · GA4</span></div>
+    <h3 class="card-title">마케팅 허브: 앱 배너 운영과 퍼포먼스 마케팅</h3><p class="card-lead">앱 배너 구좌와 유료 매체 성과를 운영 담당자가 직접 확인하는 화면</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">앱 배너의 지면별 노출 순서·정책 검증·클릭 성과와 유료 매체의 광고비·설치·가입·결제 성과의 상시 관찰</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">어드민 원천을 자동 반영한 실시간 메인 팝업·지면별 라이브 슬롯·등록 관리와 매체별·캠페인별 ROAS를 한 화면에 제공</span></div></div>
+  </div>
+</article></div></div>
+<div class="part"><div class="part-head"><h3 class="part-title">AI 활용 분석·서비스</h3><span class="part-count">2</span></div><p class="part-desc">Claude Code로 API·데이터·웹을 오케스트레이션해 만든 분석과 서비스</p>
+<div class="grid"><article class="card" id="ai-fireworks" data-sec="AI 자동화" data-part="AI 활용 분석·서비스" data-title="여의도 불꽃축제 2026 수요 예측과 주차 안내 웹" data-year="2026">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_2026_fw_step1.jpg|portfolio_images/full/notion_2026_fw_step2.jpg|portfolio_images/full/notion_2026_fw_step3.jpg|portfolio_images/full/notion_2026_fw_step4.jpg|portfolio_images/full/notion_2026_fw_step5.jpg|portfolio_images/full/notion_2026_fw_demand_map.webp|portfolio_images/full/notion_2026_fw26_check.jpg|portfolio_images/full/notion_2026_fw26_hour.jpg" data-caps="1단계 어디서 보시나요: 지난해 축제일 주차장 탐색이 평시보다 몰린 동네(빨간 원)와 관람 명소 번호를 한 지도에|강 건너를 고르면 샛강생태공원·이촌한강공원·노들섬 등 덜 붐비는 명소가 펼쳐짐|2단계 어떻게 가시나요: 이촌한강공원을 고르면 불꽃 방향 시야각과 함께 주차 후 도보·지하철 선택|3단계 주차 후 도보 동선: 원효로2동 주차장 → 이촌한강공원 걸어서 26분, 원효로·한강로 주차장 목록과 축제 당일권 가격|3단계 주차 후 지하철 동선: 용강동 주차장 → 공덕역 도보 2분 → 5호선 마포역 1분 → 이촌한강공원 도보 24분, 총 27분|전년 축제일 수요·공급 지도: 0시부터 23시까지 탐색 수요가 쌓이며 여의도 밖 영등포·용산·마포로 번지는 흐름과 시간대 막대|불꽃축제 2026 사전 점검: 전년 수요 기준 현장 준비 상태|축제 주간 시간대별 상대강도: 평소 같은 요일·시각 대비 배수" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_fw_step1.jpg" alt="여의도 불꽃축제 2026 수요 예측과 주차 안내 웹" loading="lazy"><span class="thumb-count">8장</span><div class="thumb-cap">1단계 어디서 보시나요: 지난해 축제일 주차장 탐색이 평시보다 몰린 동네(빨간 원)와 관람 명소 번호를 한 지도에</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Claude Code · BigQuery · Braze · Cloudflare</span><a class="act act-live" href="https://www.modubiz.cloud/fireworks-guide/" target="_blank" rel="noopener" title="불꽃축제 주차 안내 웹 열기"><i class="dot"></i><span>Live</span><i class="ic"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8l4-4M4.6 4H8v3.4"/></svg></i></a></div>
+    <h3 class="card-title">여의도 불꽃축제 2026 수요 예측과 주차 안내 웹</h3><p class="card-lead">전년 탐색·판매 데이터로 수요를 사전 점검하고, 관람 명소별 주차장 동선을 안내하는 웹을 AI로 직접 제작한 프로젝트</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">공급이 11% 더 줄어든 2026 축제에서 인근 권역 수요 분산과 관람 명소·주차 동선의 대고객 안내</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">관람 명소 안내 웹 제작(조회 1.1만 회), Braze로 축제존 클릭 유저 개인화 리마인드와 D-7·D-1 단계별 앱푸시</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">인근 권역 거래액 47% 확대로 공급 감소에 따른 매출 감소분 전액 상쇄, 증분 거래액 성장세 회복</span></div></div>
+  </div>
+</article>
+<article class="card" id="ai-a1" data-sec="AI 자동화" data-part="AI 활용 분석·서비스" data-title="BTS 광화문 콘서트 주차장 영향분석" data-year="2026">
+  <div class="thumb dark" data-srcs="portfolio_images/full/notion_28_bts_impact.jpg" data-caps="IMPACT MAP: 교통통제 구간·무정차 역과 주차장별 피크일 판매·토요일 판매 상품·수요 예측 (수량만 가림)" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_28_bts_impact.jpg" alt="BTS 광화문 콘서트 주차장 영향분석" loading="lazy"><div class="thumb-cap">IMPACT MAP: 교통통제 구간·무정차 역과 주차장별 피크일 판매·토요일 판매 상품·수요 예측 (수량만 가림)</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">Claude Code · Kakao Map API</span></div>
+    <h3 class="card-title">BTS 광화문 콘서트 주차장 영향분석</h3><p class="card-lead">콘서트 당일 인근 주차장의 수요 수용 가능 여부를 지도로 사전 확인한 분석</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">콘서트 대비 인근 주차장 수용 가능량 사전 분석과 수요 예측</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">카카오맵 API로 반경 주차장을 수집하고 BigQuery 과거 공연일 실적과 웹 검색 정보를 결합해 영향 지도 구성</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">공연일 기준 영향 지도 제작, 영업팀 사전 대비 자료로 활용</span></div></div>
+  </div>
+</article></div></div>
+</section>
+
+<section class="sec" id="decision" data-sec="decision" style="--sc:#1a56db">
+<div class="sec-head"><div class="sec-label" style="color:#1a56db">데이터 분석</div><h2 class="sec-title">데이터 기반 의사결정 체계 고도화</h2></div>
+<div class="part"><div class="part-head"><h3 class="part-title">실험·효과 측정</h3><span class="part-count">2</span></div><p class="part-desc">실험군 대비 대조군 증분과 평시 기준선으로 본부 액션과 이벤트 대응의 순효과를 측정하는 분석</p>
+<div class="grid"><article class="card" id="dc-causal" data-sec="데이터 분석" data-part="실험·효과 측정" data-title="인과추론 기반 본부 액션별 순효과 측정" data-year="2026">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_2026_causal_4to6.jpg|portfolio_images/full/notion_2026_causal_methods.jpg|portfolio_images/full/notion_2026_causal_w31.jpg" data-caps="4~6월 앱푸시 종합 증분: 예상(자연 성장) 위에 쌓인 캠페인 순증과 헬스체크 목표, MAU는 매달 +3.7만 명이지만 거래액 순증은 0|순효과 분해 4단계: 시계열 분해·event study·difference-in-differences·placebo 검정으로 요일·추세·자연 성장을 제거해 발송일 효과 +9,801명을 +2,566명으로 보정|실험군·대조군 전환 대조: 사일런트 웹훅으로 배정한 대조군 대비 세션·주차핀 클릭·구매 단계별 증분과 95% 유의 판정" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_causal_4to6.jpg" alt="인과추론 기반 본부 액션별 순효과 측정" loading="lazy"><span class="thumb-count">3장</span><div class="thumb-cap">4~6월 앱푸시 종합 증분: 예상(자연 성장) 위에 쌓인 캠페인 순증과 헬스체크 목표, MAU는 매달 +3.7만 명이지만 거래액 순증은 0</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">층화 무작위 배정 · CUPED · Z-test</span></div>
+    <h3 class="card-title">인과추론 기반 본부 액션별 순효과 측정</h3><p class="card-lead">본부 액션 효과에서 자연 증분과 외부 요인을 제외한 순효과를 측정하는 분석</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">공급 확대·상품 조정·CRM 캠페인·신규 기능 등 본부 액션의 순효과 측정</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">층화 무작위 배정과 CUPED로 편향을 줄인 A/B 테스트와 Z-test 판정 표준화, 평시 기준선 대비 판정으로 외부 요인 제외</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">전체 앱푸시는 캠페인당 MAU 약 1,800명 확보, 수신동의 유도는 손실 강조 문구가 미노출 대비 3.0배, 구매 증분은 인앱 메시지가 앱푸시 대비 3.4배</span></div></div>
+  </div>
+</article>
+<article class="card" id="dc-impact" data-sec="데이터 분석" data-part="실험·효과 측정" data-title="고수요 외부이벤트 영향도 분석 포맷 표준화" data-year="2026">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_2026_impact_coupang.jpg|portfolio_images/full/notion_2026_impact_standard.jpg|portfolio_images/full/notion_2026_impact_garden.jpg" data-caps="쿠팡플레이 시리즈 상암 주차 대응 검증: 단독판매 매진과 인근 흡수 일자별 히트 스트립|고수요 외부이벤트 영향도 분석 표준: 문서 구성·지표 정의·판정 기준|국제정원박람회 주차 수요 성과분석: 행사 효과와 권역 순증분 분해" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_impact_coupang.jpg" alt="고수요 외부이벤트 영향도 분석 포맷 표준화" loading="lazy"><span class="thumb-count">3장</span><div class="thumb-cap">쿠팡플레이 시리즈 상암 주차 대응 검증: 단독판매 매진과 인근 흡수 일자별 히트 스트립</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">GA4 · BigQuery</span></div>
+    <h3 class="card-title">고수요 외부이벤트 영향도 분석 포맷 표준화</h3><p class="card-lead">공연·축제 수요 흡수 극대화를 위해, 수요 증가 시점에 맞춰 공급을 충분히 확보했는지 점검하는 분석 포맷</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">대응 시점·공급 충분성·가격 적정성의 판정 기준 통일</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">탐색 추이로 수요 상승일을 잡아 상품 세팅일과 대조, 판매·매진 시각으로 흡수율과 놓친 수요 산정</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">표준 양식 정립, 쿠팡플레이 상암·싸이 흠뻑쇼 수원·국제정원박람회 3건에 적용</span></div></div>
+  </div>
+</article></div></div>
+<div class="part"><div class="part-head"><h3 class="part-title">유저 행동 분석</h3><span class="part-count">4</span></div><p class="part-desc">미결제·결제 유저군의 접속·행동·주변 공급·검색 수요를 비교해 결제전환 저해 요인을 도출한 분석</p>
+<div class="grid"><article class="card" id="project1a" data-sec="데이터 분석" data-part="유저 행동 분석" data-title="미결제/결제 유저군 간 접속횟수 비교분석" data-year="2025">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_01.jpg" data-caps="결제 여부에 따른 접속횟수별 유저비중" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_01.jpg" alt="미결제/결제 유저군 간 접속횟수 비교분석" loading="lazy"><div class="thumb-cap">결제 여부에 따른 접속횟수별 유저비중</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery</span></div>
+    <h3 class="card-title">미결제/결제 유저군 간 접속횟수 비교분석</h3><p class="card-lead">신규 획득 효율 저하에 따라 기유입 유저의 첫 결제전환을 성장 레버로 설정하고 이탈 지점을 도출한 분석</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">결제전환율 상승을 위한 우선순위 미결제 세그먼트 도출</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">접속 횟수 구간별 유저 비중을 결제·미결제 유저군으로 나눠 비교</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">미결제 유저의 80%가 접속 1~2회 신규 유저, 저회차 접속자를 결제 유도 타겟으로 선정</span></div></div>
+  </div>
+</article>
+<article class="card" id="project1b" data-sec="데이터 분석" data-part="유저 행동 분석" data-title="미결제/결제 유저군 간 행동 데이터 비교분석" data-year="2025">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_02.jpg" data-caps="미결제/결제 유저군 간 행동 데이터 비교분석" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_02.jpg" alt="미결제/결제 유저군 간 행동 데이터 비교분석" loading="lazy"><div class="thumb-cap">미결제/결제 유저군 간 행동 데이터 비교분석</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery</span></div>
+    <h3 class="card-title">미결제/결제 유저군 간 행동 데이터 비교분석</h3><p class="card-lead">탐색 후 미결제 유저의 이탈 지점을 도출한 분석</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">미결제 유저의 탐색 기능 인지·활용 부족이 결제전환 저해 요인인지 검증</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">탐색·결제 퍼널 단계별 도달률을 결제·미결제 유저군으로 비교</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">미결제 유저의 검색 후 주차장 클릭 전환율이 결제 유저 대비 40.6%p 낮아 클릭 단계 이탈이 핵심 원인</span></div></div>
+  </div>
+</article>
+<article class="card" id="project1c" data-sec="데이터 분석" data-part="유저 행동 분석" data-title="검색장소 인근 구매가능 주차장 분석" data-year="2025">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_03.jpg" data-caps="결제 vs 미결제 유저군 도넛차트 / 카이제곱 검정 결과" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_03.jpg" alt="검색장소 인근 구매가능 주차장 분석" loading="lazy"><div class="thumb-cap">결제 vs 미결제 유저군 도넛차트 / 카이제곱 검정 결과</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery · 카이제곱 검정</span></div>
+    <h3 class="card-title">검색장소 인근 구매가능 주차장 분석</h3><p class="card-lead">공급 부족의 결제전환 저해 여부를 검정한 분석</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">검색 위치 대비 인근 구매 가능 주차장 수 차이 검증</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">카카오맵 역지오코딩으로 검색 위치를 복원하고 500m 내 구매 가능 주차장 수를 결제·미결제 유저군으로 나눠 카이제곱 검정</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">미결제 유저 인근 공급 부족 확인(p&lt;0.0001), 집중 영업·넛징 CRM으로 대형집객시설 인근 신규 결제자 25.9% 증가, 미결제 신규유저 2.8만 명 첫 결제</span></div></div>
+  </div>
+</article>
+<article class="card" id="viz-v3c-tab" data-sec="데이터 분석" data-part="유저 행동 분석" data-title="미결제 유저 검색수요 지리공간 분석" data-year="2025">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_04.jpg" data-caps="지역별 검색장소 데이터 / 검색 키워드 순위" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_04.jpg" alt="미결제 유저 검색수요 지리공간 분석" loading="lazy"><div class="thumb-cap">지역별 검색장소 데이터 / 검색 키워드 순위</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Tableau · Kakao Map API</span></div>
+    <h3 class="card-title">미결제 유저 검색수요 지리공간 분석</h3><p class="card-lead">주소가 없는 검색 로그를 좌표로 복원해 미결제 수요를 지도화한 분석</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">미결제 유저 검색 수요의 지역 분포 파악</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">검색 이벤트에 주소가 없어 카카오맵 API 역지오코딩으로 좌표를 주소로 변환하고 Tableau 지도에 집계</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">검색 집중 지역을 영업(주차장 확보)과 마케팅(유저 넛지)에 활용</span></div></div>
+  </div>
+</article></div></div>
+<div class="part"><div class="part-head"><h3 class="part-title">영업 관리 분석</h3><span class="part-count">5</span></div><p class="part-desc">클릭·거래·매진 데이터로 영업 액션을 제안하고 변경 효과를 추적하는 프로세스와 대시보드</p>
+<div class="grid"><article class="card" id="project2a" data-sec="데이터 분석" data-part="영업 관리 분석" data-title="영업관리 프로세스 구축" data-year="2025">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_05.jpg" data-caps="영업관리 프로세스" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_05.jpg" alt="영업관리 프로세스 구축" loading="lazy"><div class="thumb-cap">영업관리 프로세스</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery</span></div>
+    <h3 class="card-title">영업관리 프로세스 구축</h3><p class="card-lead">영업 판단을 데이터로 뒷받침하는 프로세스</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">데이터 기반 영업관리 프로세스 구축</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">영업관리 리소스 80% 이상 절감, 제휴처의 자발적 가격·수량 변경 요청 3배 증가</span></div></div>
+  </div>
+</article>
+<article class="card" id="project2b" data-sec="데이터 분석" data-part="영업 관리 분석" data-title="통합 데이터셋 구축 및 액션 매트릭스 수립" data-year="2025">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_06.jpg|portfolio_images/full/notion_07.jpg|portfolio_images/full/notion_08.jpg" data-caps="통합 데이터셋|액션 매트릭스|수량·가격 인상 현황: 매진 추이 주간 모니터링" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_06.jpg" alt="통합 데이터셋 구축 및 액션 매트릭스 수립" loading="lazy"><span class="thumb-count">3장</span><div class="thumb-cap">통합 데이터셋</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery · Looker Studio</span></div>
+    <h3 class="card-title">통합 데이터셋 구축 및 액션 매트릭스 수립</h3><p class="card-lead">클릭·거래·매진 데이터를 통합하고 영업 액션 규칙을 정의한 기반</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">영업관리와 자동화 추적 대시보드 제작을 위한 기반 마련</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">지표 기반 영업 액션 자동화 체계 수립, 매진 추이 주간 모니터링</span></div></div>
+  </div>
+</article>
+<article class="card" id="project2c" data-sec="데이터 분석" data-part="영업 관리 분석" data-title="액션제안 및 모니터링 대시보드 제작" data-year="2025">
+  <div class="thumb dark" data-srcs="portfolio_images/full/notion_09.jpg" data-caps="주차권수량 변경 전후 거래건수·거래액 추이 / 상품가격 변경 전후 거래액 추이" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_09.jpg" alt="액션제안 및 모니터링 대시보드 제작" loading="lazy"><div class="thumb-cap">주차권수량 변경 전후 거래건수·거래액 추이 / 상품가격 변경 전후 거래액 추이</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
+    <h3 class="card-title">액션제안 및 모니터링 대시보드 제작</h3><p class="card-lead">수량·가격 변경이 거래에 미친 영향을 추적하는 대시보드</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">영업 액션(수량·가격 변경) 효과 추적과 신규 액션 제안</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">히트맵으로 변경 후 결과 추적, Z-score 3 이상 매출 급감 자동 알림과 롤백 트리거</span></div></div>
+  </div>
+</article>
+<article class="card" id="project2d" data-sec="데이터 분석" data-part="영업 관리 분석" data-title="액션제안 대시보드 1차 고도화" data-year="2025">
+  <div class="thumb dark" data-srcs="portfolio_images/full/notion_10.jpg" data-caps="가격 인상 주차권: 평일·주말 분석" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_10.jpg" alt="액션제안 대시보드 1차 고도화" loading="lazy"><div class="thumb-cap">가격 인상 주차권: 평일·주말 분석</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
+    <h3 class="card-title">액션제안 대시보드 1차 고도화</h3><p class="card-lead">인근 대비 상대 우위 지표를 추가한 1차 고도화</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">인근 대비 상대 우위 지표 추가로 제안 수용률 증대</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">평일·주말 분리 분석으로 가격 인상 근거 제시</span></div></div>
+  </div>
+</article>
+<article class="card" id="project2e" data-sec="데이터 분석" data-part="영업 관리 분석" data-title="액션제안 대시보드 2차 고도화" data-year="2025">
+  <div class="thumb dark" data-srcs="portfolio_images/full/notion_11.jpg" data-caps="상권 종합 분석 대시보드" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_11.jpg" alt="액션제안 대시보드 2차 고도화" loading="lazy"><div class="thumb-cap">상권 종합 분석 대시보드</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
+    <h3 class="card-title">액션제안 대시보드 2차 고도화</h3><p class="card-lead">상권 전체를 한 화면에서 확인하는 2차 고도화</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">제안 대상 주차장이 속한 상권의 종합 분석 자료 제공</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">상권·주차장·유저 행동·매출 현황을 한 화면에 모으고 가격·수량 조정 제안 리포트를 자동 메일로 발송해 설득 리소스 최소화</span></div></div>
+  </div>
+</article></div></div>
+<div class="part"><div class="part-head"><h3 class="part-title">사업 기획 분석</h3><span class="part-count">4</span></div><p class="part-desc">쿠폰 지급 조건 설계, 사업계획 달성 시나리오, 연휴 실적 예측, 이상치 탐지 등 의사결정용 시뮬레이션과 통계 분석</p>
+<div class="grid"><article class="card" id="project3a" data-sec="데이터 분석" data-part="사업 기획 분석" data-title="첫결제 프로모션 쿠폰 최적 지급조건 설계" data-year="2025">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_12.jpg" data-caps="첫결제 분석: 가입 후 경과 시간별 첫결제 분포 시뮬레이션" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_12.jpg" alt="첫결제 프로모션 쿠폰 최적 지급조건 설계" loading="lazy"><div class="thumb-cap">첫결제 분석: 가입 후 경과 시간별 첫결제 분포 시뮬레이션</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery · Simulation</span></div>
+    <h3 class="card-title">첫결제 프로모션 쿠폰 최적 지급조건 설계</h3><p class="card-lead">첫결제 쿠폰의 지급 시점·대상을 손실 없이 전환을 높이는 조건으로 시뮬레이션한 분석</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">첫결제 극대화와 자연 결제 유저의 쿠폰 사용 최소화 지급 조건 도출</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">가입 후 경과 시간별 첫결제 분포를 시뮬레이션해 지급 시점·조건별 손익 비교</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">약 1,500만원 잠재 매출총이익 손실 방지에 기여</span></div></div>
+  </div>
+</article>
+<article class="card" id="project3b" data-sec="데이터 분석" data-part="사업 기획 분석" data-title="신규주차장 사업계획 달성 시나리오 도출" data-year="2025">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_13.jpg" data-caps="사업계획 달성 시뮬레이션" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_13.jpg" alt="신규주차장 사업계획 달성 시나리오 도출" loading="lazy"><div class="thumb-cap">사업계획 달성 시뮬레이션</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">BigQuery · Simulation</span></div>
+    <h3 class="card-title">신규주차장 사업계획 달성 시나리오 도출</h3><p class="card-lead">사업계획 미달분의 보완 레버와 목표치를 시나리오로 도출한 분석</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">사업계획 달성을 위한 주요 레버별 목표치 도출</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">신규 주차장 수·가동률·객단가 레버 조합별 달성 시뮬레이션</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">25년 상반기 미달분 보완을 위한 목표와 수단 시나리오 수립</span></div></div>
+  </div>
+</article>
+<article class="card" id="project3c" data-sec="데이터 분석" data-part="사업 기획 분석" data-title="통계 기반 클릭/거래 이상치 탐지 및 원인 분석" data-year="2025">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_14.jpg|portfolio_images/full/notion_15.jpg" data-caps="Z-score ≥ 7 조건 고수요 탐지 / Z-score &lt; -3 조건 이슈 발견|클릭/거래 이상치 상세: 실적 그래프 및 Z-score" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_14.jpg" alt="통계 기반 클릭/거래 이상치 탐지 및 원인 분석" loading="lazy"><span class="thumb-count">2장</span><div class="thumb-cap">Z-score ≥ 7 조건 고수요 탐지 / Z-score &lt; -3 조건 이슈 발견</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Z-score</span></div>
+    <h3 class="card-title">통계 기반 클릭/거래 이상치 탐지 및 원인 분석</h3><p class="card-lead">클릭·거래 급증·급감을 통계로 탐지하는 체계</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">이상치 탐지·분석으로 수요 증가와 이슈 대응 속도 향상</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">주차장별 클릭·거래의 Z-score를 산출해 상·하한 임계치로 판정하고 원인 분류</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">콘서트·스포츠 경기 등 고수요 이벤트와 특가 상품 과다 판매 이슈 선제 탐지</span></div></div>
+  </div>
+</article>
+<article class="card" id="dc-forecast" data-sec="데이터 분석" data-part="사업 기획 분석" data-title="연휴 실적 리스크 진단과 대응 액션" data-year="2026">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_2026_forecast_actual_daily.jpg|portfolio_images/full/notion_2026_forecast_explain.jpg|portfolio_images/full/notion_2026_forecast_calendar.jpg|portfolio_images/full/notion_2026_forecast_actual_zone.jpg|portfolio_images/full/notion_2026_forecast_model_formula.jpg|portfolio_images/full/notion_2026_forecast_action_cal.jpg" data-caps="추석 주간 일자별 거래액 예측 대비 실제: 추석 3일은 예측보다 19% 많은 4.1억, 초과분은 9/26 토요일에 집중|모형 1 일별 회귀: 요일·공휴일·명절 위치·주말 강우 더미를 둔 로그 회귀식과 추정 계수|일자별 거래액 예측 캘린더: 추석 주간·징검다리 주간 예측치와 상권별 수요 지도|추석 주간 상권 13곳 수요·공급과 거래액 예측 대비 실제: 매진 발생 상권과 광명역 일자별 검증|예측 산출 단계: 전년 실적에서 성장·요일·명절 효과를 더해 월 예측에 이르는 워터폴|실행 달력: 추석 주간·징검다리 주간 액션 제안과 근거" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_forecast_actual_daily.jpg" alt="연휴 실적 리스크 진단과 대응 액션" loading="lazy"><span class="thumb-count">6장</span><div class="thumb-cap">추석 주간 일자별 거래액 예측 대비 실제: 추석 3일은 예측보다 19% 많은 4.1억, 초과분은 9/26 토요일에 집중</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">BigQuery · 캘린더 회귀모델</span></div>
+    <h3 class="card-title">연휴 실적 리스크 진단과 대응 액션</h3><p class="card-lead">연휴에 수요가 빠지는 곳과 몰리는 곳을 일자·상권 단위로 짚고 부서별 대응을 제안한 분석</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">추석 이동·징검다리 연휴로 인한 9·10월 실적 하락 대응</span></div><div class="sum-row"><span class="sum-label">도출</span><span class="sum-value">연휴 손실은 묶인 요일이 좌우하고, 수요는 교통거점과 귀경일 나들이 상권으로 이동</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">교통거점 상품 확보·시점 맞춤 기획전 제안, 추석특가 판매 현장 결제 평시 대비 +16%</span></div></div>
+  </div>
+</article></div></div>
+</section>
+
+<section class="sec" id="infra" data-sec="infra" style="--sc:#0f9d58">
+<div class="sec-head"><div class="sec-label" style="color:#0f9d58">데이터 인프라</div><h2 class="sec-title">지표 체계 설계 및 분석 인프라 구축</h2></div>
+<div class="part"><div class="part-head"><h3 class="part-title">지표 정의·데이터 인프라</h3><span class="part-count">2</span></div><p class="part-desc">이벤트 로그 설계 표준, 지표 SSOT, 분석 결과·의사결정 맥락 저장소 등 분석의 기반</p>
+<div class="grid"><article class="card" id="if-eventlog" data-sec="데이터 인프라" data-part="지표 정의·데이터 인프라" data-title="이벤트 로그 설계 프레임워크" data-year="2026">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_2026_taxonomy_flow.jpg|portfolio_images/full/notion_2026_draw_taxonomy.jpg|portfolio_images/full/notion_2026_infra_eventlog.jpg" data-caps="드로우이벤트 GA 텍소노미 설계안: 유저 플로우별 화면과 이벤트 설계|드로우이벤트 GA 텍소노미 설계안: KPI·비즈니스 질문·측정 방식 체계|현행과 프레임워크 적용 후 비교: 설계 출발점 · 설계 과정 · 산출물과 소통" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_taxonomy_flow.jpg" alt="이벤트 로그 설계 프레임워크" loading="lazy"><span class="thumb-count">3장</span><div class="thumb-cap">드로우이벤트 GA 텍소노미 설계안: 유저 플로우별 화면과 이벤트 설계</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">GA4 · Claude Code</span></div>
+    <h3 class="card-title">이벤트 로그 설계 프레임워크</h3><p class="card-lead">지표 정의부터 로그 설계까지 한 문서로 잇는 이벤트 설계 프레임워크</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">비즈니스 질문을 측정할 핵심 지표 정의에서 시작하는 이벤트 설계</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">지표 신뢰도를 위해 정책서 기반 UX 플로우를 빠짐없이 그리고 화면·분기별 이벤트 설계</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">PM·기획·마케팅 담당자가 비즈니스 질문에 집중해 뾰족한 KPI 설정, 플로우로 정합성을 직접 검증해 신뢰 기반의 빠른 의사결정</span></div></div>
+  </div>
+</article>
+<article class="card" id="if-ssot" data-sec="데이터 인프라" data-part="지표 정의·데이터 인프라" data-title="데이터마트·Git 기반 지표 SSOT" data-year="2026">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_2026_infra_ssot.jpg|portfolio_images/full/notion_2026_ssot_arch.jpg|portfolio_images/full/notion_2026_ssot_tree.jpg|portfolio_images/full/notion_2026_ssot_yaml.jpg" data-caps="지표 SSOT 구성도: 원천 데이터 → 적재·변환 → 단일 원천(BigQuery 마트 · Git 정의 저장소) → 소비처, 정의 변경 흐름|SSOT 저장소 전체 구조와 활용 흐름: 지표 정의·표준 쿼리·이벤트 스키마·데이터 사전을 Claude Code(MCP)·CI/CD·Confluence가 참조, 질의 시 정의 파일을 먼저 읽고 BigQuery를 실행|저장소 디렉토리: 사업·프로덕트·운영 지표 YAML, 표준 SQL, 앱·웹 이벤트, 테이블 설명과 용어 사전, 분석 컨벤션, 의사결정 기록, 스키마 검증 워크플로우|지표 정의 YAML 예시: 총 매출의 원천 테이블·집계·필터·분석 축·단위·주의사항·관련 지표·변경 이력" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_infra_ssot.jpg" alt="데이터마트·Git 기반 지표 SSOT" loading="lazy"><span class="thumb-count">4장</span><div class="thumb-cap">지표 SSOT 구성도: 원천 데이터 → 적재·변환 → 단일 원천(BigQuery 마트 · Git 정의 저장소) → 소비처, 정의 변경 흐름</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">BigQuery · GitHub</span></div>
+    <h3 class="card-title">데이터마트·Git 기반 지표 SSOT</h3><p class="card-lead">지표·이벤트 정의의 등록부터 배포까지 단일 경로로 일원화한 단일 원천</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">부서·리포트마다 달랐던 지표·이벤트 정의의 단일화</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">리포트·대시보드·슬랙봇·에이전트가 같은 정의를 참조</span></div></div>
+  </div>
+</article></div></div>
+</section>
+
+<section class="sec" id="viz" data-sec="viz" style="--sc:#7c3aed">
+<div class="sec-head"><div class="sec-label" style="color:#7c3aed">대시보드</div><h2 class="sec-title">사업/제품 대시보드 제작</h2></div>
+<div class="part"><div class="part-head"><h3 class="part-title">성과 추적</h3><span class="part-count">5</span></div><p class="part-desc">주차장·마케팅·이벤트·결제 실적을 자동 집계해 일·주 단위로 확인하는 대시보드</p>
+<div class="grid"><article class="card" id="viz-draw" data-sec="대시보드" data-part="성과 추적" data-title="럭키드로우 이벤트 대시보드" data-year="2026">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_2026_draw_dashboard.jpg" data-caps="럭키드로우 이벤트 대시보드: 방문·참여·응모 유저수와 유입 경로" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_draw_dashboard.jpg" alt="럭키드로우 이벤트 대시보드" loading="lazy"><div class="thumb-cap">럭키드로우 이벤트 대시보드: 방문·참여·응모 유저수와 유입 경로</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">GA4 · Vega-Lite · Cloud Run</span></div>
+    <h3 class="card-title">럭키드로우 이벤트 대시보드</h3><p class="card-lead">참여 현황부터 진입 경로·유저 구성·미션 전환율까지 보여줘 개선 액션을 끌어내는 이벤트 대시보드</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">운영 중 실시간 판단과 진입·미션 단계별 개선 액션 도출</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">GA4 실시간 범위에 맞춰 지표 스펙을 줄이고 진입·참여·응모 퍼널과 유입 경로로 구성</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">CRM 발송 유입이 참여·응모를 주도함을 확인, 10월 드로우에 단계별 리마인드 CRM 4종 편성</span></div></div>
+  </div>
+</article>
+<article class="card" id="viz-tosspay" data-sec="대시보드" data-part="성과 추적" data-title="토스페이 결제 모니터링 대시보드" data-year="2026">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_2026_tosspay_monitor.jpg" data-caps="토스페이 결제 모니터링: 결제수단별 거래건수와 토스페이 비중 추이" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_2026_tosspay_monitor.jpg" alt="토스페이 결제 모니터링 대시보드" loading="lazy"><div class="thumb-cap">토스페이 결제 모니터링: 결제수단별 거래건수와 토스페이 비중 추이</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year new">2026</span><span class="tag-tool">BigQuery · Vega-Lite · Cloud Run</span></div>
+    <h3 class="card-title">토스페이 결제 모니터링 대시보드</h3><p class="card-lead">토스페이 도입 후 결제수단 전환 추이를 일별로 확인하는 대시보드</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">결제수단 전환 추이와 간편결제 내 비중 목표 달성의 상시 관찰</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">의도대로 네이버페이 결제 비중의 다수가 토스페이로 이동해 간편결제 내 비중 목표를 달성, PG 수수료 협상의 발판 마련</span></div></div>
+  </div>
+</article>
+<article class="card" id="viz-v1a" data-sec="대시보드" data-part="성과 추적" data-title="W-1(저번주) 성과예측 대시보드" data-year="2025">
+  <div class="thumb dark" data-srcs="portfolio_images/full/notion_17.jpg" data-caps="주차존 수요 대시보드: 지도 기반 수요 시각화" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_17.jpg" alt="W-1(저번주) 성과예측 대시보드" loading="lazy"><div class="thumb-cap">주차존 수요 대시보드: 지도 기반 수요 시각화</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
+    <h3 class="card-title">W-1(저번주) 성과예측 대시보드</h3><p class="card-lead">주차장별 지난주 성과를 매주 자동 집계하는 대시보드</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">전체 주차장의 일정별 성과 수치 확인</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">주차장별 기여치 주간 자동 집계로 반복 리포팅 대체</span></div></div>
+  </div>
+</article>
+<article class="card" id="viz-v1b" data-sec="대시보드" data-part="성과 추적" data-title="마케팅 실적 리포트" data-year="2025">
+  <div class="thumb dark" data-srcs="portfolio_images/full/notion_18.jpg" data-caps="모두의주차장 운영 현황: 주간 리포트" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_18.jpg" alt="마케팅 실적 리포트" loading="lazy"><div class="thumb-cap">모두의주차장 운영 현황: 주간 리포트</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
+    <h3 class="card-title">마케팅 실적 리포트</h3><p class="card-lead">마케팅 부서가 주간 운영 현황을 실시간으로 확인하는 리포트</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">마케팅 실적 리포팅 자동화</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">주간 운영 현황 실시간 조회로 의사결정에 활용</span></div></div>
+  </div>
+</article>
+<article class="card" id="viz-v1c" data-sec="대시보드" data-part="성과 추적" data-title="공유주차 서비스 자치구별 실적 대시보드" data-year="2025">
+  <div class="thumb dark" data-srcs="portfolio_images/full/notion_19.jpg" data-caps="공유 자치구별 실적 대시보드" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_19.jpg" alt="공유주차 서비스 자치구별 실적 대시보드" loading="lazy"><div class="thumb-cap">공유 자치구별 실적 대시보드</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
+    <h3 class="card-title">공유주차 서비스 자치구별 실적 대시보드</h3><p class="card-lead">자치구별 공유주차 실적을 통합 확인하는 대시보드</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">공유사업 주요 자치구별 실적의 실시간 파악</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">자치구별 실적·예약·충결 비중 일괄 모니터링</span></div></div>
+  </div>
+</article></div></div>
+<div class="part"><div class="part-head"><h3 class="part-title">공급 관리</h3><span class="part-count">3</span></div><p class="part-desc">제휴 주차장 공급, 판매중단 시설, 정기권 슬롯을 관리하는 대시보드</p>
+<div class="grid"><article class="card" id="viz-v2a" data-sec="대시보드" data-part="공급 관리" data-title="제휴일반 대시보드" data-year="2025">
+  <div class="thumb dark" data-srcs="portfolio_images/full/notion_20.jpg" data-caps="제휴일반: 핵심 지표·매진 추이·히트맵·매진 순위" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_20.jpg" alt="제휴일반 대시보드" loading="lazy"><div class="thumb-cap">제휴일반: 핵심 지표·매진 추이·히트맵·매진 순위</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
+    <h3 class="card-title">제휴일반 대시보드</h3><p class="card-lead">제휴 주차장 공급과 시간대별 마감 추이 대시보드</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">제휴 주차장 공급 현황과 시간대별 마감 추이 파악</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">공급·구매 가능·미가동 현황과 매진 추이로 재고·가격 관리</span></div></div>
+  </div>
+</article>
+<article class="card" id="viz-v2b" data-sec="대시보드" data-part="공급 관리" data-title="판매중단 시설관리 대시보드" data-year="2025">
+  <div class="thumb dark" data-srcs="portfolio_images/full/notion_21.jpg" data-caps="판매중단 시설: 장기·단기 관리" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_21.jpg" alt="판매중단 시설관리 대시보드" loading="lazy"><div class="thumb-cap">판매중단 시설: 장기·단기 관리</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
+    <h3 class="card-title">판매중단 시설관리 대시보드</h3><p class="card-lead">판매중단 시설의 복구 우선순위를 관리하는 대시보드</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">판매중단 시설 복구·관리 프로세스 자동화</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">장단기 유형별 분류로 복구 우선순위 관리</span></div></div>
+  </div>
+</article>
+<article class="card" id="viz-v2c" data-sec="대시보드" data-part="공급 관리" data-title="장기권 슬롯관리 대시보드" data-year="2025">
+  <div class="thumb dark" data-srcs="portfolio_images/full/notion_22.jpg" data-caps="정기권 주차가능 현황: 주차가능현장 1,494 / 주차가능수량 26,333" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_22.jpg" alt="장기권 슬롯관리 대시보드" loading="lazy"><div class="thumb-cap">정기권 주차가능 현황: 주차가능현장 1,494 / 주차가능수량 26,333</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
+    <h3 class="card-title">장기권 슬롯관리 대시보드</h3><p class="card-lead">정기권 잔여 슬롯을 자산으로 운용하는 대시보드</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">제한된 정기권 슬롯 활용 극대화</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">잔여 슬롯 파악으로 쏘카존 배치와 비연장 기관 판매 제안에 활용</span></div></div>
+  </div>
+</article></div></div>
+<div class="part"><div class="part-head"><h3 class="part-title">유저 분석</h3><span class="part-count">3</span></div><p class="part-desc">퍼널·코호트·검색 수요 지리공간 분석으로 유저 행동을 확인하는 리포트와 지도</p>
+<div class="grid"><article class="card" id="viz-v3a" data-sec="대시보드" data-part="유저 분석" data-title="퍼널 대시보드" data-year="2025">
+  <div class="thumb dark" data-srcs="portfolio_images/full/notion_23.jpg|portfolio_images/full/notion_24.jpg" data-caps="풀 퍼널: 전체·iOS·AOS|주요 퍼널 by BM" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_23.jpg" alt="퍼널 대시보드" loading="lazy"><span class="thumb-count">2장</span><div class="thumb-cap">풀 퍼널: 전체·iOS·AOS</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Looker Studio</span></div>
+    <h3 class="card-title">퍼널 대시보드</h3><p class="card-lead">주요 퍼널 전환율을 OS·사업모델별로 확인하는 대시보드</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">퍼널별 전환율 시각화로 제품 개선 지점 도출</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">전체·iOS·AOS 풀 퍼널과 사업모델별 주요 퍼널 실시간 모니터링</span></div></div>
+  </div>
+</article>
+<article class="card" id="viz-v3b" data-sec="대시보드" data-part="유저 분석" data-title="신규가입유저 코호트 분석 리포트" data-year="2025">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_25.jpg" data-caps="전환율 / 기여도 / 잔존율 / 관측값: 신규가입유저 코호트 분석" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_25.jpg" alt="신규가입유저 코호트 분석 리포트" loading="lazy"><div class="thumb-cap">전환율 / 기여도 / 잔존율 / 관측값: 신규가입유저 코호트 분석</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Google Sheets</span></div>
+    <h3 class="card-title">신규가입유저 코호트 분석 리포트</h3><p class="card-lead">신규가입 코호트의 전환·기여·잔존을 비교하는 리포트</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">신규가입 유저 코호트별 금액 지표 확인으로 잔존 이해도 향상</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">코호트별 전환율·기여도·잔존율 비교로 잔존 전략 수립</span></div></div>
+  </div>
+</article>
+<article class="card" id="viz-v3c" data-sec="대시보드" data-part="유저 분석" data-title="여의도 불꽃축제 동적 수요지도" data-year="2025">
+  <div class="thumb" data-srcs="portfolio_images/full/notion_26.jpg|portfolio_images/full/notion_27.jpg" data-caps="오전 수요지도: 여의도 내 수요 집중 지점|오후 수요지도: 인근 동작·용산·노량진 수요 분산" onclick="openLightbox(this)"><img src="portfolio_images/thumbs/notion_26.jpg" alt="여의도 불꽃축제 동적 수요지도" loading="lazy"><span class="thumb-count">2장</span><div class="thumb-cap">오전 수요지도: 여의도 내 수요 집중 지점</div></div>
+  <div class="card-body">
+    <div class="card-meta"><span class="tag-year">2025</span><span class="tag-tool">Kepler.gl</span></div>
+    <h3 class="card-title">여의도 불꽃축제 동적 수요지도</h3><p class="card-lead">경쟁사 독점 계약으로 핵심 권역 공급이 46% 줄어든 축제에서 수요를 인근 권역으로 분산시킨 분석과 지도</p>
+    <div class="card-summary"><div class="sum-row"><span class="sum-label">목적</span><span class="sum-value">한정된 공급 안에서 매출 극대화를 위한 인근 권역 수요 분산과 만차 리스크 사전 안내</span></div><div class="sum-row"><span class="sum-label">방법</span><span class="sum-value">연관규칙으로 영등포시장역·마포역 탐색 이동 도출, 거리와 만차 환불의 음의 상관(r=-0.34) 확인 후 숨은 명당 12곳 딥링크 배너·Braze 인앱 설계</span></div><div class="sum-row"><span class="sum-label">결과</span><span class="sum-value">세션시간 17%·주차핀 클릭 62.5% 감소, 인근 권역 거래액 2.1배 확대로 핵심 권역 공급감소분 70% 상쇄</span></div></div>
+  </div>
+</article></div></div>
+</section>
+
+<footer class="footer" id="contact">
+  <strong style="color:var(--text)">정한얼</strong> &middot; Data Analyst
+  <p>분석을 액션으로 바꾸는 데이터 분석가</p>
+</footer>
+
+</div>
+
+<button id="sTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="맨 위로">
+  <svg width="14" height="14" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"><polyline points="3,9 7,4 11,9"/></svg>
+</button>
+
+<script>
+// Demo modal
+function openDemo(btn){
+  const src=btn.dataset.demo,title=btn.dataset.title;
+  // 데모는 열 때마다 새로 만든다. 이전 선택 상태와 브라우저 캐시를 남기지 않는다
+  try{sessionStorage.clear();localStorage.clear()}catch(e){}
+  const url=src+(src.includes('?')?'&':'?')+'v='+Date.now();
+  document.getElementById('demoTitle').textContent=title;
+  document.getElementById('demoOpen').href=url;
+  const st=document.getElementById('demoStage'),old=document.getElementById('demoFrame');
+  const f=document.createElement('iframe');f.id='demoFrame';f.title='체험 데모';f.src=url;
+  old.replaceWith(f);
+  document.getElementById('demoModal').classList.add('open');document.body.style.overflow='hidden';
+  demoW=/demos\/hub\//.test(src)?1440:0;fitDemo();
+}
+// 데모는 데스크톱 폭(1440px)으로 그린 뒤 창 크기에 맞춰 축소해 첫 화면에 전체가 보이게 한다
+let demoW=0;
+function fitDemo(){
+  const st=document.getElementById('demoStage'),f=document.getElementById('demoFrame');
+  const w=st.clientWidth,h=st.clientHeight,k=(demoW&&w>=760)?Math.min(1,w/demoW):1;  // 휴대폰에서는 허브의 모바일 화면을 그대로 쓴다
+  f.style.width=(w/k)+'px';f.style.height=(h/k)+'px';f.style.transform='scale('+k+')';
+}
+window.addEventListener('resize',()=>{if(document.getElementById('demoModal').classList.contains('open'))fitDemo()});
+function closeDemo(){
+  document.getElementById('demoModal').classList.remove('open');document.body.style.overflow='';
+  const old=document.getElementById('demoFrame'),f=document.createElement('iframe');
+  f.id='demoFrame';f.title='체험 데모';f.src='about:blank';old.replaceWith(f);
+  try{sessionStorage.clear();localStorage.clear()}catch(e){}
+}
+document.getElementById('demoModal').addEventListener('click',function(e){if(e.target===this)closeDemo()});
+window.addEventListener('message',e=>{if(e.data==='close-demo')closeDemo()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('demoModal').classList.contains('open'))closeDemo()});
+
+// Filter control (연도 × 영역 · 기본 올해 · 전체)
+(function(){
+  const cards=[...document.querySelectorAll('.card')];
+  const secs=[...document.querySelectorAll('.sec')].map(s=>({id:s.dataset.sec,label:s.querySelector('.sec-label').textContent.trim(),color:s.querySelector('.sec-label').style.color}));
+  const years=[...new Set(cards.map(c=>c.dataset.year))].sort().reverse();
+  let year=String(new Date().getFullYear());if(!years.includes(year))year=years[years.length-1];
+  let sec='all';
+  const host=document.getElementById('filterBar');
+  host.innerHTML=`<div class="frow"><span class="flab">연도</span><div class="fgrp" data-k="year"><span class="pill"></span>${years.map(y=>`<button data-v="${y}">${y}</button>`).join('')}<button data-v="all">전체</button></div></div><div class="frow"><span class="flab">영역</span><div class="fgrp" data-k="sec"><span class="pill"></span><button data-v="all">전체</button>${secs.map(s=>`<button data-v="${s.id}"><span class="dot" style="--c:${s.color}"></span>${s.label}</button>`).join('')}</div></div>`;
+  function movePill(g){const on=g.querySelector('button.on'),p=g.querySelector('.pill');if(!on||!p)return;p.style.left=on.offsetLeft+'px';p.style.width=on.offsetWidth+'px'}
+  function apply(){
+    // 연도에 맞는 영역만 노출. 선택한 영역에 그 연도 카드가 없으면 전체로 되돌린다
+    const avail=new Set(cards.filter(c=>year==='all'||c.dataset.year===year).map(c=>c.closest('.sec').dataset.sec));
+    host.querySelectorAll('[data-k="sec"] button').forEach(b=>{const ok=b.dataset.v==='all'||avail.has(b.dataset.v);b.style.display=ok?'':'none'});
+    if(sec!=='all'&&!avail.has(sec))sec='all';
+    host.querySelectorAll('.fgrp').forEach(g=>{const v=g.dataset.k==='year'?year:sec;g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===v));movePill(g)});
+    cards.forEach(c=>{const s=c.closest('.sec').dataset.sec;c.classList.toggle('yr-hide',(year!=='all'&&c.dataset.year!==year)||(sec!=='all'&&s!==sec))});
+    document.querySelectorAll('.part').forEach(pt=>{const vis=[...pt.querySelectorAll('.card')].filter(c=>!c.classList.contains('yr-hide'));pt.classList.toggle('yr-hide',!vis.length);const cnt=pt.querySelector('.part-count');if(cnt)cnt.textContent=vis.length});
+    document.querySelectorAll('.sec').forEach(s=>s.classList.toggle('yr-hide',![...s.querySelectorAll('.card')].some(c=>!c.classList.contains('yr-hide'))));
+  }
+  host.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.closest('.fgrp').dataset.k==='year')year=b.dataset.v;else sec=b.dataset.v;apply();requestAnimationFrame(()=>host.querySelectorAll('.fgrp').forEach(movePill))});
+  apply();
+  const re=()=>host.querySelectorAll('.fgrp').forEach(movePill);
+  window.addEventListener('resize',re);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(re);setTimeout(re,300);
+  window.showAllYears=()=>{if(year!=='all'||sec!=='all'){year='all';sec='all';apply()}};
+})();
+
+// Lightbox (카드별 여러 장 넘김)
+let lbSrcs=[],lbCaps=[],lbIdx=0;
+// 라이트박스 확대·이동 (버튼 · 휠 · 드래그 · 더블클릭 · 핀치)
+let lbScale=1,lbX=0,lbY=0;
+function lbApply(){const im=document.getElementById('lightboxImg');im.style.transform=`translate(${lbX}px,${lbY}px) scale(${lbScale})`;im.classList.toggle('zoomed',Math.abs(lbScale-1)>0.01);document.getElementById('lbZoomLabel').textContent=Math.abs(lbScale-1)<=0.01?'맞춤':Math.round(lbScale*100)+'%'}
+function lbClamp(){const im=document.getElementById('lightboxImg'),st=document.getElementById('lbStage');if(!im.offsetWidth)return;const W=im.offsetWidth*lbScale,H=im.offsetHeight*lbScale,mx=Math.max(0,(W-st.clientWidth)/2+24),my=Math.max(0,(H-st.clientHeight)/2+24);lbX=Math.max(-mx,Math.min(mx,lbX));lbY=Math.max(-my,Math.min(my,lbY))}
+function lbSet(v){lbScale=Math.min(4,Math.max(0.6,v));lbClamp();lbApply()}
+// 세로로 긴 문서는 폭에 맞춰 키우고 맨 위부터 보여준다
+function lbFitTall(){const im=document.getElementById('lightboxImg'),st=document.getElementById('lbStage');if(!im.naturalWidth||im.naturalHeight/im.naturalWidth<1.25)return;const s=Math.min(4,Math.min(st.clientWidth*0.9,1100)/im.offsetWidth);if(s<=1.05)return;lbScale=s;lbX=0;lbY=(im.offsetHeight*s-st.clientHeight)/2+24;lbClamp();lbApply()}
+function lbZoom(d){lbSet(lbScale*(d>0?1.15:1/1.15))}
+function lbReset(){lbScale=1;lbX=0;lbY=0;lbApply()}
+(function(){
+  const st=document.getElementById('lbStage'),im=document.getElementById('lightboxImg');
+  st.addEventListener('wheel',e=>{e.preventDefault();const k=e.deltaMode===1?16:1;
+    if(e.ctrlKey||e.metaKey){const dy=Math.max(-60,Math.min(60,e.deltaY*k));lbSet(lbScale*Math.exp(-dy*0.006));return}
+    lbX-=e.deltaX*k;lbY-=e.deltaY*k;lbClamp();lbApply()},{passive:false});
+  let drag=null,pinch=null;
+  st.addEventListener('pointerdown',e=>{if(e.target!==im)return;e.preventDefault();im.setPointerCapture(e.pointerId);drag={x:e.clientX-lbX,y:e.clientY-lbY,sx:e.clientX,sy:e.clientY,moved:false};if(lbScale!==1)im.classList.add('dragging')});
+  st.addEventListener('pointermove',e=>{if(!drag)return;if(Math.hypot(e.clientX-drag.sx,e.clientY-drag.sy)>4)drag.moved=true;lbX=e.clientX-drag.x;lbY=e.clientY-drag.y;lbClamp();lbApply()});
+  ['pointerup','pointercancel'].forEach(t=>st.addEventListener(t,e=>{if(drag&&!drag.moved&&e.target===im&&e.pointerType!=='touch'){if(Math.abs(lbScale-1)<=0.01)lbSet(1.6);else lbReset()}drag=null;im.classList.remove('dragging')}));
+  im.addEventListener('dblclick',e=>{e.stopPropagation()});
+  st.addEventListener('touchstart',e=>{if(e.touches.length===2){pinch={d:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),s:lbScale}}},{passive:true});
+  st.addEventListener('touchmove',e=>{if(pinch&&e.touches.length===2){e.preventDefault();const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);lbSet(pinch.s*Math.pow(d/pinch.d,0.8))}},{passive:false});
+  st.addEventListener('touchend',()=>{pinch=null});
+  st.addEventListener('click',e=>{if(e.target===st)closeLightbox()});
+})();
+function showLightbox(){lbReset();
+  const im=document.getElementById('lightboxImg');
+  // 이전 이미지가 남아 보이지 않게 비우고 새 이미지를 올린다
+  im.removeAttribute('src');im.style.opacity='0';
+  const next=new Image();next.onload=()=>{if(next.src===im.dataset.want){im.src=next.src;im.style.opacity='1';requestAnimationFrame(lbFitTall)}};
+  next.src=lbSrcs[lbIdx];im.dataset.want=next.src;if(next.complete){im.src=next.src;im.style.opacity='1';requestAnimationFrame(lbFitTall)}
+  document.getElementById('lightboxCap').textContent=(lbSrcs.length>1?`${lbIdx+1} / ${lbSrcs.length}  `:'')+(lbCaps[lbIdx]||'');
+  const multi=lbSrcs.length>1;
+  document.getElementById('lightbox').classList.toggle('multi',multi);
+  const strip=document.getElementById('lbStrip');strip.classList.toggle('hidden',!multi);
+  strip.querySelectorAll('.lb-th').forEach((b,j)=>b.classList.toggle('on',j===lbIdx));
+  const cur=strip.children[lbIdx];if(multi&&cur)cur.scrollIntoView({block:'nearest',inline:'center'});
+  document.getElementById('lbPrev').classList.toggle('hidden',!multi);
+  document.getElementById('lbNext').classList.toggle('hidden',!multi);
+}
+function openLightbox(box){
+  lbSrcs=(box.dataset.srcs||'').split('|').filter(Boolean);
+  lbCaps=(box.dataset.caps||'').split('|');
+  if(!lbSrcs.length)return;
+  // 하단 썸네일 줄: 번호만 작게, 제목은 마우스를 올리면 말풍선으로
+  const strip=document.getElementById('lbStrip'),tip=document.getElementById('lbTip');strip.innerHTML='';
+  if(lbSrcs.length>1)lbSrcs.forEach((src,k)=>{
+    const b=document.createElement('button');b.className='lb-th';b.type='button';
+    const t=(lbCaps[k]||'').split(':')[0].trim();b.setAttribute('aria-label',`${k+1}. ${t}`);
+    b.innerHTML=`<img src="${src.startsWith('data:')?src:src.replace('/full/','/thumbs/')}" alt="" loading="lazy"><i>${k+1}</i>`;
+    b.onclick=()=>{lbIdx=k;showLightbox()};
+    b.onmouseenter=()=>{const r=b.getBoundingClientRect();tip.textContent=t;tip.style.left=(r.left+r.width/2)+'px';tip.style.top=(r.top-8)+'px';tip.classList.add('show')};
+    b.onmouseleave=()=>tip.classList.remove('show');
+    strip.appendChild(b)});
+  lbIdx=0;showLightbox();
+  document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';
+}
+function stepLightbox(d){if(!lbSrcs.length)return;lbIdx=(lbIdx+d+lbSrcs.length)%lbSrcs.length;showLightbox()}
+function closeLightbox(){document.getElementById('lbTip').classList.remove('show');document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';const im=document.getElementById('lightboxImg');im.removeAttribute('src');im.dataset.want='';im.style.opacity='0';lbReset()}
+document.getElementById('lightbox').addEventListener('click',function(e){if(e.target===this)closeLightbox()});
+document.addEventListener('keydown',e=>{if(!document.getElementById('lightbox').classList.contains('open'))return;if(e.key==='+'||e.key==='=')lbZoom(1);if(e.key==='-')lbZoom(-1);if(e.key==='0')lbReset()});
+document.addEventListener('keydown',e=>{
+  const lb=document.getElementById('lightbox');if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLightbox();
+  if(e.key==='ArrowRight')stepLightbox(1);
+  if(e.key==='ArrowLeft')stepLightbox(-1);
+});
+
+// Float Nav + scroll spy
+(function(){
+  const nav=document.getElementById('floatNav'),hero=document.querySelector('.cover'),top=document.getElementById('sTop');
+  let vis=false;
+  new IntersectionObserver(([e])=>{const show=!e.isIntersecting;if(show!==vis){vis=show;nav.classList.toggle('visible',show);top.classList.toggle('visible',show)}}).observe(hero);
+  const zones=['ai','decision','infra','viz'];
+  function spy(){
+    const y=window.scrollY+120;let a='';
+    for(let z=zones.length-1;z>=0;z--){const el=document.getElementById(zones[z]);if(el&&el.offsetTop<=y){a=zones[z];break}}
+    nav.querySelectorAll('.nav-btn[data-section]').forEach(t=>t.classList.toggle('active',t.dataset.section===a));
+  }
+  let tick=false;
+  window.addEventListener('scroll',()=>{if(!tick){requestAnimationFrame(()=>{spy();tick=false});tick=true}},{passive:true});
+  spy();
+})();
+
+// Dropdowns
+(function(){
+  document.querySelectorAll('.viz-wrap').forEach(w=>{
+    const btn=w.querySelector('.nav-btn'),dd=w.querySelector('.viz-dropdown');
+    if(!btn||!dd)return;
+    btn.addEventListener('click',e=>{
+      e.preventDefault();e.stopPropagation();
+      const was=dd.classList.contains('open');
+      document.querySelectorAll('.viz-dropdown.open').forEach(d=>d.classList.remove('open'));
+      if(!was)dd.classList.add('open');
+    });
+    dd.addEventListener('click',e=>e.stopPropagation());
+    dd.querySelectorAll('.vd-item').forEach(item=>item.addEventListener('click',()=>{
+      const el=document.getElementById(item.dataset.target);
+      if(el&&el.classList.contains('yr-hide'))window.showAllYears();
+      if(el){el.scrollIntoView({behavior:'smooth',block:'center'});el.classList.remove('search-found');void el.offsetWidth;el.classList.add('search-found')}
+      dd.classList.remove('open');
+    }));
+  });
+  document.addEventListener('click',()=>document.querySelectorAll('.viz-dropdown.open').forEach(d=>d.classList.remove('open')));
+})();
+
+// Search (카드 DOM에서 색인 생성)
+function openSearch(){document.getElementById('searchToggle').click()}
+(function(){
+  const ov=document.getElementById('searchOverlay'),md=document.getElementById('searchModal'),
+    inp=document.getElementById('searchInput'),res=document.getElementById('searchResults'),
+    tog=document.getElementById('searchToggle'),sug=document.getElementById('searchSuggest'),clr=document.getElementById('searchClear');
+  const idx=[...document.querySelectorAll('.card')].map(el=>({
+    id:el.id,group:el.dataset.sec,part:el.dataset.part,title:el.dataset.title,
+    snippets:[...el.querySelectorAll('.sum-value,.tag-tool,.thumb-cap')].map(e=>e.textContent.trim()).filter(t=>t.length>1)
+  }));
+  let fi=-1,ci=[];
+  function open(){ov.classList.add('open');md.classList.add('open');inp.value='';res.innerHTML='';res.classList.remove('has-query');fi=-1;updateUI();setTimeout(()=>inp.focus(),50)}
+  function close(){ov.classList.remove('open');md.classList.remove('open');inp.blur()}
+  function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+  function hl(t,q){t=esc(t);if(!q)return t;return t.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark>$1</mark>')}
+  function preview(item,q){
+    for(const s of item.snippets){const l=s.toLowerCase();if(l.includes(q)){
+      const i=l.indexOf(q),st=Math.max(0,i-25),en=Math.min(s.length,i+q.length+50);
+      return (st>0?'...':'')+s.slice(st,en)+(en<s.length?'...':'');
+    }}return '';
+  }
+  function render(query){
+    res.innerHTML='';ci=[];fi=-1;
+    if(!query){res.classList.remove('has-query');return}
+    res.classList.add('has-query');
+    const q=query.toLowerCase();
+    const m=idx.filter(i=>i.title.toLowerCase().includes(q)||i.part.toLowerCase().includes(q)||i.snippets.some(s=>s.toLowerCase().includes(q)));
+    let lg='';
+    m.forEach(item=>{
+      if(item.group!==lg){lg=item.group;const g=document.createElement('div');g.className='sr-group';g.textContent=lg;res.appendChild(g)}
+      const pv=preview(item,q),div=document.createElement('div');
+      div.className='sr-item';
+      div.innerHTML=`<div class="sr-text"><div class="sr-title">${hl(item.title,query)}</div><div class="sr-breadcrumb">${esc(item.group)} · ${esc(item.part)}</div>${pv?'<div class="sr-preview">'+hl(pv,query)+'</div>':''}</div><div class="sr-arrow">&rsaquo;</div>`;
+      div.addEventListener('click',()=>{close();const sec=document.getElementById(item.id);if(sec&&sec.classList.contains('yr-hide'))window.showAllYears();if(sec){sec.scrollIntoView({behavior:'smooth',block:'center'});sec.classList.remove('search-found');void sec.offsetWidth;sec.classList.add('search-found')}});
+      res.appendChild(div);ci.push(div);
+    });
+  }
+  function focus(i){ci.forEach(e=>e.classList.remove('focused'));if(i>=0&&i<ci.length){fi=i;ci[i].classList.add('focused');ci[i].scrollIntoView({block:'nearest'})}}
+  function updateUI(){const has=inp.value.trim().length>0;sug.style.display=has?'none':'block';clr.classList.toggle('visible',has)}
+  tog.addEventListener('click',open);
+  ov.addEventListener('click',close);
+  document.addEventListener('keydown',e=>{
+    if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();open();return}
+    if(!md.classList.contains('open'))return;
+    if(e.key==='Escape'){close();return}
+    if(e.key==='ArrowDown'){e.preventDefault();focus(Math.min(fi+1,ci.length-1))}
+    if(e.key==='ArrowUp'){e.preventDefault();focus(Math.max(fi-1,0))}
+    if(e.key==='Enter'&&fi>=0){e.preventDefault();ci[fi].click()}
+  });
+  clr.addEventListener('click',()=>{inp.value='';render('');updateUI();inp.focus()});
+  let db;inp.addEventListener('input',()=>{clearTimeout(db);db=setTimeout(()=>{render(inp.value.trim());updateUI()},80)});
+  sug.querySelectorAll('.search-suggest-tag').forEach(tag=>tag.addEventListener('click',()=>{const kw=tag.dataset.kw;inp.value=kw;render(kw);updateUI();inp.focus()}));
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+.DS_Store
+build/
+_t.html
+portfolio_images/notion/*
+!portfolio_images/notion/notion_00.jpg
